@@ -1,12 +1,13 @@
 import express from "express";
-import { router } from "./router";
+import { authRouter } from "./routers/authRouter";
+import { swaggerRouter } from "./routers/swaggerRouter";
 import * as exception from "./common/exception";
 import { logger } from "./config/log4js_config";
 import { envConfig } from "./config/env_config";
 import * as health from "@cloudnative/health-connect";
 import cookieParser from "cookie-parser";
 import http from "http";
-import { authenticateToken } from "./middlewares/authenticationMiddleware";
+import { validateToken } from "./middlewares/authMiddleware";
 import * as commonEnums from "./common/enum";
 
 const app = express();
@@ -50,7 +51,7 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(express.json({ limit: '50mb' }));
 
 // xác thực và gán thông tin loginUser vào request attribute
-app.use("/*", authenticateToken, function (req: any, res: any, next: any) {
+app.use("/*", validateToken, function (req: any, res: any, next: any) {
   res.header('Cache-Control', ['private', 'max-age=0', 'no-store', 'no-cache', 'must-revalidate', 'proxy-revalidate'].join(','));
   res.header('no-cache', 'Set-Cookie');
   res.header('Expires', new Date(new Date("1970-01-01 00:00:00")).toUTCString());
@@ -114,7 +115,8 @@ app.use("/api/store/*", async function (req: any, res: any, next: any) {
   }
 });
 
-app.use(router);
+app.use(authRouter);
+app.use(swaggerRouter);
 
 // không tìm thấy đường dẫn api
 function notFoundErrorHandler(req: any, res: any, next: any) {

@@ -1,6 +1,6 @@
 import { google } from "googleapis";
 import { authUrl, Oauth2Client} from "../auth/google";
-import * as AuthenticationService from "../services/auth/AuthenticationService";
+import * as authService from "../services/auth/authService";
 import { db } from "../config/db_config";
 import * as exception from "../common/exception";
 
@@ -24,26 +24,28 @@ export async function callbackGoogle (req: any, res: any, next: any) {
         if (!data) {
             throw new exception.APIException(exception.HttpStatusCode.CLIENT_FORBIDDEN, exception.ErrorMessage.API_E_002);
         }
-        const response = await AuthenticationService.loginRoleCustomer(data.id || '', data.email || '', data.name || '', data.picture || '', data.locale || '');
+        const response = await authService.loginRoleCustomer(data.id || '', data.email || '', data.name || '', data.picture || '', data.locale || '');
         res.json(response);
         
         await db.query('COMMIT');
     } catch (error) {
         await db.query("ROLLBACK");
-        return next(error);
     }
 }
 
 export async function getLoginUserInfor (req: any, res: any, next: any) {
     const loginUser = req.loginUser;
-    console.log(loginUser)
     res.json(loginUser);
 }
 
 export async function generateAccessTokenFromRefreshToken (req: any, res: any, next: any) {
-    const refreshToken: string = req.body.refreshToken as string;
-    const response = await AuthenticationService.generateAccessTokenFromRefreshToken(refreshToken);
-    res.json(response);
+    try {
+        const refreshToken: string = req.body.refreshToken as string;
+        const response = await authService.generateAccessTokenFromRefreshToken(refreshToken);
+        res.json(response);
+    } catch (error) {
+        return next(error);
+    }
 }
 
 export async function getAccessToken (req: any, res: any, next: any) {
@@ -54,7 +56,7 @@ export async function logout (req: any, res: any, next: any) {
     try {
         await db.query('BEGIN');
         const refreshToken: string = req.body.refreshToken as string;
-        const response = await AuthenticationService.logout(refreshToken);
+        const response = await authService.logout(refreshToken);
         res.json(response);
         await db.query('COMMIT');
     } catch (error) {

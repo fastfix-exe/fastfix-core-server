@@ -6,12 +6,21 @@ const options = {
     openapi: '3.0.0',
     info: {
       title: 'Fastfix API',
-      description: 'Example of CRUD API ',
+      description: 'Fastfix core service',
       version: '1.0.0',
     },
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT'
+        }
+      }
+    }
   },
   // looks for configuration in specified directories
-  apis: [`${__dirname}/../../router.ts`],
+  apis: [`${__dirname}/../../routers/*.ts`],
 }
 
 const swaggerSpec = swaggerJsdoc(options)
