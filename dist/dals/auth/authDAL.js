@@ -59,22 +59,18 @@ function loginCustomer(googleId, email, googleName, googlePicture, locale) {
             // login with administrator role instead!
             throw new exception.APIException(exception.HttpStatusCode.CLIENT_BAD_REQUEST, exception.ErrorMessage.API_E_003);
         }
-        console.log("TESTTTTTTTTTTTTTTTTTTTTT1");
         const queryStringGetCustomer = userSql.getCustomerByEmail(email);
         let customer;
         [customer] = yield db_config_1.db.query(queryStringGetCustomer);
         // lần đầu login
         if (!customer) {
-            console.log(customer, queryStringGetCustomer);
             const customerId = guid_typescript_1.Guid.create().toString().replace(/-/g, '');
             const hiddenData = {
                 locale: locale,
                 googleId
             };
             const queryInsertCustomer = userSql.createCustomer(customerId, email, googleName, googlePicture, hiddenData);
-            console.log(queryInsertCustomer);
             yield db_config_1.db.query(queryInsertCustomer);
-            console.log('234');
             [customer] = yield db_config_1.db.query(queryStringGetCustomer);
         }
         if (!customer) {
@@ -87,8 +83,12 @@ exports.loginCustomer = loginCustomer;
 // lưu trữ refresh token
 function addNewRefreshToken(userObject) {
     return __awaiter(this, void 0, void 0, function* () {
+        console.log(userObject);
+        console.log(123);
         const accessToken = generateJWTAccessToken(userObject);
+        console.log(456);
         const refreshToken = generateJWTRefreshToken(userObject);
+        console.log(789);
         const queryInsertRefreshToken = userSql.insertRefreshToken(refreshToken, userObject.role, userObject.id);
         yield db_config_1.db.query(queryInsertRefreshToken);
         return { accessToken, refreshToken };

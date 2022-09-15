@@ -26,23 +26,19 @@ export async function loginCustomer (googleId: string, email: string, googleName
         // login with administrator role instead!
         throw new exception.APIException(exception.HttpStatusCode.CLIENT_BAD_REQUEST, exception.ErrorMessage.API_E_003);
     }
-    console.log("TESTTTTTTTTTTTTTTTTTTTTT1")
     const queryStringGetCustomer = userSql.getCustomerByEmail(email);
     let customer: customerModel.CustomerDB;
     [customer] = await db.query(queryStringGetCustomer);
     // lần đầu login
     if (!customer) {
-        console.log(customer, queryStringGetCustomer);
         const customerId = Guid.create().toString().replace(/-/g, '');
         const hiddenData = {
             locale: locale,
             googleId
         }
         const queryInsertCustomer = userSql.createCustomer(customerId, email, googleName, googlePicture, hiddenData);
-            console.log(queryInsertCustomer);
 
         await db.query(queryInsertCustomer);
-        console.log('234');
         [customer] = await db.query(queryStringGetCustomer);
     }
 
@@ -55,8 +51,14 @@ export async function loginCustomer (googleId: string, email: string, googleName
 
 // lưu trữ refresh token
 export async function addNewRefreshToken (userObject: any) {
+    console.log(userObject);
+    console.log(123);
     const accessToken = generateJWTAccessToken(userObject);
+    console.log(456);
+
     const refreshToken = generateJWTRefreshToken(userObject);
+    console.log(789);
+
     const queryInsertRefreshToken = userSql.insertRefreshToken(refreshToken, userObject.role, userObject.id);
     await db.query(queryInsertRefreshToken);
     return { accessToken, refreshToken };
