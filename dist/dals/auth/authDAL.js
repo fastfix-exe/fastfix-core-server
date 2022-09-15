@@ -84,13 +84,12 @@ exports.loginCustomer = loginCustomer;
 function addNewRefreshToken(userObject) {
     return __awaiter(this, void 0, void 0, function* () {
         console.log(userObject);
-        console.log(123);
         const accessToken = generateJWTAccessToken(userObject);
-        console.log(456);
         const refreshToken = generateJWTRefreshToken(userObject);
-        console.log(789);
         const queryInsertRefreshToken = userSql.insertRefreshToken(refreshToken, userObject.role, userObject.id);
+        console.log(queryInsertRefreshToken);
         yield db_config_1.db.query(queryInsertRefreshToken);
+        console.log(111111111111111);
         return { accessToken, refreshToken };
     });
 }

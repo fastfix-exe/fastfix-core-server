@@ -52,15 +52,15 @@ export async function loginCustomer (googleId: string, email: string, googleName
 // lưu trữ refresh token
 export async function addNewRefreshToken (userObject: any) {
     console.log(userObject);
-    console.log(123);
     const accessToken = generateJWTAccessToken(userObject);
-    console.log(456);
 
     const refreshToken = generateJWTRefreshToken(userObject);
-    console.log(789);
 
     const queryInsertRefreshToken = userSql.insertRefreshToken(refreshToken, userObject.role, userObject.id);
+    console.log(queryInsertRefreshToken);
     await db.query(queryInsertRefreshToken);
+    console.log(111111111111111);
+
     return { accessToken, refreshToken };
 }
 
