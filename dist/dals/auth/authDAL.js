@@ -65,14 +65,16 @@ function loginCustomer(googleId, email, googleName, googlePicture, locale) {
         [customer] = yield db_config_1.db.query(queryStringGetCustomer);
         // lần đầu login
         if (!customer) {
+            console.log(customer, queryStringGetCustomer);
             const customerId = guid_typescript_1.Guid.create().toString().replace(/-/g, '');
             const hiddenData = {
                 locale: locale,
                 googleId
             };
             const queryInsertCustomer = userSql.createCustomer(customerId, email, googleName, googlePicture, hiddenData);
-            console.log("queryInsertCustomer");
+            console.log(queryInsertCustomer);
             yield db_config_1.db.query(queryInsertCustomer);
+            console.log('234');
             [customer] = yield db_config_1.db.query(queryStringGetCustomer);
         }
         if (!customer) {

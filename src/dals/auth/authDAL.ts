@@ -32,15 +32,17 @@ export async function loginCustomer (googleId: string, email: string, googleName
     [customer] = await db.query(queryStringGetCustomer);
     // lần đầu login
     if (!customer) {
+        console.log(customer, queryStringGetCustomer);
         const customerId = Guid.create().toString().replace(/-/g, '');
         const hiddenData = {
             locale: locale,
             googleId
         }
         const queryInsertCustomer = userSql.createCustomer(customerId, email, googleName, googlePicture, hiddenData);
-            console.log("queryInsertCustomer")
+            console.log(queryInsertCustomer);
 
         await db.query(queryInsertCustomer);
+        console.log('234');
         [customer] = await db.query(queryStringGetCustomer);
     }
 
