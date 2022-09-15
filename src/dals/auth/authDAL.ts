@@ -26,6 +26,7 @@ export async function loginCustomer (googleId: string, email: string, googleName
         // login with administrator role instead!
         throw new exception.APIException(exception.HttpStatusCode.CLIENT_BAD_REQUEST, exception.ErrorMessage.API_E_003);
     }
+    console.log("TESTTTTTTTTTTTTTTTTTTTTT1")
     const queryStringGetCustomer = userSql.getCustomerByEmail(email);
     let customer: customerModel.CustomerDB;
     [customer] = await db.query(queryStringGetCustomer);
@@ -37,6 +38,8 @@ export async function loginCustomer (googleId: string, email: string, googleName
             googleId
         }
         const queryInsertCustomer = userSql.createCustomer(customerId, email, googleName, googlePicture, hiddenData);
+            console.log("queryInsertCustomer")
+
         await db.query(queryInsertCustomer);
         [customer] = await db.query(queryStringGetCustomer);
     }

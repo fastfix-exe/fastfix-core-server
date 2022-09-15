@@ -59,6 +59,7 @@ function loginCustomer(googleId, email, googleName, googlePicture, locale) {
             // login with administrator role instead!
             throw new exception.APIException(exception.HttpStatusCode.CLIENT_BAD_REQUEST, exception.ErrorMessage.API_E_003);
         }
+        console.log("TESTTTTTTTTTTTTTTTTTTTTT1");
         const queryStringGetCustomer = userSql.getCustomerByEmail(email);
         let customer;
         [customer] = yield db_config_1.db.query(queryStringGetCustomer);
@@ -70,6 +71,7 @@ function loginCustomer(googleId, email, googleName, googlePicture, locale) {
                 googleId
             };
             const queryInsertCustomer = userSql.createCustomer(customerId, email, googleName, googlePicture, hiddenData);
+            console.log("queryInsertCustomer");
             yield db_config_1.db.query(queryInsertCustomer);
             [customer] = yield db_config_1.db.query(queryStringGetCustomer);
         }
