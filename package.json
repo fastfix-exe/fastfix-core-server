@@ -64,7 +64,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "tsc": "./node_modules/typescript/bin/tsc",
-    "start": "tsc&node ./dist/app/app.js",
+    "start": "tsc&node ./app/dist/app.js",
     "start:live": "npm run build:live",
     "start:heroku": "tsc&node ./dist/app.js",
     "build:live": "nodemon --watch ./ -e ts,tsx --exec ts-node src/app.ts"
