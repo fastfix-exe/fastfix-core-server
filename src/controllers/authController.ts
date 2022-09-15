@@ -25,7 +25,7 @@ export async function callbackGoogle (req: any, res: any, next: any) {
             throw new exception.APIException(exception.HttpStatusCode.CLIENT_FORBIDDEN, exception.ErrorMessage.API_E_002);
         }
         const response = await authService.loginRoleCustomer(data.id || '', data.email || '', data.name || '', data.picture || '', data.locale || '');
-        res.json(response);
+        res.send(response);
         
         await db.query('COMMIT');
     } catch (error) {
