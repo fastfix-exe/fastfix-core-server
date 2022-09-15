@@ -11,7 +11,6 @@ async function query(text: any) {
     return rows;
 }
   
-//モジュールエクスポート
 export const db = {
     query
 }

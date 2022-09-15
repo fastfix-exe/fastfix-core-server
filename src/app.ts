@@ -4,47 +4,12 @@ import { swaggerRouter } from "./routers/swaggerRouter";
 import * as exception from "./common/exception";
 import { logger } from "./config/log4js_config";
 import { envConfig } from "./config/env_config";
-import * as health from "@cloudnative/health-connect";
 import cookieParser from "cookie-parser";
 import http from "http";
 import { validateToken } from "./middlewares/authMiddleware";
 import * as commonEnums from "./common/enum";
 
 const app = express();
-
-// Setting healthcheck
-const healthcheck = new health.HealthChecker();
-// trạng thái start
-const startPromise = () => new Promise<void>((resolve, _reject) => {
-  setTimeout(function () {
-    resolve();
-  }, 10);
-});
-healthcheck.registerStartupCheck(new health.StartupCheck("startCheck", startPromise));
-
-// trạng thái ready
-const readyPromise = () => new Promise<void>((resolve, _reject) => {
-  setTimeout(function () {
-    resolve();
-  }, 10);
-});
-healthcheck.registerReadinessCheck(new health.ReadinessCheck("readyCheck", readyPromise));
-
-// trạng thái live
-const livePromise = () => new Promise<void>((resolve, _reject) => {
-  setTimeout(function () {
-    resolve();
-  }, 10);
-});
-healthcheck.registerLivenessCheck(new health.LivenessCheck("liveCheck", livePromise));
-
-// trạng thái shutdown
-const shutdownPromise = () => new Promise<void>((resolve, _reject) => {
-  setTimeout(function () {
-    resolve();
-  }, 10);
-});
-healthcheck.registerShutdownCheck(new health.ShutdownCheck("shutdownCheck", shutdownPromise));
 
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
@@ -61,8 +26,6 @@ app.use("/*", validateToken, function (req: any, res: any, next: any) {
   res.header('X-Content-Type-Options', 'nosniff');
   next();
 });
-
-app.use("/api/healthcheck", health.HealthEndpoint(healthcheck));
 
 app.use("/api/adm/*", async function (req: any, res: any, next: any) {
   try {

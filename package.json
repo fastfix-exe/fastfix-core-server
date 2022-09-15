@@ -4,7 +4,6 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "@cloudnative/health-connect": "^2.1.0",
     "@types/bcryptjs": "^2.4.2",
     "@types/cors": "^2.8.12",
     "@types/helmet": "^4.0.0",
@@ -65,7 +64,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "tsc": "tsc",
-    "start": "node dist/app.js",
+    "start": "tsc&node dist/app.js",
     "start:live": "npm run build:live",
     "build:live": "nodemon --watch ./ -e ts,tsx --exec ts-node src/app.ts"
   },
