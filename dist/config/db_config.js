@@ -13,7 +13,12 @@ exports.db = void 0;
 const pg_1 = require("pg");
 const env_config_1 = require("./env_config");
 //create pool
-const pool = new pg_1.Pool({ connectionString: env_config_1.envConfig.PG_CONNECTION_STRING });
+const pool = new pg_1.Pool({
+    connectionString: env_config_1.envConfig.PG_CONNECTION_STRING,
+    ssl: {
+        rejectUnauthorized: false
+    }
+});
 //sql query
 function query(text) {
     return __awaiter(this, void 0, void 0, function* () {
