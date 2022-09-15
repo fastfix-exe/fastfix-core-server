@@ -14,10 +14,7 @@ const pg_1 = require("pg");
 const env_config_1 = require("./env_config");
 //create pool
 const pool = new pg_1.Pool({
-    connectionString: env_config_1.envConfig.PG_CONNECTION_STRING,
-    ssl: {
-        rejectUnauthorized: false
-    }
+    connectionString: env_config_1.envConfig.PG_CONNECTION_STRING
 });
 //sql query
 function query(text) {
