@@ -3,7 +3,8 @@ import { envConfig } from "./env_config";
 
 //create pool
 const pool = new Pool({
-    connectionString: envConfig.PG_CONNECTION_STRING
+    connectionString: envConfig.PG_CONNECTION_STRING,
+    ssl: { rejectUnauthorized: false }
 });
 
 //sql query
