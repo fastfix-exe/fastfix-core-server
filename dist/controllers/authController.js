@@ -60,7 +60,6 @@ function callbackGoogle(req, res, next) {
             }
             const response = yield authService.loginRoleCustomer(data.id || '', data.email || '', data.name || '', data.picture || '', data.locale || '');
             yield db_config_1.db.query('COMMIT');
-            console.log(response);
             res.json(response);
         }
         catch (error) {

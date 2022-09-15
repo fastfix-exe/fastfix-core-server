@@ -57,9 +57,7 @@ export async function addNewRefreshToken (userObject: any) {
     const refreshToken = generateJWTRefreshToken(userObject);
 
     const queryInsertRefreshToken = userSql.insertRefreshToken(refreshToken, userObject.role, userObject.id);
-    console.log(queryInsertRefreshToken);
     await db.query(queryInsertRefreshToken);
-    console.log(111111111111111);
 
     return { accessToken, refreshToken };
 }

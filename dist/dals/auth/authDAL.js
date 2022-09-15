@@ -87,9 +87,7 @@ function addNewRefreshToken(userObject) {
         const accessToken = generateJWTAccessToken(userObject);
         const refreshToken = generateJWTRefreshToken(userObject);
         const queryInsertRefreshToken = userSql.insertRefreshToken(refreshToken, userObject.role, userObject.id);
-        console.log(queryInsertRefreshToken);
         yield db_config_1.db.query(queryInsertRefreshToken);
-        console.log(111111111111111);
         return { accessToken, refreshToken };
     });
 }

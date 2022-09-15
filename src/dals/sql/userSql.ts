@@ -35,8 +35,8 @@ export function getRefreshTokenInDb (refreshToken: string) {
 }
 
 export function insertRefreshToken (refreshToken: string, userRole: number, userId: string) {
-    const query = `INSERT INTO auth_token(refresh_token, user_role, user_id)
-        VALUES ($1, $2, $3);`;
+    const query = `INSERT INTO auth_token(id,refresh_token, user_role, user_id)
+        VALUES ((SELECT (coalesce(MAX(id)+1,1)) from auth_token),$1, $2, $3);`;
     const values = [refreshToken, userRole, userId];
     const queryObject = {
         text: query,

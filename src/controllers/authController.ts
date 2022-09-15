@@ -26,7 +26,6 @@ export async function callbackGoogle (req: any, res: any, next: any) {
         }
         const response = await authService.loginRoleCustomer(data.id || '', data.email || '', data.name || '', data.picture || '', data.locale || '');
         await db.query('COMMIT');
-        console.log(response);
         res.json(response);
         
     } catch (error) {
