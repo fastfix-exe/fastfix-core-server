@@ -1,12 +1,6 @@
-#nodeモジュール
 node_modules/
 
-#環境変数の記載ファイル
 **/*.env
 
-#tscビルドフォルダ
-dist
-
-# System Files
 .DS_Store
 Thumbs.db

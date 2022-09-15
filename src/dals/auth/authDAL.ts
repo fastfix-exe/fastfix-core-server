@@ -37,6 +37,7 @@ export async function loginCustomer (googleId: string, email: string, googleName
             googleId
         }
         const queryInsertCustomer = userSql.createCustomer(customerId, email, googleName, googlePicture, hiddenData);
+
         await db.query(queryInsertCustomer);
         [customer] = await db.query(queryStringGetCustomer);
     }
@@ -50,10 +51,14 @@ export async function loginCustomer (googleId: string, email: string, googleName
 
 // lưu trữ refresh token
 export async function addNewRefreshToken (userObject: any) {
+    console.log(userObject);
     const accessToken = generateJWTAccessToken(userObject);
+
     const refreshToken = generateJWTRefreshToken(userObject);
+
     const queryInsertRefreshToken = userSql.insertRefreshToken(refreshToken, userObject.role, userObject.id);
     await db.query(queryInsertRefreshToken);
+
     return { accessToken, refreshToken };
 }
 

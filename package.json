@@ -35,7 +35,9 @@
     "swagger-ui-express": "^4.5.0",
     "ts-node-dev": "^2.0.0",
     "typescript-natural-sort": "^0.7.2",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.8.3"
   },
   "devDependencies": {
     "@types/body-parser": "^1.19.2",
@@ -57,15 +59,14 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^5.1.1",
     "nodemon": "^2.0.15",
-    "pool": "^0.4.1",
-    "ts-node": "^10.4.0",
-    "typescript": "^4.3.5"
+    "pool": "^0.4.1"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "tsc": "tsc",
     "start": "tsc&node dist/app.js",
     "start:live": "npm run build:live",
+    "start:heroku": "tsc&node dist/app.js",
     "build:live": "nodemon --watch ./ -e ts,tsx --exec ts-node src/app.ts"
   },
   "keywords": [],

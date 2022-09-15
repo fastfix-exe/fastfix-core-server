@@ -3,9 +3,14 @@ import * as path from 'path';
 
 const env = process.env.NODE_ENV || 'localenv';
 
-dotenv.config({
-  path: path.resolve(process.cwd() + '/src/config', env + '.env')
-});
+if (env === 'localenv') {
+  dotenv.config({
+    path: path.resolve(process.cwd() + '/src/config', env + '.env')
+  });
+} else {
+  dotenv.config();
+}
+
 
 export const envConfig = {
 

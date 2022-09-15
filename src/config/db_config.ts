@@ -2,7 +2,10 @@ import { Pool } from "pg";
 import { envConfig } from "./env_config";
 
 //create pool
-const pool = new Pool({connectionString: envConfig.PG_CONNECTION_STRING});
+const pool = new Pool({
+    connectionString: envConfig.PG_CONNECTION_STRING,
+    ssl: { rejectUnauthorized: false }
+});
 
 //sql query
 async function query(text: any) {
