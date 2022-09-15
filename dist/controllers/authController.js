@@ -59,8 +59,9 @@ function callbackGoogle(req, res, next) {
                 throw new exception.APIException(exception.HttpStatusCode.CLIENT_FORBIDDEN, exception.ErrorMessage.API_E_002);
             }
             const response = yield authService.loginRoleCustomer(data.id || '', data.email || '', data.name || '', data.picture || '', data.locale || '');
-            res.send(response);
             yield db_config_1.db.query('COMMIT');
+            console.log(response);
+            res.json(response);
         }
         catch (error) {
             yield db_config_1.db.query("ROLLBACK");
