@@ -23,7 +23,7 @@ const options = {
         }
     },
     // looks for configuration in specified directories
-    apis: [`${__dirname}/../../routers/*.ts`],
+    apis: [`${__dirname}/../../routers/*.js`],
 };
 const swaggerSpec = (0, swagger_jsdoc_1.default)(options);
 exports.default = swaggerSpec;

@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.logout = exports.getAccessToken = exports.generateAccessTokenFromRefreshToken = exports.getLoginUserInfor = exports.callbackGoogle = exports.getGoogleLoginUrl = void 0;
+exports.loginRoleStore = exports.logout = exports.generateAccessTokenFromRefreshToken = exports.getLoginUserInfor = exports.callbackGoogle = exports.getGoogleLoginUrl = void 0;
 const googleapis_1 = require("googleapis");
 const google_1 = require("../auth/google");
 const authService = __importStar(require("../services/auth/authService"));
@@ -58,41 +58,45 @@ function callbackGoogle(req, res, next) {
             if (!data) {
                 throw new exception.APIException(exception.HttpStatusCode.CLIENT_FORBIDDEN, exception.ErrorMessage.API_E_002);
             }
-            const response = yield authService.loginRoleCustomer(data.id || '', data.email || '', data.name || '', data.picture || '', data.locale || '');
+            const response = yield authService.loginCustomerOrAdmin(data.email || '', data.name || '', data.picture || '');
             yield db_config_1.db.query('COMMIT');
             res.json(response);
         }
         catch (error) {
             yield db_config_1.db.query("ROLLBACK");
+            next(error);
         }
     });
 }
 exports.callbackGoogle = callbackGoogle;
 function getLoginUserInfor(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        const loginUser = req.loginUser;
-        res.json(loginUser);
+        try {
+            const result = yield authService.getCurrentLoginUserInfor(req.loginUser);
+            res.json(result);
+        }
+        catch (error) {
+            next(error);
+        }
     });
 }
 exports.getLoginUserInfor = getLoginUserInfor;
 function generateAccessTokenFromRefreshToken(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
+            yield db_config_1.db.query('BEGIN');
             const refreshToken = req.body.refreshToken;
             const response = yield authService.generateAccessTokenFromRefreshToken(refreshToken);
             res.json(response);
+            yield db_config_1.db.query('COMMIT');
         }
         catch (error) {
+            yield db_config_1.db.query('ROLLBACK');
             return next(error);
         }
     });
 }
 exports.generateAccessTokenFromRefreshToken = generateAccessTokenFromRefreshToken;
-function getAccessToken(req, res, next) {
-    return __awaiter(this, void 0, void 0, function* () {
-    });
-}
-exports.getAccessToken = getAccessToken;
 function logout(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -109,4 +113,18 @@ function logout(req, res, next) {
     });
 }
 exports.logout = logout;
+function loginRoleStore(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const loginId = req.body.loginId;
+            const password = req.body.password;
+            const result = yield authService.loginRoleStore(loginId, password);
+            res.json(result);
+        }
+        catch (error) {
+            return next(error);
+        }
+    });
+}
+exports.loginRoleStore = loginRoleStore;
 //# sourceMappingURL=authController.js.map

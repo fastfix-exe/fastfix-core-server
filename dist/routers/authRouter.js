@@ -32,11 +32,11 @@ const authController = __importStar(require("../controllers/authController"));
 const router = express_1.default.Router();
 /**
  * @openapi
- * '/api/auth/customer':
+ * '/api/auth/google':
  *  get:
  *     tags:
  *     - Authentication
- *     summary: Get gooogle login's URL
+ *     summary: Get gooogle login's URL (for customer or admin)
  *     responses:
  *       200:
  *         description: Success
@@ -45,9 +45,7 @@ const router = express_1.default.Router();
  *            schema:
  *              type: string
  */
-router.get('/api/auth/customer', authController.getGoogleLoginUrl);
-// app.get('/api/auth/store', googleAuth.loginWithGoogle);
-// app.get('/api/auth/adm', googleAuth.loginWithGoogle);
+router.get('/api/auth/google', authController.getGoogleLoginUrl);
 router.get('/api/auth/google/callback', authController.callbackGoogle);
 /**
  * @openapi
@@ -106,11 +104,11 @@ router.post('/api/auth/logout', authController.logout);
 router.post('/api/auth/token', authController.generateAccessTokenFromRefreshToken);
 /**
  * @openapi
- * '/api/customer/profile':
+ * '/api/auth/user/profile':
  *  get:
  *     tags:
  *     - Authentication
- *     summary: Decode access token to JSON object (test)
+ *     summary: Decode access token to JSON object
  *     security:
  *       - bearerAuth: []
  *     responses:
@@ -121,6 +119,37 @@ router.post('/api/auth/token', authController.generateAccessTokenFromRefreshToke
  *            schema:
  *              type: object
  */
-router.get('/api/customer/profile', authController.getLoginUserInfor);
+router.get('/api/auth/user/profile', authController.getLoginUserInfor);
+/**
+ * @openapi
+ * '/api/auth/store':
+ *  post:
+ *     tags:
+ *     - Authentication
+ *     summary: Login role store
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               loginId:
+ *                 description: username of store
+ *                 type: string
+ *               password:
+ *                 description: password
+ *                 type: string
+ *             required:
+ *               - loginId
+ *               - password
+ *     responses:
+ *       200:
+ *         description: Success
+ *         content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ */
+router.post('/api/auth/store', authController.loginRoleStore);
 exports.authRouter = router;
 //# sourceMappingURL=authRouter.js.map

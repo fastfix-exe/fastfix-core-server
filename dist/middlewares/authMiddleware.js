@@ -27,8 +27,8 @@ exports.validateToken = void 0;
 const env_config_1 = require("../config/env_config");
 const exception = __importStar(require("../common/exception"));
 const jwt = __importStar(require("jsonwebtoken"));
+const bypassApi = ['/api/healthcheck', '/api/auth/google', '/api/auth/token', '/docs.json', '/docs', '/favicon.ico', '/api/auth/store'];
 function validateToken(req, res, next) {
-    const bypassApi = ['/api/healthcheck', '/api/auth/customer', '/api/auth/google/callback', '/api/auth/token', '/docs.json', '/docs', '/favicon.ico'];
     if (bypassApi.some((api) => req.originalUrl.startsWith(api))) {
         next();
     }

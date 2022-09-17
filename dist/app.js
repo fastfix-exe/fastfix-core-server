@@ -37,6 +37,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const authRouter_1 = require("./routers/authRouter");
+const userRouter_1 = require("./routers/userRouter");
 const swaggerRouter_1 = require("./routers/swaggerRouter");
 const exception = __importStar(require("./common/exception"));
 const log4js_config_1 = require("./config/log4js_config");
@@ -68,7 +69,7 @@ app.use("/api/adm/*", function (req, res, next) {
             }
             const bypassApi = [];
             if (req.loginUser.role !== commonEnums.UserRole.administrator && !bypassApi.some((api) => req.originalUrl.startsWith(api))) {
-                throw new exception.APIException(exception.HttpStatusCode.UNAUTHORIZED, exception.ErrorMessage.API_E_004);
+                throw new exception.APIException(exception.HttpStatusCode.CLIENT_FORBIDDEN, exception.ErrorMessage.API_E_004);
             }
             next();
         }
@@ -86,7 +87,7 @@ app.use("/api/customer/*", function (req, res, next) {
             }
             const bypassApi = [];
             if (req.loginUser.role !== commonEnums.UserRole.customer && !bypassApi.some((api) => req.originalUrl.startsWith(api))) {
-                throw new exception.APIException(exception.HttpStatusCode.UNAUTHORIZED, exception.ErrorMessage.API_E_004);
+                throw new exception.APIException(exception.HttpStatusCode.CLIENT_FORBIDDEN, exception.ErrorMessage.API_E_004);
             }
             next();
         }
@@ -104,7 +105,7 @@ app.use("/api/store/*", function (req, res, next) {
             }
             const bypassApi = [];
             if (req.loginUser.role !== commonEnums.UserRole.store && !bypassApi.some((api) => req.originalUrl.startsWith(api))) {
-                throw new exception.APIException(exception.HttpStatusCode.UNAUTHORIZED, exception.ErrorMessage.API_E_004);
+                throw new exception.APIException(exception.HttpStatusCode.CLIENT_FORBIDDEN, exception.ErrorMessage.API_E_004);
             }
             next();
         }
@@ -113,8 +114,9 @@ app.use("/api/store/*", function (req, res, next) {
         }
     });
 });
-app.use(authRouter_1.authRouter);
 app.use(swaggerRouter_1.swaggerRouter);
+app.use(authRouter_1.authRouter);
+app.use(userRouter_1.userRouter);
 // không tìm thấy đường dẫn api
 function notFoundErrorHandler(req, res, next) {
     var err = new exception.APIException(exception.HttpStatusCode.CLIENT_NOT_FOUND, exception.ErrorMessage.API_E_001);

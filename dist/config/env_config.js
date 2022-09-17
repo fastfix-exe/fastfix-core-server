@@ -22,6 +22,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.envConfig = void 0;
 const dotenv = __importStar(require("dotenv"));
@@ -48,7 +49,7 @@ exports.envConfig = {
     GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET || '',
     GOOGLE_REDIRECT_URI: process.env.GOOGLE_REDIRECT_URI || '',
     // admin email
-    ADMINISTRATOR_EMAIL: process.env.ADMINISTRATOR_EMAIL || '',
+    ADMINISTRATOR_EMAIL: ((_a = process.env.ADMINISTRATOR_EMAIL) === null || _a === void 0 ? void 0 : _a.split(/ /g)) || [],
     // jwt secret
     REFRESH_TOKEN_SECRET: process.env.REFRESH_TOKEN_SECRET || '',
     ACCESS_TOKEN_SECRET: process.env.ACCESS_TOKEN_SECRET || '',

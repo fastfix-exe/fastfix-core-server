@@ -32,19 +32,26 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.generateAccessTokenFromRefreshToken = exports.logout = exports.loginRoleCustomer = void 0;
+exports.getCurrentLoginUserInfor = exports.loginRoleStore = exports.generateAccessTokenFromRefreshToken = exports.logout = exports.loginCustomerOrAdmin = void 0;
 const authDAL = __importStar(require("../../dals/auth/authDAL"));
-function loginRoleCustomer(googleId, email, googleName, googlePicture, locale) {
+const env_config_1 = require("../../config/env_config");
+function loginCustomerOrAdmin(email, name, avatarPicture) {
     return __awaiter(this, void 0, void 0, function* () {
-        const loginCustomer = yield authDAL.loginCustomer(googleId, email, googleName, googlePicture, locale);
-        const tokens = yield authDAL.addNewRefreshToken(loginCustomer);
+        let loginUser;
+        if (env_config_1.envConfig.ADMINISTRATOR_EMAIL.some((adminEmail) => adminEmail.toLocaleLowerCase().localeCompare(email.toLocaleLowerCase()) === 0)) {
+            loginUser = yield authDAL.loginAdministrator(email, name, avatarPicture);
+        }
+        else {
+            loginUser = yield authDAL.loginCustomer(email, name, avatarPicture);
+        }
+        const tokens = yield authDAL.addNewRefreshToken(loginUser);
         return {
-            loginCustomer,
+            loginUser,
             tokens,
         };
     });
 }
-exports.loginRoleCustomer = loginRoleCustomer;
+exports.loginCustomerOrAdmin = loginCustomerOrAdmin;
 function logout(refreshToken) {
     return __awaiter(this, void 0, void 0, function* () {
         return yield authDAL.deleteRefreshToken(refreshToken);
@@ -60,4 +67,21 @@ function generateAccessTokenFromRefreshToken(refreshToken) {
     });
 }
 exports.generateAccessTokenFromRefreshToken = generateAccessTokenFromRefreshToken;
+function loginRoleStore(loginId, password) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const loginStore = yield authDAL.loginStore(loginId, password);
+        const tokens = yield authDAL.addNewRefreshToken(loginStore);
+        return {
+            loginStore,
+            tokens,
+        };
+    });
+}
+exports.loginRoleStore = loginRoleStore;
+function getCurrentLoginUserInfor(loginUser) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield authDAL.getCurrentLoginUserInfor(loginUser);
+    });
+}
+exports.getCurrentLoginUserInfor = getCurrentLoginUserInfor;
 //# sourceMappingURL=authService.js.map

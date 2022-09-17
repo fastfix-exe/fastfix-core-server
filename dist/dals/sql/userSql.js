@@ -23,7 +23,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getCustomerById = exports.deleteRefreshToken = exports.insertRefreshToken = exports.getRefreshTokenInDb = exports.createCustomer = exports.getCustomerByEmail = void 0;
+exports.updateStore = exports.updateCustomer = exports.getStoreByStoreIdAndLoginId = exports.getStoreByLoginIdAndPassword = exports.getCustomerByIdAndEmail = exports.deleteRefreshToken = exports.insertRefreshToken = exports.getRefreshTokenInDb = exports.createCustomer = exports.getCustomerByEmail = void 0;
 const localDateTimeUtils = __importStar(require("../../common/utils/LocalDateTimeUtils"));
 // get customer's infor
 function getCustomerByEmail(email) {
@@ -38,8 +38,8 @@ function getCustomerByEmail(email) {
 exports.getCustomerByEmail = getCustomerByEmail;
 // insert customer
 function createCustomer(customerId, email, customerName, avatarPicture, hiddenData) {
-    const query = `INSERT INTO customer(customer_id, email, customer_name, avatar_picture, hidden_data, created_at, created_by, updated_at, updated_by)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $6, $7);`;
+    const query = `INSERT INTO customer(customer_id, email, customer_name, avatar_picture, hidden_data, created_at, created_by, updated_at, updated_by, status)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $6, $7,0);`;
     const now = localDateTimeUtils.getSystemDateTime();
     const values = [customerId, email, customerName, avatarPicture, hiddenData, now, email];
     const queryObject = {
@@ -80,14 +80,62 @@ function deleteRefreshToken(refreshToken) {
     return queryObject;
 }
 exports.deleteRefreshToken = deleteRefreshToken;
-function getCustomerById(customerId) {
-    const query = `SELECT * FROM CUSTOMER WHERE customer_id = $1`;
-    const values = [customerId];
+function getCustomerByIdAndEmail(customerId, email) {
+    const query = `SELECT * FROM CUSTOMER WHERE customer_id = $1 and email = $2`;
+    const values = [customerId, email];
     const queryObject = {
         text: query,
         values: values,
     };
     return queryObject;
 }
-exports.getCustomerById = getCustomerById;
+exports.getCustomerByIdAndEmail = getCustomerByIdAndEmail;
+function getStoreByLoginIdAndPassword(loginId, password) {
+    const query = `SELECT * FROM STORE WHERE LOGIN_ID = $1 AND PASSWORD = $2`;
+    const now = localDateTimeUtils.getSystemDateTime();
+    const values = [loginId, password];
+    const queryObject = {
+        text: query,
+        values: values,
+    };
+    return queryObject;
+}
+exports.getStoreByLoginIdAndPassword = getStoreByLoginIdAndPassword;
+function getStoreByStoreIdAndLoginId(storeId, loginId) {
+    const query = `SELECT * FROM STORE WHERE STORE_ID = $1 AND LOGIN_ID = $2`;
+    const now = localDateTimeUtils.getSystemDateTime();
+    const values = [storeId, loginId];
+    const queryObject = {
+        text: query,
+        values: values,
+    };
+    return queryObject;
+}
+exports.getStoreByStoreIdAndLoginId = getStoreByStoreIdAndLoginId;
+function updateCustomer(customerId, email, name, gender, phoneNumber, dateOfBirth, avatarPicture) {
+    const query = `UPDATE CUSTOMER 
+        SET CUSTOME_NAME = $3, GENDER = $4, PHONE_NUMBER = $5, DATE_OF_BIRTH = $6, AVATAR_PICTURE = $7, UPDATED_AT = $8, UPDATED_BY = $9
+        WHERE customer_id = $1 and email = $2`;
+    const now = localDateTimeUtils.getSystemDateTime();
+    const values = [customerId, email, name, gender, phoneNumber, dateOfBirth, avatarPicture, now, email];
+    const queryObject = {
+        text: query,
+        values: values,
+    };
+    return queryObject;
+}
+exports.updateCustomer = updateCustomer;
+function updateStore(storeId, email, name, address, phoneNumber, avatarPicture, description, loginStoreId) {
+    const query = `UPDATE STORE
+	SET email=$2, store_name=$3, address=$4, phone_number=$5, avatar_picture=$6, description=$7, updated_at=$8, updated_by=$9
+	WHERE STORE_ID = $1 AND LOGIN_ID = $9;`;
+    const now = localDateTimeUtils.getSystemDateTime();
+    const values = [storeId, email, name, address, phoneNumber, avatarPicture, description, now, loginStoreId];
+    const queryObject = {
+        text: query,
+        values: values,
+    };
+    return queryObject;
+}
+exports.updateStore = updateStore;
 //# sourceMappingURL=userSql.js.map

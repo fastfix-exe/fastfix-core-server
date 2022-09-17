@@ -32,12 +32,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.generateAccessTokenFromRefreshToken = exports.deleteRefreshToken = exports.addNewRefreshToken = exports.loginCustomer = void 0;
+exports.getCurrentLoginUserInfor = exports.loginAdministrator = exports.loginStore = exports.registerStore = exports.generateAccessTokenFromRefreshToken = exports.deleteRefreshToken = exports.addNewRefreshToken = exports.loginCustomer = void 0;
 const db_config_1 = require("../../config/db_config");
 const env_config_1 = require("../../config/env_config");
 const userSql = __importStar(require("../sql/userSql"));
 const guid_typescript_1 = require("guid-typescript");
 const customerModel = __importStar(require("../../models/CustomerModels"));
+const storeModel = __importStar(require("../../models/StoreModels"));
+const adminModel = __importStar(require("../../models/AdministratorModels"));
 const commonEnums = __importStar(require("../../common/enum"));
 const exception = __importStar(require("../../common/exception"));
 const jwt = __importStar(require("jsonwebtoken"));
@@ -53,10 +55,9 @@ function generateJWTRefreshToken(userObject) {
 /*
 * tìm thông tin customer sau khi đã được google xác thực
 */
-function loginCustomer(googleId, email, googleName, googlePicture, locale) {
+function loginCustomer(email, googleName, googlePicture) {
     return __awaiter(this, void 0, void 0, function* () {
-        if (env_config_1.envConfig.ADMINISTRATOR_EMAIL.toLocaleLowerCase().localeCompare(email.toLocaleLowerCase()) === 0) {
-            // login with administrator role instead!
+        if (env_config_1.envConfig.ADMINISTRATOR_EMAIL.some((adminEmail) => adminEmail.toLocaleLowerCase().localeCompare(email.toLocaleLowerCase()) === 0)) {
             throw new exception.APIException(exception.HttpStatusCode.CLIENT_BAD_REQUEST, exception.ErrorMessage.API_E_003);
         }
         const queryStringGetCustomer = userSql.getCustomerByEmail(email);
@@ -65,10 +66,7 @@ function loginCustomer(googleId, email, googleName, googlePicture, locale) {
         // lần đầu login
         if (!customer) {
             const customerId = guid_typescript_1.Guid.create().toString().replace(/-/g, '');
-            const hiddenData = {
-                locale: locale,
-                googleId
-            };
+            const hiddenData = {};
             const queryInsertCustomer = userSql.createCustomer(customerId, email, googleName, googlePicture, hiddenData);
             yield db_config_1.db.query(queryInsertCustomer);
             [customer] = yield db_config_1.db.query(queryStringGetCustomer);
@@ -83,7 +81,6 @@ exports.loginCustomer = loginCustomer;
 // lưu trữ refresh token
 function addNewRefreshToken(userObject) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log(userObject);
         const accessToken = generateJWTAccessToken(userObject);
         const refreshToken = generateJWTRefreshToken(userObject);
         const queryInsertRefreshToken = userSql.insertRefreshToken(refreshToken, userObject.role, userObject.id);
@@ -105,7 +102,7 @@ exports.deleteRefreshToken = deleteRefreshToken;
 function generateAccessTokenFromRefreshToken(refreshToken) {
     return __awaiter(this, void 0, void 0, function* () {
         let accessToken = '';
-        let userToken = { id: '-1', role: -1 };
+        let userToken = { id: '-1', role: -1, email: '', loginId: '' };
         let userDb = null;
         let createdUser = null;
         if (refreshToken == null) {
@@ -126,14 +123,15 @@ function generateAccessTokenFromRefreshToken(refreshToken) {
             userToken = user;
         });
         if (userToken.role === commonEnums.UserRole.customer) {
-            [userDb] = yield db_config_1.db.query(userSql.getCustomerById(userToken.id));
+            [userDb] = yield db_config_1.db.query(userSql.getCustomerByIdAndEmail(userToken.id, userToken.email));
             createdUser = userDb ? customerModel.createJsonObjectWithoutHiddenData(userDb) : null;
         }
         if (userToken.role === commonEnums.UserRole.administrator) {
-            // [userDb] = ...
+            createdUser = adminModel.createJsonObject(userToken);
         }
         if (userToken.role === commonEnums.UserRole.store) {
-            // [userDb] = ...
+            [userDb] = yield db_config_1.db.query(userSql.getStoreByStoreIdAndLoginId(userToken.id, userToken.loginId));
+            createdUser = userDb ? storeModel.createJsonObjectWithoutHiddenData(userDb) : null;
         }
         if (!createdUser) {
             throw new exception.APIException(exception.HttpStatusCode.SERVER, exception.ErrorMessage.API_E_002);
@@ -143,4 +141,53 @@ function generateAccessTokenFromRefreshToken(refreshToken) {
     });
 }
 exports.generateAccessTokenFromRefreshToken = generateAccessTokenFromRefreshToken;
+/*
+* đăng kí thông tin doanh nghiệp
+*/
+function registerStore(loginId, password, confirmPassword) {
+    return __awaiter(this, void 0, void 0, function* () {
+        // tbd
+    });
+}
+exports.registerStore = registerStore;
+/*
+* đăng nhập tài khoản doanh nghiệp
+*/
+function loginStore(loginId, password) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const queryGetStore = userSql.getStoreByLoginIdAndPassword(loginId, password);
+        const [store] = yield db_config_1.db.query(queryGetStore);
+        if (!store) {
+            throw new exception.APIException(exception.HttpStatusCode.CLIENT_BAD_REQUEST, exception.ErrorMessage.API_E_002);
+        }
+        return storeModel.createJsonObjectWithoutHiddenData(store);
+    });
+}
+exports.loginStore = loginStore;
+/*
+* đăng nhập tài khoản admin
+*/
+function loginAdministrator(email, name, avatarPicture) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const id = guid_typescript_1.Guid.create().toString().replace(/-/g, '');
+        return adminModel.createJsonObject({ id, email, name, avatarPicture });
+    });
+}
+exports.loginAdministrator = loginAdministrator;
+function getCurrentLoginUserInfor(loginUser) {
+    return __awaiter(this, void 0, void 0, function* () {
+        if (loginUser.role === commonEnums.UserRole.administrator) {
+            return loginUser;
+        }
+        if (loginUser.role === commonEnums.UserRole.customer) {
+            const [customer] = yield db_config_1.db.query(userSql.getCustomerByIdAndEmail(loginUser.id, loginUser.email));
+            return customerModel.createJsonObjectWithoutHiddenData(customer);
+        }
+        if (loginUser.role === commonEnums.UserRole.store) {
+            const [store] = yield db_config_1.db.query(userSql.getStoreByStoreIdAndLoginId(loginUser.id, loginUser.loginId));
+            return storeModel.createJsonObjectWithoutHiddenData(store);
+        }
+    });
+}
+exports.getCurrentLoginUserInfor = getCurrentLoginUserInfor;
 //# sourceMappingURL=authDAL.js.map

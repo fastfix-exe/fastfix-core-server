@@ -9,3 +9,9 @@ export enum UserRole {
     store = 2,
     administrator = 0,
 }
+
+export enum UserStatus {
+    Activated = 0,
+    Deleted = 1,
+    Approved = 2,
+}

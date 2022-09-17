@@ -1,5 +1,6 @@
 import express from "express";
 import { authRouter } from "./routers/authRouter";
+import { userRouter } from "./routers/userRouter";
 import { swaggerRouter } from "./routers/swaggerRouter";
 import * as exception from "./common/exception";
 import { logger } from "./config/log4js_config";
@@ -35,7 +36,7 @@ app.use("/api/adm/*", async function (req: any, res: any, next: any) {
     }
     const bypassApi: string[] = [];
     if (req.loginUser.role !== commonEnums.UserRole.administrator && !bypassApi.some((api: string) => req.originalUrl.startsWith(api))) {
-      throw new exception.APIException(exception.HttpStatusCode.UNAUTHORIZED, exception.ErrorMessage.API_E_004);
+      throw new exception.APIException(exception.HttpStatusCode.CLIENT_FORBIDDEN, exception.ErrorMessage.API_E_004);
     }
     next();
 
@@ -52,7 +53,7 @@ app.use("/api/customer/*", async function (req: any, res: any, next: any) {
     }
     const bypassApi: string[] = [];
     if (req.loginUser.role !== commonEnums.UserRole.customer && !bypassApi.some((api: string) => req.originalUrl.startsWith(api))) {
-      throw new exception.APIException(exception.HttpStatusCode.UNAUTHORIZED, exception.ErrorMessage.API_E_004);
+      throw new exception.APIException(exception.HttpStatusCode.CLIENT_FORBIDDEN, exception.ErrorMessage.API_E_004);
     }
     next();
 
@@ -69,7 +70,7 @@ app.use("/api/store/*", async function (req: any, res: any, next: any) {
     }
     const bypassApi: string[] = [];
     if (req.loginUser.role !== commonEnums.UserRole.store && !bypassApi.some((api: string) => req.originalUrl.startsWith(api))) {
-      throw new exception.APIException(exception.HttpStatusCode.UNAUTHORIZED, exception.ErrorMessage.API_E_004);
+      throw new exception.APIException(exception.HttpStatusCode.CLIENT_FORBIDDEN, exception.ErrorMessage.API_E_004);
     }
     next();
 
@@ -77,9 +78,10 @@ app.use("/api/store/*", async function (req: any, res: any, next: any) {
     next(err);
   }
 });
+app.use(swaggerRouter);
 
 app.use(authRouter);
-app.use(swaggerRouter);
+app.use(userRouter);
 
 // không tìm thấy đường dẫn api
 function notFoundErrorHandler(req: any, res: any, next: any) {

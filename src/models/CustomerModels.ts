@@ -12,9 +12,10 @@ export interface CustomerDB {
     created_at?: Date;
     created_by?: string;
     updated_at?: Date;
-    Updated_by?: string;
+    updated_by?: string;
     deleted_at?: Date;
     deleted_by?: string;
+    status: number;
 }
 
 

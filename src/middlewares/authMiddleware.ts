@@ -2,9 +2,9 @@ import { envConfig } from "../config/env_config"
 import * as exception from "../common/exception";
 
 import * as jwt from 'jsonwebtoken';
+const bypassApi: string[] = ['/api/healthcheck', '/api/auth/google', '/api/auth/token', '/docs.json', '/docs', '/favicon.ico', '/api/auth/store'];
 
 export function validateToken(req: any, res: any, next: any) {
-  const bypassApi: string[] = ['/api/healthcheck', '/api/auth/customer', '/api/auth/google/callback', '/api/auth/token', '/docs.json', '/docs', '/favicon.ico'];
   if (bypassApi.some((api: string) => req.originalUrl.startsWith(api))) {
     next();
   } else {

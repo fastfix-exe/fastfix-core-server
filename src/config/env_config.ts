@@ -31,7 +31,7 @@ export const envConfig = {
   GOOGLE_REDIRECT_URI: process.env.GOOGLE_REDIRECT_URI || '',
 
   // admin email
-  ADMINISTRATOR_EMAIL: process.env.ADMINISTRATOR_EMAIL || '',
+  ADMINISTRATOR_EMAIL: process.env.ADMINISTRATOR_EMAIL?.split(/ /g) || [],
 
   // jwt secret
   REFRESH_TOKEN_SECRET: process.env.REFRESH_TOKEN_SECRET || '',
