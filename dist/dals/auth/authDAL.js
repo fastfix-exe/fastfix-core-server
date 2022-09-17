@@ -92,6 +92,10 @@ exports.addNewRefreshToken = addNewRefreshToken;
 // xóa refresh token khỏi db (logout)
 function deleteRefreshToken(refreshToken) {
     return __awaiter(this, void 0, void 0, function* () {
+        const queryGetRefreshToken = userSql.getRefreshTokenInDb(refreshToken);
+        if (!refreshToken) {
+            throw new exception.APIException(exception.HttpStatusCode.SERVER, exception.ErrorMessage.API_E_007);
+        }
         const queryDeleteRefreshToken = userSql.deleteRefreshToken(refreshToken);
         yield db_config_1.db.query(queryDeleteRefreshToken);
         return true;
@@ -158,7 +162,7 @@ function loginStore(loginId, password) {
         const queryGetStore = userSql.getStoreByLoginIdAndPassword(loginId, password);
         const [store] = yield db_config_1.db.query(queryGetStore);
         if (!store) {
-            throw new exception.APIException(exception.HttpStatusCode.CLIENT_BAD_REQUEST, exception.ErrorMessage.API_E_002);
+            throw new exception.APIException(exception.HttpStatusCode.CLIENT_BAD_REQUEST, exception.ErrorMessage.API_E_006);
         }
         return storeModel.createJsonObjectWithoutHiddenData(store);
     });

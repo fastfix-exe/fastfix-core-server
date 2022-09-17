@@ -37,4 +37,5 @@ export const ErrorMessage = {
     API_E_004: "You are not authorized!",
     API_E_005: "JWT expired!",
     API_E_006: "Wrong username or password!",
+    API_E_007: "Refresh token not found?!",
 }

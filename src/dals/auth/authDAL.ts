@@ -61,6 +61,10 @@ export async function addNewRefreshToken (userObject: any) {
 
 // xóa refresh token khỏi db (logout)
 export async function deleteRefreshToken (refreshToken: string) {
+    const queryGetRefreshToken = userSql.getRefreshTokenInDb(refreshToken);
+    if (!refreshToken) {
+        throw new exception.APIException(exception.HttpStatusCode.SERVER, exception.ErrorMessage.API_E_007);
+    }
     const queryDeleteRefreshToken = userSql.deleteRefreshToken(refreshToken);
     await db.query(queryDeleteRefreshToken);
     return true;
@@ -126,7 +130,7 @@ export async function loginStore (loginId: string, password: string) {
     const [store] = await db.query(queryGetStore);
 
     if (!store) {
-        throw new exception.APIException(exception.HttpStatusCode.CLIENT_BAD_REQUEST, exception.ErrorMessage.API_E_002);
+        throw new exception.APIException(exception.HttpStatusCode.CLIENT_BAD_REQUEST, exception.ErrorMessage.API_E_006);
     }
 
     return storeModel.createJsonObjectWithoutHiddenData(store);
