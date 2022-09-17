@@ -64,9 +64,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "tsc": "tsc",
-    "start": "tsc&node dist/app.js",
+    "start": "tsc&node --optimize_for_size --max_old_space_size=460 dist/app.js",
     "start:live": "npm run build:live",
-    "start:heroku": "tsc&node dist/app.js",
+    "start:heroku": "tsc&node --optimize_for_size --max_old_space_size=460 dist/app.js",
     "build:live": "nodemon --watch ./ -e ts,tsx --exec ts-node src/app.ts"
   },
   "keywords": [],
