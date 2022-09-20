@@ -47,7 +47,7 @@ const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const authMiddleware_1 = require("./middlewares/authMiddleware");
 const commonEnums = __importStar(require("./common/enum"));
 const app = (0, express_1.default)();
-app.use(cors_1.default);
+app.use((0, cors_1.default)());
 app.use((0, cookie_parser_1.default)());
 app.use(express_1.default.urlencoded({ extended: true, limit: '50mb' }));
 app.use(express_1.default.json({ limit: '50mb' }));
