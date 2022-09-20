@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import { authRouter } from "./routers/authRouter";
 import { userRouter } from "./routers/userRouter";
 import { swaggerRouter } from "./routers/swaggerRouter";
@@ -11,6 +12,8 @@ import { validateToken } from "./middlewares/authMiddleware";
 import * as commonEnums from "./common/enum";
 
 const app = express();
+
+app.use(cors);
 
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
