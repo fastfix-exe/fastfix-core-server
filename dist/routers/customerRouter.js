@@ -37,7 +37,6 @@ const router = express_1.default.Router();
 *  put:
 *     tags:
 *     - Customer
-*     - User
 *     summary: Update customer's profile (name, gender, date of birth, phone number, avatar)
 *     security:
 *       - bearerAuth: []
@@ -93,6 +92,12 @@ router.get('/api/customer/store/list', customerController.getListStore);
 *     tags:
 *     - Customer
 *     summary: Get store's infor by ID
+*     parameters:
+*     - in: path
+*       name: storeId
+*       required: true
+*       schema:
+*          type: string
 *     security:
 *       - bearerAuth: []
 *     responses:

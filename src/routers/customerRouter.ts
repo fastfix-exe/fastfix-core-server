@@ -67,6 +67,12 @@ router.get('/api/customer/store/list', customerController.getListStore);
  *     tags:
  *     - Customer
  *     summary: Get store's infor by ID
+ *     parameters:
+ *     - in: path
+ *       name: storeId
+ *       required: true
+ *       schema:
+ *          type: string
  *     security:
  *       - bearerAuth: []
  *     responses:

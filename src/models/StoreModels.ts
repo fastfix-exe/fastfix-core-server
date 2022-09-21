@@ -58,5 +58,5 @@ export function createJsonObjectWithoutHiddenData (data: StoreDB) {
 export function customerGetStore (data: StoreDB) {
     const isDeleted = !!(data.deleted_at && data.deleted_by);
     const store = new Store(data.store_id, data.login_id, data.email, data.store_name, isDeleted, data.phone_number, data.avatar_picture);
-    return _objectWithoutProperties(store, ['loginId', 'hiddenData']);
+    return _objectWithoutProperties(store, ['role', 'loginId', 'hiddenData']);
 }
