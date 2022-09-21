@@ -31,8 +31,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getCurrentLoginUserInfor = exports.loginAdministrator = exports.loginStore = exports.registerStore = exports.generateAccessTokenFromRefreshToken = exports.deleteRefreshToken = exports.addNewRefreshToken = exports.loginCustomer = void 0;
+exports.getCurrentLoginUserInfor = exports.loginAdministrator = exports.loginStore = exports.registerStore = exports.generateAccessTokenFromRefreshToken = exports.deleteRefreshToken = exports.addNewRefreshToken = exports.loginCustomer = exports.decodeCredentialId = void 0;
 const db_config_1 = require("../../config/db_config");
 const env_config_1 = require("../../config/env_config");
 const userSql = __importStar(require("../sql/userSql"));
@@ -44,6 +47,7 @@ const commonEnums = __importStar(require("../../common/enum"));
 const exception = __importStar(require("../../common/exception"));
 const jwt = __importStar(require("jsonwebtoken"));
 const objectUtils = __importStar(require("../../common/utils/ObjectUtils"));
+const jwt_decode_1 = __importDefault(require("jwt-decode"));
 // tạo access token từ json object thông tin user
 function generateJWTAccessToken(userObject) {
     return jwt.sign(objectUtils.toJSONAnInstance(userObject), env_config_1.envConfig.ACCESS_TOKEN_SECRET, { expiresIn: env_config_1.envConfig.ACCESS_TOKEN_TIMEOUT });
@@ -52,6 +56,10 @@ function generateJWTAccessToken(userObject) {
 function generateJWTRefreshToken(userObject) {
     return jwt.sign(objectUtils.toJSONAnInstance(userObject), env_config_1.envConfig.REFRESH_TOKEN_SECRET);
 }
+function decodeCredentialId(credentialId) {
+    return (0, jwt_decode_1.default)(credentialId);
+}
+exports.decodeCredentialId = decodeCredentialId;
 /*
 * tìm thông tin customer sau khi đã được google xác thực
 */

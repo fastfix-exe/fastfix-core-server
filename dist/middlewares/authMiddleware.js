@@ -28,9 +28,9 @@ const env_config_1 = require("../config/env_config");
 const exception = __importStar(require("../common/exception"));
 const commonEnums = __importStar(require("../common/enum"));
 const jwt = __importStar(require("jsonwebtoken"));
-const bypassApi = ['/api/healthcheck', '/api/auth/google', '/api/auth/token', '/docs.json', '/docs', '/favicon.ico', '/api/auth/store'];
+const commonBypassApi = ['/api/healthcheck', '/api/auth/google', '/api/auth/token', '/docs.json', '/docs', '/favicon.ico', '/api/auth/store'];
 function validateToken(req, res, next) {
-    if (bypassApi.some((api) => req.originalUrl.startsWith(api))) {
+    if (commonBypassApi.some((api) => req.originalUrl.startsWith(api))) {
         next();
     }
     else {

@@ -3,10 +3,10 @@ import * as exception from "../common/exception";
 import * as commonEnums from "../common/enum";
 
 import * as jwt from 'jsonwebtoken';
-const bypassApi: string[] = ['/api/healthcheck', '/api/auth/google', '/api/auth/token', '/docs.json', '/docs', '/favicon.ico', '/api/auth/store'];
+const commonBypassApi: string[] = ['/api/healthcheck', '/api/auth/google', '/api/auth/token', '/docs.json', '/docs', '/favicon.ico', '/api/auth/store'];
 
 export function validateToken(req: any, res: any, next: any) {
-  if (bypassApi.some((api: string) => req.originalUrl.startsWith(api))) {
+  if (commonBypassApi.some((api: string) => req.originalUrl.startsWith(api))) {
     next();
   } else {
     const authHeader = req.headers['authorization'];

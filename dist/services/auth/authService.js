@@ -32,9 +32,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getCurrentLoginUserInfor = exports.loginRoleStore = exports.generateAccessTokenFromRefreshToken = exports.logout = exports.loginCustomerOrAdmin = void 0;
+exports.getCurrentLoginUserInfor = exports.loginRoleStore = exports.generateAccessTokenFromRefreshToken = exports.logout = exports.loginViaCredentialId = exports.loginCustomerOrAdmin = void 0;
 const authDAL = __importStar(require("../../dals/auth/authDAL"));
 const env_config_1 = require("../../config/env_config");
+const exception = __importStar(require("../../common/exception"));
 function loginCustomerOrAdmin(email, name, avatarPicture) {
     return __awaiter(this, void 0, void 0, function* () {
         let loginUser;
@@ -52,6 +53,31 @@ function loginCustomerOrAdmin(email, name, avatarPicture) {
     });
 }
 exports.loginCustomerOrAdmin = loginCustomerOrAdmin;
+function loginViaCredentialId(credentialId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let loginUser;
+        const user = authDAL.decodeCredentialId(credentialId);
+        console.log(credentialId, user);
+        if (!user || !user.email || !user.name || !user.picture) {
+            throw new exception.APIException(exception.HttpStatusCode.CLIENT_BAD_REQUEST, exception.ErrorMessage.API_E_009);
+        }
+        const email = user.email;
+        const name = user.name;
+        const avatarPicture = user.picture;
+        if (env_config_1.envConfig.ADMINISTRATOR_EMAIL.some((adminEmail) => adminEmail.toLocaleLowerCase().localeCompare(email.toLocaleLowerCase()) === 0)) {
+            loginUser = yield authDAL.loginAdministrator(email, name, avatarPicture);
+        }
+        else {
+            loginUser = yield authDAL.loginCustomer(email, name, avatarPicture);
+        }
+        const tokens = yield authDAL.addNewRefreshToken(loginUser);
+        return {
+            loginUser,
+            tokens,
+        };
+    });
+}
+exports.loginViaCredentialId = loginViaCredentialId;
 function logout(refreshToken) {
     return __awaiter(this, void 0, void 0, function* () {
         return yield authDAL.deleteRefreshToken(refreshToken);

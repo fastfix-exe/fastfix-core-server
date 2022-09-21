@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.loginRoleStore = exports.logout = exports.generateAccessTokenFromRefreshToken = exports.getLoginUserInfor = exports.callbackGoogle = exports.getGoogleLoginUrl = void 0;
+exports.loginRoleStore = exports.logout = exports.generateAccessTokenFromRefreshToken = exports.getLoginUserInfor = exports.loginWithCredentialId = exports.callbackGoogle = exports.getGoogleLoginUrl = void 0;
 const googleapis_1 = require("googleapis");
 const google_1 = require("../auth/google");
 const authService = __importStar(require("../services/auth/authService"));
@@ -69,6 +69,22 @@ function callbackGoogle(req, res, next) {
     });
 }
 exports.callbackGoogle = callbackGoogle;
+function loginWithCredentialId(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            yield db_config_1.db.query('BEGIN');
+            const credentialId = req.body.credentialId;
+            const response = yield authService.loginViaCredentialId(credentialId);
+            yield db_config_1.db.query('COMMIT');
+            res.json(response);
+        }
+        catch (error) {
+            yield db_config_1.db.query("ROLLBACK");
+            next(error);
+        }
+    });
+}
+exports.loginWithCredentialId = loginWithCredentialId;
 function getLoginUserInfor(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {

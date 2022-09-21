@@ -50,6 +50,29 @@ router.post('/api/auth/logout', authController.logout);
 
 /**
  * @openapi
+ * '/api/auth/google':
+ *  post:
+ *     tags:
+ *     - Authentication
+ *     summary: Login via credential ID (role customer or admin)
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               credentialId: 
+ *                 type: string
+ *             required:
+ *               - credentialId
+ *     responses:
+ *       200:
+ *         description: Success
+ */
+ router.post('/api/auth/google', authController.loginWithCredentialId);
+
+/**
+ * @openapi
  * '/api/auth/token':
  *  post:
  *     tags:

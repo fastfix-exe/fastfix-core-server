@@ -34,6 +34,19 @@ export async function callbackGoogle (req: any, res: any, next: any) {
     }
 }
 
+export async function loginWithCredentialId (req: any, res: any, next: any) {
+    try {
+        await db.query('BEGIN');
+        const credentialId = req.body.credentialId;
+        const response = await authService.loginViaCredentialId(credentialId);
+        await db.query('COMMIT');
+        res.json(response);
+    } catch (error) {
+        await db.query("ROLLBACK");
+        next(error);
+    }
+}
+
 export async function getLoginUserInfor (req: any, res: any, next: any) {
     try {
         const result = await authService.getCurrentLoginUserInfor(req.loginUser);

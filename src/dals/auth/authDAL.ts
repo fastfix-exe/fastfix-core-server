@@ -9,6 +9,7 @@ import * as commonEnums from "../../common/enum";
 import * as exception from "../../common/exception";
 import * as jwt from 'jsonwebtoken';
 import * as objectUtils from '../../common/utils/ObjectUtils';
+import jwt_decode from "jwt-decode";
 
 // tạo access token từ json object thông tin user
 function generateJWTAccessToken (userObject: any) {
@@ -19,7 +20,9 @@ function generateJWTAccessToken (userObject: any) {
 function generateJWTRefreshToken (userObject: any) {
     return jwt.sign(objectUtils.toJSONAnInstance(userObject), envConfig.REFRESH_TOKEN_SECRET);
 }
-
+export function decodeCredentialId (credentialId: string) {
+    return jwt_decode(credentialId);
+}
 /*
 * tìm thông tin customer sau khi đã được google xác thực
 */
