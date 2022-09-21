@@ -23,8 +23,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createJsonObjectWithoutHiddenData = exports.createJsonObject = exports.Store = void 0;
+exports.customerGetStore = exports.createJsonObjectWithoutHiddenData = exports.createJsonObject = exports.Store = void 0;
 const commonEnums = __importStar(require("../common/enum"));
+const ObjectUtils_1 = require("../common/utils/ObjectUtils");
 class Store {
     constructor(storeId, loginId, email, storeName, isDeleted, phoneNumber, avatarPicture, hiddenData) {
         this.role = commonEnums.UserRole.store;
@@ -49,4 +50,10 @@ function createJsonObjectWithoutHiddenData(data) {
     return new Store(data.store_id, data.login_id, data.email, data.store_name, isDeleted, data.phone_number, data.avatar_picture);
 }
 exports.createJsonObjectWithoutHiddenData = createJsonObjectWithoutHiddenData;
+function customerGetStore(data) {
+    const isDeleted = !!(data.deleted_at && data.deleted_by);
+    const store = new Store(data.store_id, data.login_id, data.email, data.store_name, isDeleted, data.phone_number, data.avatar_picture);
+    return (0, ObjectUtils_1._objectWithoutProperties)(store, ['loginId', 'hiddenData']);
+}
+exports.customerGetStore = customerGetStore;
 //# sourceMappingURL=StoreModels.js.map

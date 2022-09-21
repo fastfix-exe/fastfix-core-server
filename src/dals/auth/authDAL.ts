@@ -8,16 +8,16 @@ import * as adminModel from "../../models/AdministratorModels";
 import * as commonEnums from "../../common/enum";
 import * as exception from "../../common/exception";
 import * as jwt from 'jsonwebtoken';
-import * as serializerUtils from '../../common/utils/SerializerUtils';
+import * as objectUtils from '../../common/utils/ObjectUtils';
 
 // tạo access token từ json object thông tin user
 function generateJWTAccessToken (userObject: any) {
-    return jwt.sign(serializerUtils.toJSONAnInstance(userObject), envConfig.ACCESS_TOKEN_SECRET, { expiresIn: envConfig.ACCESS_TOKEN_TIMEOUT });
+    return jwt.sign(objectUtils.toJSONAnInstance(userObject), envConfig.ACCESS_TOKEN_SECRET, { expiresIn: envConfig.ACCESS_TOKEN_TIMEOUT });
 }
 
 // tạo refresh token từ json object thông tin user
 function generateJWTRefreshToken (userObject: any) {
-    return jwt.sign(serializerUtils.toJSONAnInstance(userObject), envConfig.REFRESH_TOKEN_SECRET);
+    return jwt.sign(objectUtils.toJSONAnInstance(userObject), envConfig.REFRESH_TOKEN_SECRET);
 }
 
 /*

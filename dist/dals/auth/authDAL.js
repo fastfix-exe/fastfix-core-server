@@ -43,14 +43,14 @@ const adminModel = __importStar(require("../../models/AdministratorModels"));
 const commonEnums = __importStar(require("../../common/enum"));
 const exception = __importStar(require("../../common/exception"));
 const jwt = __importStar(require("jsonwebtoken"));
-const serializerUtils = __importStar(require("../../common/utils/SerializerUtils"));
+const objectUtils = __importStar(require("../../common/utils/ObjectUtils"));
 // tạo access token từ json object thông tin user
 function generateJWTAccessToken(userObject) {
-    return jwt.sign(serializerUtils.toJSONAnInstance(userObject), env_config_1.envConfig.ACCESS_TOKEN_SECRET, { expiresIn: env_config_1.envConfig.ACCESS_TOKEN_TIMEOUT });
+    return jwt.sign(objectUtils.toJSONAnInstance(userObject), env_config_1.envConfig.ACCESS_TOKEN_SECRET, { expiresIn: env_config_1.envConfig.ACCESS_TOKEN_TIMEOUT });
 }
 // tạo refresh token từ json object thông tin user
 function generateJWTRefreshToken(userObject) {
-    return jwt.sign(serializerUtils.toJSONAnInstance(userObject), env_config_1.envConfig.REFRESH_TOKEN_SECRET);
+    return jwt.sign(objectUtils.toJSONAnInstance(userObject), env_config_1.envConfig.REFRESH_TOKEN_SECRET);
 }
 /*
 * tìm thông tin customer sau khi đã được google xác thực

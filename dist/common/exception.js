@@ -39,5 +39,6 @@ exports.ErrorMessage = {
     API_E_005: "JWT expired!",
     API_E_006: "Wrong username or password!",
     API_E_007: "Refresh token not found?!",
+    API_E_008: "Store not found?!",
 };
 //# sourceMappingURL=exception.js.map

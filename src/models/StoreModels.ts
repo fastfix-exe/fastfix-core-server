@@ -1,4 +1,5 @@
 import * as commonEnums from "../common/enum";
+import { _objectWithoutProperties } from "../common/utils/ObjectUtils";
 
 export interface StoreDB {
     store_id: string;
@@ -52,4 +53,10 @@ export function createJsonObject (data: StoreDB) {
 export function createJsonObjectWithoutHiddenData (data: StoreDB) {
     const isDeleted = !!(data.deleted_at && data.deleted_by);
     return new Store(data.store_id, data.login_id, data.email, data.store_name, isDeleted, data.phone_number, data.avatar_picture);
+}
+
+export function customerGetStore (data: StoreDB) {
+    const isDeleted = !!(data.deleted_at && data.deleted_by);
+    const store = new Store(data.store_id, data.login_id, data.email, data.store_name, isDeleted, data.phone_number, data.avatar_picture);
+    return _objectWithoutProperties(store, ['loginId', 'hiddenData']);
 }

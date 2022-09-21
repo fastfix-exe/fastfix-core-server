@@ -23,7 +23,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateStore = exports.updateCustomer = exports.getStoreByStoreIdAndLoginId = exports.getStoreByLoginIdAndPassword = exports.getCustomerByIdAndEmail = exports.deleteRefreshToken = exports.insertRefreshToken = exports.getRefreshTokenInDb = exports.createCustomer = exports.getCustomerByEmail = void 0;
+exports.getStoreById = exports.getListAllStore = exports.updateStore = exports.updateCustomer = exports.getStoreByStoreIdAndLoginId = exports.getStoreByLoginIdAndPassword = exports.getCustomerByIdAndEmail = exports.deleteRefreshToken = exports.insertRefreshToken = exports.getRefreshTokenInDb = exports.createCustomer = exports.getCustomerByEmail = void 0;
 const localDateTimeUtils = __importStar(require("../../common/utils/LocalDateTimeUtils"));
 // get customer's infor
 function getCustomerByEmail(email) {
@@ -138,4 +138,24 @@ function updateStore(storeId, email, name, address, phoneNumber, avatarPicture, 
     return queryObject;
 }
 exports.updateStore = updateStore;
+function getListAllStore() {
+    const query = `SELECT * FROM STORE`;
+    const values = [];
+    const queryObject = {
+        text: query,
+        values: values,
+    };
+    return queryObject;
+}
+exports.getListAllStore = getListAllStore;
+function getStoreById(storeId) {
+    const query = `SELECT * FROM STORE WHERE STORE_ID = $1`;
+    const values = [storeId];
+    const queryObject = {
+        text: query,
+        values: values,
+    };
+    return queryObject;
+}
+exports.getStoreById = getStoreById;
 //# sourceMappingURL=userSql.js.map

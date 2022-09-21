@@ -113,3 +113,23 @@ export function updateStore (storeId: string, email: string, name: string, addre
     }
     return queryObject;
 }
+
+export function getListAllStore () {
+    const query = `SELECT * FROM STORE`;
+    const values: any = [];
+    const queryObject = {
+        text: query,
+        values: values,
+    }
+    return queryObject;
+}
+
+export function getStoreById (storeId: string) {
+    const query = `SELECT * FROM STORE WHERE STORE_ID = $1`;
+    const values: any = [storeId];
+    const queryObject = {
+        text: query,
+        values: values,
+    }
+    return queryObject;
+}

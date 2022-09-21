@@ -1,14 +1,15 @@
 import express from "express";
 import cors from "cors";
 import { authRouter } from "./routers/authRouter";
-import { userRouter } from "./routers/userRouter";
+import { storeRouter } from "./routers/storeRouter";
+import { customerRouter } from "./routers/customerRouter";
 import { swaggerRouter } from "./routers/swaggerRouter";
 import * as exception from "./common/exception";
 import { logger } from "./config/log4js_config";
 import { envConfig } from "./config/env_config";
 import cookieParser from "cookie-parser";
 import http from "http";
-import { validateToken } from "./middlewares/authMiddleware";
+import * as authMiddleware from "./middlewares/authMiddleware";
 import * as commonEnums from "./common/enum";
 
 const app = express();
@@ -20,7 +21,7 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(express.json({ limit: '50mb' }));
 
 // xác thực và gán thông tin loginUser vào request attribute
-app.use("/*", validateToken, function (req: any, res: any, next: any) {
+app.use("/*", authMiddleware.validateToken, function (req: any, res: any, next: any) {
   res.header('Cache-Control', ['private', 'max-age=0', 'no-store', 'no-cache', 'must-revalidate', 'proxy-revalidate'].join(','));
   res.header('no-cache', 'Set-Cookie');
   res.header('Expires', new Date(new Date("1970-01-01 00:00:00")).toUTCString());
@@ -31,60 +32,16 @@ app.use("/*", validateToken, function (req: any, res: any, next: any) {
   next();
 });
 
-app.use("/api/adm/*", async function (req: any, res: any, next: any) {
-  try {
-    // check role or add role to call apis
-    if (!req.loginUser) {
-      throw new exception.APIException(exception.HttpStatusCode.UNAUTHORIZED, exception.ErrorMessage.API_E_004);
-    }
-    const bypassApi: string[] = [];
-    if (req.loginUser.role !== commonEnums.UserRole.administrator && !bypassApi.some((api: string) => req.originalUrl.startsWith(api))) {
-      throw new exception.APIException(exception.HttpStatusCode.CLIENT_FORBIDDEN, exception.ErrorMessage.API_E_004);
-    }
-    next();
+app.use("/api/adm/*", authMiddleware.authorizeAdministrator);
 
-  } catch (err) {
-    next(err);
-  }
-});
+app.use("/api/customer/*", authMiddleware.authorizeCustomer);
 
-app.use("/api/customer/*", async function (req: any, res: any, next: any) {
-  try {
-    // check role or add role to call apis
-    if (!req.loginUser) {
-      throw new exception.APIException(exception.HttpStatusCode.UNAUTHORIZED, exception.ErrorMessage.API_E_004);
-    }
-    const bypassApi: string[] = [];
-    if (req.loginUser.role !== commonEnums.UserRole.customer && !bypassApi.some((api: string) => req.originalUrl.startsWith(api))) {
-      throw new exception.APIException(exception.HttpStatusCode.CLIENT_FORBIDDEN, exception.ErrorMessage.API_E_004);
-    }
-    next();
-
-  } catch (err) {
-    next(err);
-  }
-});
-
-app.use("/api/store/*", async function (req: any, res: any, next: any) {
-  try {
-    // check role or add role to call apis
-    if (!req.loginUser) {
-      throw new exception.APIException(exception.HttpStatusCode.UNAUTHORIZED, exception.ErrorMessage.API_E_004);
-    }
-    const bypassApi: string[] = [];
-    if (req.loginUser.role !== commonEnums.UserRole.store && !bypassApi.some((api: string) => req.originalUrl.startsWith(api))) {
-      throw new exception.APIException(exception.HttpStatusCode.CLIENT_FORBIDDEN, exception.ErrorMessage.API_E_004);
-    }
-    next();
-
-  } catch (err) {
-    next(err);
-  }
-});
+app.use("/api/store/*", authMiddleware.authorizeStore);
 app.use(swaggerRouter);
 
 app.use(authRouter);
-app.use(userRouter);
+app.use(storeRouter);
+app.use(customerRouter);
 
 // không tìm thấy đường dẫn api
 function notFoundErrorHandler(req: any, res: any, next: any) {

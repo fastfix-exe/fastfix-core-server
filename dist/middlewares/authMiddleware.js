@@ -23,9 +23,10 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validateToken = void 0;
+exports.authorizeStore = exports.authorizeCustomer = exports.authorizeAdministrator = exports.validateToken = void 0;
 const env_config_1 = require("../config/env_config");
 const exception = __importStar(require("../common/exception"));
+const commonEnums = __importStar(require("../common/enum"));
 const jwt = __importStar(require("jsonwebtoken"));
 const bypassApi = ['/api/healthcheck', '/api/auth/google', '/api/auth/token', '/docs.json', '/docs', '/favicon.ico', '/api/auth/store'];
 function validateToken(req, res, next) {
@@ -48,4 +49,55 @@ function validateToken(req, res, next) {
     }
 }
 exports.validateToken = validateToken;
+function authorizeAdministrator(req, res, next) {
+    try {
+        // check role or add role to call apis
+        if (!req.loginUser) {
+            throw new exception.APIException(exception.HttpStatusCode.UNAUTHORIZED, exception.ErrorMessage.API_E_004);
+        }
+        const bypassApi = [];
+        if (req.loginUser.role !== commonEnums.UserRole.administrator && !bypassApi.some((api) => req.originalUrl.startsWith(api))) {
+            throw new exception.APIException(exception.HttpStatusCode.CLIENT_FORBIDDEN, exception.ErrorMessage.API_E_004);
+        }
+        next();
+    }
+    catch (err) {
+        next(err);
+    }
+}
+exports.authorizeAdministrator = authorizeAdministrator;
+function authorizeCustomer(req, res, next) {
+    try {
+        // check role or add role to call apis
+        if (!req.loginUser) {
+            throw new exception.APIException(exception.HttpStatusCode.UNAUTHORIZED, exception.ErrorMessage.API_E_004);
+        }
+        const bypassApi = [];
+        if (req.loginUser.role !== commonEnums.UserRole.customer && !bypassApi.some((api) => req.originalUrl.startsWith(api))) {
+            throw new exception.APIException(exception.HttpStatusCode.CLIENT_FORBIDDEN, exception.ErrorMessage.API_E_004);
+        }
+        next();
+    }
+    catch (err) {
+        next(err);
+    }
+}
+exports.authorizeCustomer = authorizeCustomer;
+function authorizeStore(req, res, next) {
+    try {
+        // check role or add role to call apis
+        if (!req.loginUser) {
+            throw new exception.APIException(exception.HttpStatusCode.UNAUTHORIZED, exception.ErrorMessage.API_E_004);
+        }
+        const bypassApi = [];
+        if (req.loginUser.role !== commonEnums.UserRole.store && !bypassApi.some((api) => req.originalUrl.startsWith(api))) {
+            throw new exception.APIException(exception.HttpStatusCode.CLIENT_FORBIDDEN, exception.ErrorMessage.API_E_004);
+        }
+        next();
+    }
+    catch (err) {
+        next(err);
+    }
+}
+exports.authorizeStore = authorizeStore;
 //# sourceMappingURL=authMiddleware.js.map
