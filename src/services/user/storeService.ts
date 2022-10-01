@@ -17,3 +17,10 @@ export async function getStoreById(loginCustomer: any, storeId: string) {
     const res = storeModel.customerGetStore(store);
     return res;
 }
+
+export async function updateStoreById(loginCustomer: any, storeId: string, storeEntry: any) {
+    // const store: storeModel.StoreDB = await storeDAL.getStoreById(storeId);
+    
+    const res = await storeDAL.updateStoreById(storeId, storeEntry);
+    return res;
+}

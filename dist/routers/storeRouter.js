@@ -73,5 +73,6 @@ const router = express_1.default.Router();
  *         description: Success
  */
 router.put('/api/store/profile', userController.updateStore);
+router.patch('/api/store/hiddendata/:storeId', userController.updateStoreByStoreId);
 exports.storeRouter = router;
 //# sourceMappingURL=storeRouter.js.map

@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getStoreById = exports.getListStore = void 0;
+exports.updateStoreById = exports.getStoreById = exports.getListStore = void 0;
 const db_config_1 = require("../../config/db_config");
 const userSql = __importStar(require("../sql/userSql"));
 const exception = __importStar(require("../../common/exception"));
@@ -54,4 +54,17 @@ function getStoreById(storeId) {
     });
 }
 exports.getStoreById = getStoreById;
+function updateStoreById(storeId, storeEntry) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const queryGetOneStore = userSql.getStoreById(storeId);
+        const [store] = yield db_config_1.db.query(queryGetOneStore);
+        if (!store) {
+            return false;
+        }
+        const queryUpdatehiddenData = userSql.updateHiddenDataByStoreId(storeId, storeEntry.hiddenData);
+        yield db_config_1.db.query(queryUpdatehiddenData);
+        return true;
+    });
+}
+exports.updateStoreById = updateStoreById;
 //# sourceMappingURL=storeDAL.js.map

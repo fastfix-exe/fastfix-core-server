@@ -133,3 +133,29 @@ export function getStoreById (storeId: string) {
     }
     return queryObject;
 }
+
+export function updateStoreByStoreId (storeId: string, storeName: string, address: string, 
+                            phoneNumber: string, avatarPicture: string, description: string, hiddenData: any) {
+    const query = `SELECT * FROM STORE WHERE STORE_ID = $1`;
+    const now = localDateTimeUtils.getSystemDateTime();
+
+    const values: any = [storeId];
+    const queryObject = {
+        text: query,
+        values: values,
+    }
+    return queryObject;
+}
+
+export function updateHiddenDataByStoreId (storeId: string, hiddenData: any) {
+    const query = `UPDATE STORE SET HIDDEN_DATA = $2, UPDATED_AT = $3
+                     WHERE STORE_ID = $1`;
+    const now = localDateTimeUtils.getSystemDateTime();
+
+    const values: any = [storeId, hiddenData, now];
+    const queryObject = {
+    text: query,
+    values: values,
+    }
+    return queryObject;
+}

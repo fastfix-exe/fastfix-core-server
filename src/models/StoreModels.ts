@@ -21,6 +21,9 @@ export interface StoreDB {
     status: number;
 }
 
+export interface StoreHiddenData {
+    type: string;
+}
 
 export class Store {
     private id: string;
@@ -29,10 +32,10 @@ export class Store {
     private storeName: string;
     private phoneNumber?: string;
     private avatarPicture?: string;
-    private hiddenData?: any;
+    private hiddenData?: StoreHiddenData;
     private isDeleted?: boolean;
     private role: number = commonEnums.UserRole.store;
-
+    private type?: string; // from hiddendata
     constructor (storeId: string, loginId: string, email: string, storeName: string, isDeleted: boolean, phoneNumber?: string, avatarPicture?: string, hiddenData?: any) {
         this.id =  storeId;
         this.loginId =  loginId;
@@ -42,6 +45,7 @@ export class Store {
         this.phoneNumber =  phoneNumber;
         this.avatarPicture =  avatarPicture;
         this.hiddenData =  hiddenData;
+        this.type = hiddenData.type;
     }
 }
 
@@ -51,12 +55,11 @@ export function createJsonObject (data: StoreDB) {
 }
 
 export function createJsonObjectWithoutHiddenData (data: StoreDB) {
-    const isDeleted = !!(data.deleted_at && data.deleted_by);
-    return new Store(data.store_id, data.login_id, data.email, data.store_name, isDeleted, data.phone_number, data.avatar_picture);
+    return _objectWithoutProperties(createJsonObject(data), ['hiddenData']);
 }
 
 export function customerGetStore (data: StoreDB) {
     const isDeleted = !!(data.deleted_at && data.deleted_by);
-    const store = new Store(data.store_id, data.login_id, data.email, data.store_name, isDeleted, data.phone_number, data.avatar_picture);
+    const store = new Store(data.store_id, data.login_id, data.email, data.store_name, isDeleted, data.phone_number, data.avatar_picture, data.hidden_data);
     return _objectWithoutProperties(store, ['role', 'loginId', 'hiddenData']);
 }

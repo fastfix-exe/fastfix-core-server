@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getStoreById = exports.getListStore = void 0;
+exports.updateStoreById = exports.getStoreById = exports.getListStore = void 0;
 const storeDAL = __importStar(require("../../dals/user/storeDAL"));
 const storeModel = __importStar(require("../../models/StoreModels"));
 function getListStore(loginCustomer) {
@@ -52,4 +52,12 @@ function getStoreById(loginCustomer, storeId) {
     });
 }
 exports.getStoreById = getStoreById;
+function updateStoreById(loginCustomer, storeId, storeEntry) {
+    return __awaiter(this, void 0, void 0, function* () {
+        // const store: storeModel.StoreDB = await storeDAL.getStoreById(storeId);
+        const res = yield storeDAL.updateStoreById(storeId, storeEntry);
+        return res;
+    });
+}
+exports.updateStoreById = updateStoreById;
 //# sourceMappingURL=storeService.js.map

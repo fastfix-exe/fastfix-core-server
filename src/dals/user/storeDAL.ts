@@ -15,3 +15,17 @@ export async function getStoreById(storeId: string) {
     }
     return store;
 }
+
+export async function updateStoreById(storeId: string, storeEntry: any) {
+
+    const queryGetOneStore = userSql.getStoreById(storeId);
+    const [store] = await db.query(queryGetOneStore);
+
+    if (!store) {
+        return false;
+    }
+    
+    const queryUpdatehiddenData = userSql.updateHiddenDataByStoreId(storeId, storeEntry.hiddenData);
+    await db.query(queryUpdatehiddenData);
+    return true;
+}

@@ -32,11 +32,11 @@ app.use("/*", authMiddleware.validateToken, function (req: any, res: any, next: 
   next();
 });
 
-app.use("/api/adm/*", authMiddleware.authorizeAdministrator);
+// app.use("/api/adm/*", authMiddleware.authorizeAdministrator);
 
-app.use("/api/customer/*", authMiddleware.authorizeCustomer);
+// app.use("/api/customer/*", authMiddleware.authorizeCustomer);
 
-app.use("/api/store/*", authMiddleware.authorizeStore);
+// app.use("/api/store/*", authMiddleware.authorizeStore);
 app.use(swaggerRouter);
 
 app.use(authRouter);

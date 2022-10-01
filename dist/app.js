@@ -53,9 +53,9 @@ app.use("/*", authMiddleware.validateToken, function (req, res, next) {
     res.header('X-Content-Type-Options', 'nosniff');
     next();
 });
-app.use("/api/adm/*", authMiddleware.authorizeAdministrator);
-app.use("/api/customer/*", authMiddleware.authorizeCustomer);
-app.use("/api/store/*", authMiddleware.authorizeStore);
+// app.use("/api/adm/*", authMiddleware.authorizeAdministrator);
+// app.use("/api/customer/*", authMiddleware.authorizeCustomer);
+// app.use("/api/store/*", authMiddleware.authorizeStore);
 app.use(swaggerRouter_1.swaggerRouter);
 app.use(authRouter_1.authRouter);
 app.use(storeRouter_1.storeRouter);
