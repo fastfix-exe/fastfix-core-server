@@ -37,7 +37,7 @@ class Store {
             this.phoneNumber = phoneNumber;
         this.avatarPicture = avatarPicture;
         this.hiddenData = hiddenData;
-        this.type = hiddenData.type;
+        this.emergency = hiddenData.emergency;
     }
 }
 exports.Store = Store;

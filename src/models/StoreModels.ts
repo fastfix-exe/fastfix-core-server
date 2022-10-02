@@ -22,7 +22,7 @@ export interface StoreDB {
 }
 
 export interface StoreHiddenData {
-    type: string;
+    emergency: any;
 }
 
 export class Store {
@@ -35,8 +35,9 @@ export class Store {
     private hiddenData?: StoreHiddenData;
     private isDeleted?: boolean;
     private role: number = commonEnums.UserRole.store;
-    private type?: string; // from hiddendata
-    constructor (storeId: string, loginId: string, email: string, storeName: string, isDeleted: boolean, phoneNumber?: string, avatarPicture?: string, hiddenData?: any) {
+    private emergency?: any; // from hiddendata
+    constructor (storeId: string, loginId: string, email: string, storeName: string, isDeleted: boolean,
+             phoneNumber?: string, avatarPicture?: string, hiddenData?: any) {
         this.id =  storeId;
         this.loginId =  loginId;
         this.email =  email;
@@ -45,7 +46,7 @@ export class Store {
         this.phoneNumber =  phoneNumber;
         this.avatarPicture =  avatarPicture;
         this.hiddenData =  hiddenData;
-        this.type = hiddenData.type;
+        this.emergency = hiddenData.emergency;
     }
 }
 

@@ -30,7 +30,8 @@ const commonEnums = __importStar(require("../common/enum"));
 const jwt = __importStar(require("jsonwebtoken"));
 const commonBypassApi = ['/api/healthcheck', '/api/auth/google', '/api/auth/token', '/docs.json',
     '/docs', '/favicon.ico', '/api/auth/store'];
-commonBypassApi.push("/api/store/hiddendata/", "/api/customer/store/list");
+// tmp bypass api for dev
+commonBypassApi.push();
 function validateToken(req, res, next) {
     if (commonBypassApi.some((api) => req.originalUrl.startsWith(api))) {
         next();
