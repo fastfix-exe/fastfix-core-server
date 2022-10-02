@@ -23,7 +23,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getStoreById = exports.getListAllStore = exports.updateStore = exports.updateCustomer = exports.getStoreByStoreIdAndLoginId = exports.getStoreByLoginIdAndPassword = exports.getCustomerByIdAndEmail = exports.deleteRefreshToken = exports.insertRefreshToken = exports.getRefreshTokenInDb = exports.createCustomer = exports.getCustomerByEmail = void 0;
+exports.updateHiddenDataByStoreId = exports.updateStoreByStoreId = exports.getStoreById = exports.getListAllStore = exports.updateStore = exports.updateCustomer = exports.getStoreByStoreIdAndLoginId = exports.getStoreByLoginIdAndPassword = exports.getCustomerByIdAndEmail = exports.deleteRefreshToken = exports.insertRefreshToken = exports.getRefreshTokenInDb = exports.createCustomer = exports.getCustomerByEmail = void 0;
 const localDateTimeUtils = __importStar(require("../../common/utils/LocalDateTimeUtils"));
 // get customer's infor
 function getCustomerByEmail(email) {
@@ -158,4 +158,27 @@ function getStoreById(storeId) {
     return queryObject;
 }
 exports.getStoreById = getStoreById;
+function updateStoreByStoreId(storeId, storeName, address, phoneNumber, avatarPicture, description, hiddenData) {
+    const query = `SELECT * FROM STORE WHERE STORE_ID = $1`;
+    const now = localDateTimeUtils.getSystemDateTime();
+    const values = [storeId];
+    const queryObject = {
+        text: query,
+        values: values,
+    };
+    return queryObject;
+}
+exports.updateStoreByStoreId = updateStoreByStoreId;
+function updateHiddenDataByStoreId(storeId, hiddenData) {
+    const query = `UPDATE STORE SET HIDDEN_DATA = $2, UPDATED_AT = $3
+                     WHERE STORE_ID = $1`;
+    const now = localDateTimeUtils.getSystemDateTime();
+    const values = [storeId, hiddenData, now];
+    const queryObject = {
+        text: query,
+        values: values,
+    };
+    return queryObject;
+}
+exports.updateHiddenDataByStoreId = updateHiddenDataByStoreId;
 //# sourceMappingURL=userSql.js.map

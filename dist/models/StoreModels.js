@@ -37,6 +37,7 @@ class Store {
             this.phoneNumber = phoneNumber;
         this.avatarPicture = avatarPicture;
         this.hiddenData = hiddenData;
+        this.emergency = hiddenData.emergency;
     }
 }
 exports.Store = Store;
@@ -46,13 +47,12 @@ function createJsonObject(data) {
 }
 exports.createJsonObject = createJsonObject;
 function createJsonObjectWithoutHiddenData(data) {
-    const isDeleted = !!(data.deleted_at && data.deleted_by);
-    return new Store(data.store_id, data.login_id, data.email, data.store_name, isDeleted, data.phone_number, data.avatar_picture);
+    return (0, ObjectUtils_1._objectWithoutProperties)(createJsonObject(data), ['hiddenData']);
 }
 exports.createJsonObjectWithoutHiddenData = createJsonObjectWithoutHiddenData;
 function customerGetStore(data) {
     const isDeleted = !!(data.deleted_at && data.deleted_by);
-    const store = new Store(data.store_id, data.login_id, data.email, data.store_name, isDeleted, data.phone_number, data.avatar_picture);
+    const store = new Store(data.store_id, data.login_id, data.email, data.store_name, isDeleted, data.phone_number, data.avatar_picture, data.hidden_data);
     return (0, ObjectUtils_1._objectWithoutProperties)(store, ['role', 'loginId', 'hiddenData']);
 }
 exports.customerGetStore = customerGetStore;

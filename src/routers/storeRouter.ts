@@ -46,5 +46,6 @@ const router = express.Router();
  */
  router.put('/api/store/profile', userController.updateStore);
 
+  router.patch('/api/store/hiddendata/:storeId', userController.updateStoreByStoreId);
 
 export const storeRouter = router;

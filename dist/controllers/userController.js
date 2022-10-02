@@ -32,8 +32,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateStore = exports.updateCustomer = void 0;
+exports.updateStoreByStoreId = exports.updateStore = exports.updateCustomer = void 0;
 const userService = __importStar(require("../services/user/userService"));
+const storeService = __importStar(require("../services/user/storeService"));
 const db_config_1 = require("../config/db_config");
 function updateCustomer(req, res, next) {
     var _a, _b;
@@ -86,4 +87,30 @@ function updateStore(req, res, next) {
     });
 }
 exports.updateStore = updateStore;
+function updateStoreByStoreId(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            yield db_config_1.db.query('BEGIN');
+            const loginStore = req.loginUser;
+            const storeId = req.params.storeId;
+            const storeEntry = {
+                // email: req.body.email || loginStore.email,
+                // storeName: req.body.storeName || loginStore.storeName,
+                // address: req.body.address,
+                // phoneNumber: req.body.phoneNumber,
+                // avatarPicture: req.body.avatarPicture || loginStore.avatarPicture,
+                // description: req.body.description,
+                hiddenData: req.body.hiddenData,
+            };
+            const response = yield storeService.updateStoreById(loginStore, storeId, storeEntry);
+            res.json(response);
+            yield db_config_1.db.query('COMMIT');
+        }
+        catch (error) {
+            yield db_config_1.db.query("ROLLBACK");
+            return next(error);
+        }
+    });
+}
+exports.updateStoreByStoreId = updateStoreByStoreId;
 //# sourceMappingURL=userController.js.map
