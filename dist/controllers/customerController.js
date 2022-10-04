@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getStoreByStoreId = exports.getListStore = void 0;
+exports.getStoreByStoreId = exports.getListNearestStore = exports.getListStore = void 0;
 const storeService = __importStar(require("../services/user/storeService"));
 function getListStore(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -47,6 +47,24 @@ function getListStore(req, res, next) {
     });
 }
 exports.getListStore = getListStore;
+function getListNearestStore(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const loginCustomer = req.loginUser;
+            const latitude = req.body.latitude;
+            const longtitude = req.body.longtitude;
+            const currentPotition = {
+                latitude, longtitude
+            };
+            const response = yield storeService.getListStore(loginCustomer, currentPotition);
+            res.json(response);
+        }
+        catch (error) {
+            return next(error);
+        }
+    });
+}
+exports.getListNearestStore = getListNearestStore;
 function getStoreByStoreId(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {

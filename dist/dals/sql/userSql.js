@@ -114,7 +114,7 @@ function getStoreByStoreIdAndLoginId(storeId, loginId) {
 exports.getStoreByStoreIdAndLoginId = getStoreByStoreIdAndLoginId;
 function updateCustomer(customerId, email, name, gender, phoneNumber, dateOfBirth, avatarPicture) {
     const query = `UPDATE CUSTOMER 
-        SET CUSTOME_NAME = $3, GENDER = $4, PHONE_NUMBER = $5, DATE_OF_BIRTH = $6, AVATAR_PICTURE = $7, UPDATED_AT = $8, UPDATED_BY = $9
+        SET CUSTOMER_NAME = $3, GENDER = $4, PHONE_NUMBER = $5, DATE_OF_BIRTH = $6, AVATAR_PICTURE = $7, UPDATED_AT = $8, UPDATED_BY = $9
         WHERE customer_id = $1 and email = $2`;
     const now = localDateTimeUtils.getSystemDateTime();
     const values = [customerId, email, name, gender, phoneNumber, dateOfBirth, avatarPicture, now, email];

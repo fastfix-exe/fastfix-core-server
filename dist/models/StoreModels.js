@@ -27,7 +27,7 @@ exports.customerGetStore = exports.createJsonObjectWithoutHiddenData = exports.c
 const commonEnums = __importStar(require("../common/enum"));
 const ObjectUtils_1 = require("../common/utils/ObjectUtils");
 class Store {
-    constructor(storeId, loginId, email, storeName, isDeleted, phoneNumber, avatarPicture, hiddenData) {
+    constructor(storeId, loginId, email, storeName, isDeleted, phoneNumber, avatarPicture, hiddenData, distance) {
         this.role = commonEnums.UserRole.store;
         this.id = storeId;
         this.loginId = loginId;
@@ -38,12 +38,13 @@ class Store {
         this.avatarPicture = avatarPicture;
         this.hiddenData = hiddenData;
         this.emergency = hiddenData.emergency;
+        this.distance = distance || 0;
     }
 }
 exports.Store = Store;
 function createJsonObject(data) {
     const isDeleted = !!(data.deleted_at && data.deleted_by);
-    return new Store(data.store_id, data.login_id, data.email, data.store_name, isDeleted, data.phone_number, data.avatar_picture, data.hidden_data);
+    return new Store(data.store_id, data.login_id, data.email, data.store_name, isDeleted, data.phone_number, data.avatar_picture, data.hidden_data, data.distance);
 }
 exports.createJsonObject = createJsonObject;
 function createJsonObjectWithoutHiddenData(data) {
@@ -52,7 +53,7 @@ function createJsonObjectWithoutHiddenData(data) {
 exports.createJsonObjectWithoutHiddenData = createJsonObjectWithoutHiddenData;
 function customerGetStore(data) {
     const isDeleted = !!(data.deleted_at && data.deleted_by);
-    const store = new Store(data.store_id, data.login_id, data.email, data.store_name, isDeleted, data.phone_number, data.avatar_picture, data.hidden_data);
+    const store = new Store(data.store_id, data.login_id, data.email, data.store_name, isDeleted, data.phone_number, data.avatar_picture, data.hidden_data, data.distance);
     return (0, ObjectUtils_1._objectWithoutProperties)(store, ['role', 'loginId', 'hiddenData']);
 }
 exports.customerGetStore = customerGetStore;
