@@ -159,3 +159,36 @@ export function updateHiddenDataByStoreId (storeId: string, hiddenData: any) {
     }
     return queryObject;
 }
+
+export function getListAllSubscription () {
+    const query = `select * from subcription`;
+    const values: any = [];
+    const queryObject = {
+        text: query,
+        values: values,
+    }
+    return queryObject;
+}
+
+export function getSubcriptionById (subcriptionId: string) {
+    const query = `select * from subcription where  subcription_id = $1`;
+    const values: any = [subcriptionId];
+    const queryObject = {
+        text: query,
+        values: values,
+    }
+    return queryObject;
+}
+
+export function updateSubcription (subcriptionId: string, name: string, price: number, description: string) {
+const query = `UPDATE subcription
+SET name=$2, price = $3, description = $4, updated_at = $5
+WHERE STORE_ID = $1 AND LOGIN_ID = $9;`;
+const now = localDateTimeUtils.getSystemDateTime();
+const values = [subcriptionId, name,  price, description, now];
+const queryObject = {
+text: query,
+values: values,
+}
+return queryObject;
+}

@@ -11,6 +11,7 @@ import cookieParser from "cookie-parser";
 import http from "http";
 import * as authMiddleware from "./middlewares/authMiddleware";
 import * as commonEnums from "./common/enum";
+import { subsriptionRouter } from "./routers/subcriptionRouter";
 
 const app = express();
 
@@ -42,6 +43,7 @@ app.use(swaggerRouter);
 app.use(authRouter);
 app.use(storeRouter);
 app.use(customerRouter);
+app.use(subsriptionRouter);
 
 // không tìm thấy đường dẫn api
 function notFoundErrorHandler(req: any, res: any, next: any) {
