@@ -34,7 +34,9 @@ export function authorizeAdministrator(req: any, res: any, next: any) {
     if (!req.loginUser) {
       throw new exception.APIException(exception.HttpStatusCode.UNAUTHORIZED, exception.ErrorMessage.API_E_004);
     }
-    const bypassApi: string[] = [];
+    const bypassApi: string[] = commonBypassApi;
+    // skip by role
+    bypassApi.push();
     if (req.loginUser.role !== commonEnums.UserRole.administrator && !bypassApi.some((api: string) => req.originalUrl.startsWith(api))) {
       throw new exception.APIException(exception.HttpStatusCode.CLIENT_FORBIDDEN, exception.ErrorMessage.API_E_004);
     }
@@ -51,7 +53,9 @@ export function authorizeCustomer(req: any, res: any, next: any) {
     if (!req.loginUser) {
       throw new exception.APIException(exception.HttpStatusCode.UNAUTHORIZED, exception.ErrorMessage.API_E_004);
     }
-    const bypassApi: string[] = [];
+    const bypassApi: string[] = commonBypassApi;
+    // skip by role
+    bypassApi.push();
     if (req.loginUser.role !== commonEnums.UserRole.customer && !bypassApi.some((api: string) => req.originalUrl.startsWith(api))) {
       throw new exception.APIException(exception.HttpStatusCode.CLIENT_FORBIDDEN, exception.ErrorMessage.API_E_004);
     }
@@ -68,7 +72,9 @@ export function authorizeStore(req: any, res: any, next: any) {
     if (!req.loginUser) {
       throw new exception.APIException(exception.HttpStatusCode.UNAUTHORIZED, exception.ErrorMessage.API_E_004);
     }
-    const bypassApi: string[] = [];
+    const bypassApi: string[] = commonBypassApi;
+    // skip by role
+    bypassApi.push();
     if (req.loginUser.role !== commonEnums.UserRole.store && !bypassApi.some((api: string) => req.originalUrl.startsWith(api))) {
       throw new exception.APIException(exception.HttpStatusCode.CLIENT_FORBIDDEN, exception.ErrorMessage.API_E_004);
     }

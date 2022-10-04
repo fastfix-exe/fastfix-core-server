@@ -58,7 +58,9 @@ function authorizeAdministrator(req, res, next) {
         if (!req.loginUser) {
             throw new exception.APIException(exception.HttpStatusCode.UNAUTHORIZED, exception.ErrorMessage.API_E_004);
         }
-        const bypassApi = [];
+        const bypassApi = commonBypassApi;
+        // skip by role
+        bypassApi.push();
         if (req.loginUser.role !== commonEnums.UserRole.administrator && !bypassApi.some((api) => req.originalUrl.startsWith(api))) {
             throw new exception.APIException(exception.HttpStatusCode.CLIENT_FORBIDDEN, exception.ErrorMessage.API_E_004);
         }
@@ -75,7 +77,9 @@ function authorizeCustomer(req, res, next) {
         if (!req.loginUser) {
             throw new exception.APIException(exception.HttpStatusCode.UNAUTHORIZED, exception.ErrorMessage.API_E_004);
         }
-        const bypassApi = [];
+        const bypassApi = commonBypassApi;
+        // skip by role
+        bypassApi.push();
         if (req.loginUser.role !== commonEnums.UserRole.customer && !bypassApi.some((api) => req.originalUrl.startsWith(api))) {
             throw new exception.APIException(exception.HttpStatusCode.CLIENT_FORBIDDEN, exception.ErrorMessage.API_E_004);
         }
@@ -92,7 +96,9 @@ function authorizeStore(req, res, next) {
         if (!req.loginUser) {
             throw new exception.APIException(exception.HttpStatusCode.UNAUTHORIZED, exception.ErrorMessage.API_E_004);
         }
-        const bypassApi = [];
+        const bypassApi = commonBypassApi;
+        // skip by role
+        bypassApi.push();
         if (req.loginUser.role !== commonEnums.UserRole.store && !bypassApi.some((api) => req.originalUrl.startsWith(api))) {
             throw new exception.APIException(exception.HttpStatusCode.CLIENT_FORBIDDEN, exception.ErrorMessage.API_E_004);
         }
