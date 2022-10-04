@@ -19,6 +19,12 @@ export interface StoreDB {
     deleted_at?: Date;
     deleted_by?: string;
     status: number;
+    distance?: any;
+}
+
+export interface Position {
+    longtitude: string;
+    latitude: string;
 }
 
 export interface StoreHiddenData {
@@ -36,8 +42,9 @@ export class Store {
     private isDeleted?: boolean;
     private role: number = commonEnums.UserRole.store;
     private emergency?: any; // from hiddendata
+    private distance?: any; // from hiddendata
     constructor (storeId: string, loginId: string, email: string, storeName: string, isDeleted: boolean,
-             phoneNumber?: string, avatarPicture?: string, hiddenData?: any) {
+             phoneNumber?: string, avatarPicture?: string, hiddenData?: any, distance?: any) {
         this.id =  storeId;
         this.loginId =  loginId;
         this.email =  email;
@@ -47,12 +54,14 @@ export class Store {
         this.avatarPicture =  avatarPicture;
         this.hiddenData =  hiddenData;
         this.emergency = hiddenData.emergency;
+        this.distance = distance || 0;
     }
 }
 
 export function createJsonObject (data: StoreDB) {
     const isDeleted = !!(data.deleted_at && data.deleted_by);
-    return new Store(data.store_id, data.login_id, data.email, data.store_name, isDeleted, data.phone_number, data.avatar_picture, data.hidden_data);
+    return new Store(data.store_id, data.login_id, data.email, data.store_name, isDeleted, data.phone_number, 
+        data.avatar_picture, data.hidden_data, data.distance);
 }
 
 export function createJsonObjectWithoutHiddenData (data: StoreDB) {
@@ -61,6 +70,7 @@ export function createJsonObjectWithoutHiddenData (data: StoreDB) {
 
 export function customerGetStore (data: StoreDB) {
     const isDeleted = !!(data.deleted_at && data.deleted_by);
-    const store = new Store(data.store_id, data.login_id, data.email, data.store_name, isDeleted, data.phone_number, data.avatar_picture, data.hidden_data);
+    const store = new Store(data.store_id, data.login_id, data.email, data.store_name, isDeleted, data.phone_number,
+        data.avatar_picture, data.hidden_data, data.distance);
     return _objectWithoutProperties(store, ['role', 'loginId', 'hiddenData']);
 }

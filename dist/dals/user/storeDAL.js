@@ -32,10 +32,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateStoreById = exports.getStoreById = exports.getListStore = void 0;
+exports.updateStoreById = exports.getStoreById = exports.getListNearestStore = exports.getListStore = void 0;
 const db_config_1 = require("../../config/db_config");
 const userSql = __importStar(require("../sql/userSql"));
 const exception = __importStar(require("../../common/exception"));
+const locationUtils = __importStar(require(".././../common/utils/LocationUtils"));
 function getListStore() {
     return __awaiter(this, void 0, void 0, function* () {
         const queryGetListAllStore = userSql.getListAllStore();
@@ -43,6 +44,22 @@ function getListStore() {
     });
 }
 exports.getListStore = getListStore;
+function getListNearestStore(currentPotition) {
+    var _a;
+    return __awaiter(this, void 0, void 0, function* () {
+        const queryGetListAllStore = userSql.getListAllStore();
+        const listStore = yield db_config_1.db.query(queryGetListAllStore);
+        for (const store of listStore) {
+            const storeCoordinates = (_a = store.hidden_data.coordinates) === null || _a === void 0 ? void 0 : _a.split(", ");
+            if (!storeCoordinates || !storeCoordinates[0] || !storeCoordinates[1]) {
+                continue;
+            }
+            store.distance = locationUtils.distance(currentPotition.latitude, currentPotition.longtitude, storeCoordinates[0], storeCoordinates[1], "K");
+        }
+        return listStore;
+    });
+}
+exports.getListNearestStore = getListNearestStore;
 function getStoreById(storeId) {
     return __awaiter(this, void 0, void 0, function* () {
         const queryGetOneStore = userSql.getStoreById(storeId);

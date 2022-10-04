@@ -35,8 +35,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateStoreById = exports.getStoreById = exports.getListStore = void 0;
 const storeDAL = __importStar(require("../../dals/user/storeDAL"));
 const storeModel = __importStar(require("../../models/StoreModels"));
-function getListStore(loginCustomer) {
+function getListStore(loginCustomer, currentPotition) {
     return __awaiter(this, void 0, void 0, function* () {
+        if (currentPotition) {
+            const listStore = yield storeDAL.getListNearestStore(currentPotition);
+            const res = listStore.map((e) => storeModel.customerGetStore(e))
+                .filter((e) => !e.isDeleted).sort((a, b) => a.distance - b.distance);
+            return res;
+        }
         const listStore = yield storeDAL.getListStore();
         const res = listStore.map((e) => storeModel.customerGetStore(e))
             .filter((e) => !e.isDeleted);

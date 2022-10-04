@@ -57,7 +57,6 @@ function loginViaCredentialId(credentialId) {
     return __awaiter(this, void 0, void 0, function* () {
         let loginUser;
         const user = authDAL.decodeCredentialId(credentialId);
-        console.log(credentialId, user);
         if (!user || !user.email || !user.name || !user.picture) {
             throw new exception.APIException(exception.HttpStatusCode.CLIENT_BAD_REQUEST, exception.ErrorMessage.API_E_009);
         }

@@ -5,7 +5,13 @@ import { envConfig } from "../../config/env_config";
 import * as storeModel from "../../models/StoreModels";
 import * as exception from "../../common/exception";
 
-export async function getListStore(loginCustomer: any) {
+export async function getListStore(loginCustomer: any, currentPotition?: storeModel.Position) {
+    if (currentPotition) {
+        const listStore = await storeDAL.getListNearestStore(currentPotition);
+        const res = listStore.map((e: storeModel.StoreDB) => storeModel.customerGetStore(e))
+                            .filter((e: any) => !e.isDeleted).sort((a: any, b: any) => a.distance - b.distance);
+        return res;
+    }
     const listStore = await storeDAL.getListStore();
     const res = listStore.map((e: storeModel.StoreDB) => storeModel.customerGetStore(e))
                             .filter((e: any) => !e.isDeleted);

@@ -13,6 +13,7 @@ export function validateToken(req: any, res: any, next: any) {
   } else {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1]; //format: Bearer {{token}}
+    
     if (token == null) {
       throw new exception.APIException(exception.HttpStatusCode.UNAUTHORIZED, exception.ErrorMessage.API_E_004);
     }

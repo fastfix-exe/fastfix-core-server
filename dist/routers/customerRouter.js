@@ -74,6 +74,35 @@ router.put('/api/customer/profile', userController.updateCustomer);
 /**
 * @openapi
 * '/api/customer/store/list':
+*  post:
+*     tags:
+*     - Customer
+*     summary: Get list of store and distance
+*     security:
+*       - bearerAuth: []
+*     requestBody:
+*       content:
+*         application/json:
+*           schema:
+*             type: object
+*             properties:
+*               latitude:
+*                 description: current latitude
+*                 type: string
+*               longtitude:
+*                 description: current longtitude
+*                 type: string
+*             required:
+*               - latitude
+*               - longtitude
+*     responses:
+*       200:
+*         description: Success
+*/
+router.post('/api/customer/store/list', customerController.getListNearestStore);
+/**
+* @openapi
+* '/api/customer/store/list':
 *  get:
 *     tags:
 *     - Customer

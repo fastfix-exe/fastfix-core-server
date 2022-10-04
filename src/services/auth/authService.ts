@@ -19,7 +19,6 @@ export async function loginCustomerOrAdmin (email: string, name: string, avatarP
 export async function loginViaCredentialId (credentialId: string) {
     let loginUser: any;
     const user: any = authDAL.decodeCredentialId(credentialId);
-    console.log(credentialId, user);
     if (!user || !user.email || !user.name || !user.picture) {
         throw new exception.APIException(exception.HttpStatusCode.CLIENT_BAD_REQUEST, exception.ErrorMessage.API_E_009);
     }

@@ -12,6 +12,21 @@ export async function getListStore (req: any, res: any, next: any) {
     }
 }
 
+export async function getListNearestStore (req: any, res: any, next: any) {
+    try {
+        const loginCustomer = req.loginUser;
+        const latitude = req.body.latitude;
+        const longtitude = req.body.longtitude;
+        const currentPotition = {
+            latitude, longtitude
+        }
+        const response = await storeService.getListStore(loginCustomer, currentPotition);
+        res.json(response);
+    } catch (error) {
+        return next(error);
+    }
+}
+
 export async function getStoreByStoreId (req: any, res: any, next: any) {
     try {
         const loginCustomer = req.loginUser;
