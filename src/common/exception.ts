@@ -40,4 +40,5 @@ export const ErrorMessage = {
     API_E_007: "Refresh token not found?!",
     API_E_008: "Store not found?!",
     API_E_009: "Invalid credential id!",
+    API_E_010: "Subcriptions not found?!",
 }
