@@ -32,38 +32,31 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addFieldHiddenDataForStore = exports.getStoreById = exports.getListStore = void 0;
-const storeDAL = __importStar(require("../../dals/user/storeDAL"));
-const storeModel = __importStar(require("../../models/StoreModels"));
-function getListStore(loginCustomer, currentPotition) {
+exports.updateSubcriptionById = exports.getSubcriptionById = exports.getListSubscription = void 0;
+const storeDAL = __importStar(require("../../dals/user/subcriptionDAL"));
+const subcriptionModels = __importStar(require("../../models/SubcriptionModels"));
+function getListSubscription(loginCustomer) {
     return __awaiter(this, void 0, void 0, function* () {
-        if (currentPotition) {
-            const listStore = yield storeDAL.getListNearestStore(currentPotition);
-            const res = listStore.map((e) => storeModel.customerGetStore(e))
-                .filter((e) => !e.isDeleted).sort((a, b) => a.distance - b.distance);
-            return res;
-        }
-        const listStore = yield storeDAL.getListStore();
-        const res = listStore.map((e) => storeModel.customerGetStore(e))
+        const listSubscription = yield storeDAL.getListSubscription();
+        const res = listSubscription.map((e) => subcriptionModels.createJsonObject(e))
             .filter((e) => !e.isDeleted);
         return res;
     });
 }
-exports.getListStore = getListStore;
-function getStoreById(loginCustomer, storeId) {
+exports.getListSubscription = getListSubscription;
+function getSubcriptionById(loginCustomer, storeId) {
     return __awaiter(this, void 0, void 0, function* () {
-        const store = yield storeDAL.getStoreById(storeId);
-        const res = storeModel.customerGetStore(store);
+        const store = yield storeDAL.getSubcriptionById(storeId);
+        const res = subcriptionModels.createJsonObject(store);
         return res;
     });
 }
-exports.getStoreById = getStoreById;
-function addFieldHiddenDataForStore(loginCustomer, storeId, hiddenData) {
+exports.getSubcriptionById = getSubcriptionById;
+function updateSubcriptionById(subcriptionEntry) {
     return __awaiter(this, void 0, void 0, function* () {
-        // const store: storeModel.StoreDB = await storeDAL.getStoreById(storeId);
-        const res = yield storeDAL.addFieldHiddenData(storeId, hiddenData);
+        const res = yield storeDAL.updateSubcriptionById(subcriptionEntry);
         return res;
     });
 }
-exports.addFieldHiddenDataForStore = addFieldHiddenDataForStore;
-//# sourceMappingURL=storeService.js.map
+exports.updateSubcriptionById = updateSubcriptionById;
+//# sourceMappingURL=subcriptionService.js.map

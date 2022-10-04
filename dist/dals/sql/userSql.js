@@ -23,7 +23,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateHiddenDataByStoreId = exports.updateStoreByStoreId = exports.getStoreById = exports.getListAllStore = exports.updateStore = exports.updateCustomer = exports.getStoreByStoreIdAndLoginId = exports.getStoreByLoginIdAndPassword = exports.getCustomerByIdAndEmail = exports.deleteRefreshToken = exports.insertRefreshToken = exports.getRefreshTokenInDb = exports.createCustomer = exports.getCustomerByEmail = void 0;
+exports.updateSubcription = exports.getSubcriptionById = exports.getListAllSubscription = exports.updateHiddenDataByStoreId = exports.updateStoreByStoreId = exports.getStoreById = exports.getListAllStore = exports.updateStore = exports.updateCustomer = exports.getStoreByStoreIdAndLoginId = exports.getStoreByLoginIdAndPassword = exports.getCustomerByIdAndEmail = exports.deleteRefreshToken = exports.insertRefreshToken = exports.getRefreshTokenInDb = exports.createCustomer = exports.getCustomerByEmail = void 0;
 const localDateTimeUtils = __importStar(require("../../common/utils/LocalDateTimeUtils"));
 // get customer's infor
 function getCustomerByEmail(email) {
@@ -181,4 +181,37 @@ function updateHiddenDataByStoreId(storeId, hiddenData) {
     return queryObject;
 }
 exports.updateHiddenDataByStoreId = updateHiddenDataByStoreId;
+function getListAllSubscription() {
+    const query = `select * from subcription`;
+    const values = [];
+    const queryObject = {
+        text: query,
+        values: values,
+    };
+    return queryObject;
+}
+exports.getListAllSubscription = getListAllSubscription;
+function getSubcriptionById(subcriptionId) {
+    const query = `select * from subcription where  subcription_id = $1`;
+    const values = [subcriptionId];
+    const queryObject = {
+        text: query,
+        values: values,
+    };
+    return queryObject;
+}
+exports.getSubcriptionById = getSubcriptionById;
+function updateSubcription(subcriptionId, name, price, description) {
+    const query = `UPDATE subcription
+SET name=$2, price = $3, description = $4, updated_at = $5
+WHERE STORE_ID = $1 AND LOGIN_ID = $9;`;
+    const now = localDateTimeUtils.getSystemDateTime();
+    const values = [subcriptionId, name, price, description, now];
+    const queryObject = {
+        text: query,
+        values: values,
+    };
+    return queryObject;
+}
+exports.updateSubcription = updateSubcription;
 //# sourceMappingURL=userSql.js.map

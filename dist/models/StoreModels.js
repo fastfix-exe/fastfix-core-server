@@ -38,6 +38,7 @@ class Store {
         this.avatarPicture = avatarPicture;
         this.hiddenData = hiddenData;
         this.emergency = hiddenData.emergency;
+        this.rating = hiddenData.rating || null;
         this.distance = distance || 0;
     }
 }

@@ -42,7 +42,8 @@ export class Store {
     private isDeleted?: boolean;
     private role: number = commonEnums.UserRole.store;
     private emergency?: any; // from hiddendata
-    private distance?: any; // from hiddendata
+    private distance?: any;
+    private rating?: number; // from hiddendata
     constructor (storeId: string, loginId: string, email: string, storeName: string, isDeleted: boolean,
              phoneNumber?: string, avatarPicture?: string, hiddenData?: any, distance?: any) {
         this.id =  storeId;
@@ -54,6 +55,7 @@ export class Store {
         this.avatarPicture =  avatarPicture;
         this.hiddenData =  hiddenData;
         this.emergency = hiddenData.emergency;
+        this.rating = hiddenData.rating || null;
         this.distance = distance || 0;
     }
 }

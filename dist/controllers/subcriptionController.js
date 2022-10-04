@@ -32,38 +32,52 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addFieldHiddenDataForStore = exports.getStoreById = exports.getListStore = void 0;
-const storeDAL = __importStar(require("../../dals/user/storeDAL"));
-const storeModel = __importStar(require("../../models/StoreModels"));
-function getListStore(loginCustomer, currentPotition) {
+exports.updateSubcriptionById = exports.getSubcriptionBySubcriptionId = exports.getListAllSubscription = void 0;
+const db_config_1 = require("../config/db_config");
+const subcriptionService = __importStar(require("../services/user/subcriptionService"));
+function getListAllSubscription(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        if (currentPotition) {
-            const listStore = yield storeDAL.getListNearestStore(currentPotition);
-            const res = listStore.map((e) => storeModel.customerGetStore(e))
-                .filter((e) => !e.isDeleted).sort((a, b) => a.distance - b.distance);
-            return res;
+        try {
+            const loginCustomer = req.loginUser;
+            const response = yield subcriptionService.getListSubscription(loginCustomer);
+            res.json(response);
         }
-        const listStore = yield storeDAL.getListStore();
-        const res = listStore.map((e) => storeModel.customerGetStore(e))
-            .filter((e) => !e.isDeleted);
-        return res;
+        catch (error) {
+            return next(error);
+        }
     });
 }
-exports.getListStore = getListStore;
-function getStoreById(loginCustomer, storeId) {
+exports.getListAllSubscription = getListAllSubscription;
+function getSubcriptionBySubcriptionId(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        const store = yield storeDAL.getStoreById(storeId);
-        const res = storeModel.customerGetStore(store);
-        return res;
+        try {
+            const loginCustomer = req.loginUser;
+            const subcriptionIid = req.params.subcriptionId;
+            const response = yield subcriptionService.getSubcriptionById(loginCustomer, subcriptionIid);
+            res.json(response);
+        }
+        catch (error) {
+            return next(error);
+        }
     });
 }
-exports.getStoreById = getStoreById;
-function addFieldHiddenDataForStore(loginCustomer, storeId, hiddenData) {
+exports.getSubcriptionBySubcriptionId = getSubcriptionBySubcriptionId;
+function updateSubcriptionById(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        // const store: storeModel.StoreDB = await storeDAL.getStoreById(storeId);
-        const res = yield storeDAL.addFieldHiddenData(storeId, hiddenData);
-        return res;
+        try {
+            yield db_config_1.db.query('BEGIN');
+            const storeEntry = {
+                hiddenData: req.body.hiddenData,
+            };
+            const response = yield subcriptionService.updateSubcriptionById(storeEntry);
+            res.json(response);
+            yield db_config_1.db.query('COMMIT');
+        }
+        catch (error) {
+            yield db_config_1.db.query("ROLLBACK");
+            return next(error);
+        }
     });
 }
-exports.addFieldHiddenDataForStore = addFieldHiddenDataForStore;
-//# sourceMappingURL=storeService.js.map
+exports.updateSubcriptionById = updateSubcriptionById;
+//# sourceMappingURL=subcriptionController.js.map

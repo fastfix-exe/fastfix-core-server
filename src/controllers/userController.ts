@@ -67,7 +67,7 @@ export async function updateStoreByStoreId (req: any, res: any, next: any) {
             hiddenData: req.body.hiddenData,
         }
 
-        const response = await storeService.updateStoreById(loginStore, storeId, storeEntry);
+        const response = await storeService.addFieldHiddenDataForStore(loginStore, storeId, storeEntry.hiddenData);
 
         res.json(response);
         await db.query('COMMIT');

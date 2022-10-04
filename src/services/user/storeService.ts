@@ -24,9 +24,9 @@ export async function getStoreById(loginCustomer: any, storeId: string) {
     return res;
 }
 
-export async function updateStoreById(loginCustomer: any, storeId: string, storeEntry: any) {
+export async function addFieldHiddenDataForStore(loginCustomer: any, storeId: string, hiddenData: any) {
     // const store: storeModel.StoreDB = await storeDAL.getStoreById(storeId);
     
-    const res = await storeDAL.updateStoreById(storeId, storeEntry);
+    const res = await storeDAL.addFieldHiddenData(storeId, hiddenData);
     return res;
 }

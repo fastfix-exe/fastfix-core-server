@@ -102,7 +102,7 @@ function updateStoreByStoreId(req, res, next) {
                 // description: req.body.description,
                 hiddenData: req.body.hiddenData,
             };
-            const response = yield storeService.updateStoreById(loginStore, storeId, storeEntry);
+            const response = yield storeService.addFieldHiddenDataForStore(loginStore, storeId, storeEntry.hiddenData);
             res.json(response);
             yield db_config_1.db.query('COMMIT');
         }

@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateStoreById = exports.getStoreById = exports.getListNearestStore = exports.getListStore = void 0;
+exports.addFieldHiddenData = exports.updateStoreById = exports.getStoreById = exports.getListNearestStore = exports.getListStore = void 0;
 const db_config_1 = require("../../config/db_config");
 const userSql = __importStar(require("../sql/userSql"));
 const exception = __importStar(require("../../common/exception"));
@@ -84,4 +84,21 @@ function updateStoreById(storeId, storeEntry) {
     });
 }
 exports.updateStoreById = updateStoreById;
+function addFieldHiddenData(storeId, hiddenData) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const queryGetOneStore = userSql.getStoreById(storeId);
+        const [store] = yield db_config_1.db.query(queryGetOneStore);
+        if (!store) {
+            return false;
+        }
+        const newHiddenData = store.hidden_data;
+        for (const prop in hiddenData) {
+            newHiddenData[prop] = hiddenData[prop];
+        }
+        const queryUpdatehiddenData = userSql.updateHiddenDataByStoreId(storeId, newHiddenData);
+        yield db_config_1.db.query(queryUpdatehiddenData);
+        return true;
+    });
+}
+exports.addFieldHiddenData = addFieldHiddenData;
 //# sourceMappingURL=storeDAL.js.map

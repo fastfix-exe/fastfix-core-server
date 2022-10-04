@@ -44,3 +44,20 @@ export async function updateStoreById(storeId: string, storeEntry: any) {
     await db.query(queryUpdatehiddenData);
     return true;
 }
+
+export async function addFieldHiddenData(storeId: string, hiddenData: any) {
+
+    const queryGetOneStore = userSql.getStoreById(storeId);
+    const [store] = await db.query(queryGetOneStore);
+
+    if (!store) {
+        return false;
+    }
+    const newHiddenData: any = store.hidden_data;
+    for (const prop in hiddenData) {
+        newHiddenData[prop] = hiddenData[prop];
+    }
+    const queryUpdatehiddenData = userSql.updateHiddenDataByStoreId(storeId, newHiddenData);
+    await db.query(queryUpdatehiddenData);
+    return true;
+}
