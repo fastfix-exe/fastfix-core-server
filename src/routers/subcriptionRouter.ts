@@ -6,7 +6,7 @@ import * as subsriptionController from "../controllers/subcriptionController";
 const router = express.Router();
  /**
  * @openapi
- * '/api/customer/subcription/list':
+ * '/api/subcription/list':
  *  get:
  *     tags:
  *     - Subcription
@@ -17,11 +17,11 @@ const router = express.Router();
  *       200:
  *         description: Success
  */
-  router.get('/api/customer/subcription/list', subsriptionController.getListAllSubscription);
+  router.get('/api/subcription/list', subsriptionController.getListAllSubscription);
 
  /**
  * @openapi
- * '/api/customer/subcription/{subcriptionId}':
+ * '/api/subcription/{subcriptionId}':
  *  get:
  *     tags:
  *     - Subcription
@@ -38,7 +38,7 @@ const router = express.Router();
  *       200:
  *         description: Success
  */
-  router.get('/api/customer/subcription/:subcriptionId', subsriptionController.getSubcriptionBySubcriptionId);
+  router.get('/api/subcription/:subcriptionId', subsriptionController.getSubcriptionBySubcriptionId);
 
    /**
  * @openapi

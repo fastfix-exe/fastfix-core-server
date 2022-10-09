@@ -44,7 +44,7 @@ const router = express_1.default.Router();
 *       200:
 *         description: Success
 */
-router.get('/api/customer/subcription/list', subsriptionController.getListAllSubscription);
+router.get('/api/subcription/list', subsriptionController.getListAllSubscription);
 /**
 * @openapi
 * '/api/customer/subcription/{subcriptionId}':
@@ -64,7 +64,7 @@ router.get('/api/customer/subcription/list', subsriptionController.getListAllSub
 *       200:
 *         description: Success
 */
-router.get('/api/customer/subcription/:subcriptionId', subsriptionController.getSubcriptionBySubcriptionId);
+router.get('/api/subcription/:subcriptionId', subsriptionController.getSubcriptionBySubcriptionId);
 /**
 * @openapi
 * '/api/customer/subcription/':

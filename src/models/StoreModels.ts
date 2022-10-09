@@ -36,6 +36,7 @@ export class Store {
     private loginId: string;
     private email: string;
     private storeName: string;
+    private address?: string;
     private phoneNumber?: string;
     private avatarPicture?: string;
     private hiddenData?: StoreHiddenData;
@@ -43,26 +44,29 @@ export class Store {
     private role: number = commonEnums.UserRole.store;
     private emergency?: any; // from hiddendata
     private distance?: any;
+    private coordinates?: any;
     private rating?: number; // from hiddendata
-    constructor (storeId: string, loginId: string, email: string, storeName: string, isDeleted: boolean,
+    constructor (storeId: string, loginId: string, email: string, storeName: string, isDeleted: boolean, address?: string,
              phoneNumber?: string, avatarPicture?: string, hiddenData?: any, distance?: any) {
         this.id =  storeId;
         this.loginId =  loginId;
         this.email =  email;
         this.storeName =  storeName;
         this.isDeleted = isDeleted,
+        this.address =  address;
         this.phoneNumber =  phoneNumber;
         this.avatarPicture =  avatarPicture;
         this.hiddenData =  hiddenData;
         this.emergency = hiddenData.emergency;
         this.rating = hiddenData.rating || null;
+        this.coordinates = hiddenData.coordinates;
         this.distance = distance || 0;
     }
 }
 
 export function createJsonObject (data: StoreDB) {
     const isDeleted = !!(data.deleted_at && data.deleted_by);
-    return new Store(data.store_id, data.login_id, data.email, data.store_name, isDeleted, data.phone_number, 
+    return new Store(data.store_id, data.login_id, data.email, data.store_name, isDeleted, data.address, data.phone_number, 
         data.avatar_picture, data.hidden_data, data.distance);
 }
 
@@ -72,7 +76,7 @@ export function createJsonObjectWithoutHiddenData (data: StoreDB) {
 
 export function customerGetStore (data: StoreDB) {
     const isDeleted = !!(data.deleted_at && data.deleted_by);
-    const store = new Store(data.store_id, data.login_id, data.email, data.store_name, isDeleted, data.phone_number,
+    const store = new Store(data.store_id, data.login_id, data.email, data.store_name, isDeleted, data.address, data.phone_number,
         data.avatar_picture, data.hidden_data, data.distance);
     return _objectWithoutProperties(store, ['role', 'loginId', 'hiddenData']);
 }
