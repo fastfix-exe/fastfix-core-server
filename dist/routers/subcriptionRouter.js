@@ -33,7 +33,7 @@ const subsriptionController = __importStar(require("../controllers/subcriptionCo
 const router = express_1.default.Router();
 /**
 * @openapi
-* '/api/customer/subcription/list':
+* '/api/subcription/list':
 *  get:
 *     tags:
 *     - Subcription
@@ -47,7 +47,7 @@ const router = express_1.default.Router();
 router.get('/api/subcription/list', subsriptionController.getListAllSubscription);
 /**
 * @openapi
-* '/api/customer/subcription/{subcriptionId}':
+* '/api/subcription/{subcriptionId}':
 *  get:
 *     tags:
 *     - Subcription
