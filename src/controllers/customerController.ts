@@ -37,3 +37,19 @@ export async function getStoreByStoreId (req: any, res: any, next: any) {
         return next(error);
     }
 }
+
+export async function getStoreAndDistanceByStoreId (req: any, res: any, next: any) {
+    try {
+        const loginCustomer = req.loginUser;
+        const storeId: string = req.params.storeId as string;
+        const longtitude: string = req.body.longtitude as string;
+        const latitude: string = req.body.latitude as string;
+        const currentPotition = {
+            latitude, longtitude
+        }
+        const response = await storeService.getStoreById(loginCustomer, storeId, currentPotition);
+        res.json(response);
+    } catch (error) {
+        return next(error);
+    }
+}

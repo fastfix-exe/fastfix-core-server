@@ -18,8 +18,8 @@ export async function getListStore(loginCustomer: any, currentPotition?: storeMo
     return res;
 }
 
-export async function getStoreById(loginCustomer: any, storeId: string) {
-    const store = await storeDAL.getStoreById(storeId);
+export async function getStoreById(loginCustomer: any, storeId: string, currentPotition?: storeModel.Position) {
+    const store = await storeDAL.getStoreById(storeId, currentPotition);
     const res = storeModel.customerGetStore(store);
     return res;
 }
@@ -28,5 +28,25 @@ export async function addFieldHiddenDataForStore(loginCustomer: any, storeId: st
     // const store: storeModel.StoreDB = await storeDAL.getStoreById(storeId);
     
     const res = await storeDAL.addFieldHiddenData(storeId, hiddenData);
+    return res;
+}
+
+export async function getStoreCommentByStoreId(loginCustomer: any, storeId: string) {
+    const res = await storeDAL.getStoreCommentByStoreId(storeId);
+    return res;
+}
+
+export async function getStoreRatingByStoreId(loginCustomer: any, storeId: string) {
+    const res = await storeDAL.getStoreRatingByStoreId(storeId);
+    return res;
+}
+
+export async function insertStoreCommentByStoreId(loginUser: any, storeId: string, content: string, replyId?: string) {
+    const res = await storeDAL.postStoreComment(loginUser, storeId, content, replyId);
+    return res;
+}
+
+export async function insertOrUpdateStoreRatingByStoreId(loginUser: any, storeId: string, rating: number) {
+    const res = await storeDAL.postStoreRating(loginUser, storeId, rating);
     return res;
 }

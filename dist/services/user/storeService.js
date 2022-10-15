@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addFieldHiddenDataForStore = exports.getStoreById = exports.getListStore = void 0;
+exports.insertOrUpdateStoreRatingByStoreId = exports.insertStoreCommentByStoreId = exports.getStoreRatingByStoreId = exports.getStoreCommentByStoreId = exports.addFieldHiddenDataForStore = exports.getStoreById = exports.getListStore = void 0;
 const storeDAL = __importStar(require("../../dals/user/storeDAL"));
 const storeModel = __importStar(require("../../models/StoreModels"));
 function getListStore(loginCustomer, currentPotition) {
@@ -50,9 +50,9 @@ function getListStore(loginCustomer, currentPotition) {
     });
 }
 exports.getListStore = getListStore;
-function getStoreById(loginCustomer, storeId) {
+function getStoreById(loginCustomer, storeId, currentPotition) {
     return __awaiter(this, void 0, void 0, function* () {
-        const store = yield storeDAL.getStoreById(storeId);
+        const store = yield storeDAL.getStoreById(storeId, currentPotition);
         const res = storeModel.customerGetStore(store);
         return res;
     });
@@ -66,4 +66,32 @@ function addFieldHiddenDataForStore(loginCustomer, storeId, hiddenData) {
     });
 }
 exports.addFieldHiddenDataForStore = addFieldHiddenDataForStore;
+function getStoreCommentByStoreId(loginCustomer, storeId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const res = yield storeDAL.getStoreCommentByStoreId(storeId);
+        return res;
+    });
+}
+exports.getStoreCommentByStoreId = getStoreCommentByStoreId;
+function getStoreRatingByStoreId(loginCustomer, storeId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const res = yield storeDAL.getStoreRatingByStoreId(storeId);
+        return res;
+    });
+}
+exports.getStoreRatingByStoreId = getStoreRatingByStoreId;
+function insertStoreCommentByStoreId(loginUser, storeId, content, replyId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const res = yield storeDAL.postStoreComment(loginUser, storeId, content, replyId);
+        return res;
+    });
+}
+exports.insertStoreCommentByStoreId = insertStoreCommentByStoreId;
+function insertOrUpdateStoreRatingByStoreId(loginUser, storeId, rating) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const res = yield storeDAL.postStoreRating(loginUser, storeId, rating);
+        return res;
+    });
+}
+exports.insertOrUpdateStoreRatingByStoreId = insertOrUpdateStoreRatingByStoreId;
 //# sourceMappingURL=storeService.js.map

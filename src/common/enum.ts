@@ -15,3 +15,8 @@ export enum UserStatus {
     Deleted = 1,
     Approved = 2,
 }
+
+export enum GeneralStatus {
+    Activating = 1,
+    Deleted = 0,
+}
