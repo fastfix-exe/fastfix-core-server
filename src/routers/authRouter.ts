@@ -151,6 +151,6 @@ router.get('/api/auth/user/profile', authController.getLoginUserInfor);
  *            schema:
  *              type: object
  */
- router.post('/api/auth/store', authController.loginRoleStore);
+ router.post('/api/auth/store', authController.loginRoleStoreOrEmployee);
 
 export const authRouter = router;

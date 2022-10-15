@@ -4,6 +4,7 @@ import { authRouter } from "./routers/authRouter";
 import { storeRouter } from "./routers/storeRouter";
 import { customerRouter } from "./routers/customerRouter";
 import { userRouter } from "./routers/userRouter";
+import { employeeRouter } from "./routers/employeeRouter";
 import { swaggerRouter } from "./routers/swaggerRouter";
 import * as exception from "./common/exception";
 import { logger } from "./config/log4js_config";
@@ -39,7 +40,10 @@ app.use("/api/adm/*", authMiddleware.authorizeAdministrator);
 
 app.use("/api/customer/*", authMiddleware.authorizeCustomer);
 
+// store will bypass apis start with /api/employee/
 app.use("/api/store/*", authMiddleware.authorizeStore);
+
+app.use("/api/employee/*", authMiddleware.authorizeEmployee);
 app.use(swaggerRouter);
 
 app.use(authRouter);
@@ -49,6 +53,7 @@ app.use(subsriptionRouter);
 
 app.use(requestRouter);
 app.use(userRouter);
+app.use(employeeRouter);
 
 // không tìm thấy đường dẫn api
 function notFoundErrorHandler(req: any, res: any, next: any) {

@@ -32,42 +32,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateStore = exports.updateCustomer = void 0;
-const userDAL = __importStar(require("../../dals/user/userDAL"));
-const authService = __importStar(require("../../services/auth/authService"));
-const exception = __importStar(require("../../common/exception"));
-function updateCustomer(loginCustomer, customerEntry, refreshToken) {
+exports.getListEmployeeByStoreId = void 0;
+const storeService = __importStar(require("../services/user/storeService"));
+function getListEmployeeByStoreId(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        const customerId = loginCustomer.id;
-        const email = loginCustomer.email;
-        const customer = yield userDAL.updateCustomer(customerId, email, customerEntry);
-        // delete refreshtoken (temp logout) and generate new tokens
-        if (customer) {
-            yield authService.logout(refreshToken);
-            const res = yield authService.loginCustomerOrAdmin(email, customer.customer_name, customer.avatar_picture);
-            return res;
+        try {
+            const loginUser = req.loginUser;
+            const storeId = req.params.storeId;
+            const response = yield storeService.getListEmployeeByStoreId(storeId);
+            res.json(response);
         }
-        else {
-            throw new exception.APIException(exception.HttpStatusCode.SERVER, exception.ErrorMessage.API_E_002);
+        catch (error) {
+            return next(error);
         }
     });
 }
-exports.updateCustomer = updateCustomer;
-function updateStore(loginStore, storeEntry, refreshToken) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const storeId = loginStore.id;
-        const loginId = loginStore.loginId;
-        const store = yield userDAL.updateStore(storeId, loginId, storeEntry);
-        // delete refreshtoken (temp logout) and generate new tokens
-        if (store) {
-            yield authService.logout(refreshToken);
-            const res = yield authService.loginRoleStoreOrEmployee(loginId, store.password);
-            return res;
-        }
-        else {
-            throw new exception.APIException(exception.HttpStatusCode.SERVER, exception.ErrorMessage.API_E_002);
-        }
-    });
-}
-exports.updateStore = updateStore;
-//# sourceMappingURL=userService.js.map
+exports.getListEmployeeByStoreId = getListEmployeeByStoreId;
+//# sourceMappingURL=employeeController.js.map

@@ -23,7 +23,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getRatingByUniqueKey = exports.insertOrUpdateStoreRating = exports.insertStoreComment = exports.getListRatingsOfStore = exports.getListCommentsOfStore = exports.updateSubcription = exports.UpdateStatusRequest = exports.getRequestById = exports.createRequest = exports.getSubcriptionById = exports.getListAllSubscription = exports.updateHiddenDataByStoreId = exports.updateStoreByStoreId = exports.getStoreById = exports.getListAllCustomer = exports.getListAllStore = exports.updateStore = exports.updateCustomer = exports.getStoreByStoreIdAndLoginId = exports.getStoreByLoginIdAndPassword = exports.getCustomerByIdAndEmail = exports.deleteRefreshToken = exports.insertRefreshToken = exports.getRefreshTokenInDb = exports.createCustomer = exports.getCustomerByEmail = void 0;
+exports.getRatingByUniqueKey = exports.insertOrUpdateStoreRating = exports.insertStoreComment = exports.getListRatingsOfStore = exports.getListCommentsOfStore = exports.updateSubcription = exports.UpdateStatusRequest = exports.getRequestById = exports.createRequest = exports.getSubcriptionById = exports.getListAllSubscription = exports.updateHiddenDataByStoreId = exports.updateStoreByStoreId = exports.getStoreById = exports.getListAllCustomer = exports.getListAllEmployeeByStoreId = exports.getListAllStore = exports.updateStore = exports.updateCustomer = exports.getEmployeeByEmpIdAndLoginId = exports.getStoreByStoreIdAndLoginId = exports.getEmployeeByLoginIdAndPassword = exports.getStoreByLoginIdAndPassword = exports.getCustomerByIdAndEmail = exports.deleteRefreshToken = exports.insertRefreshToken = exports.getRefreshTokenInDb = exports.createCustomer = exports.getCustomerByEmail = void 0;
 const localDateTimeUtils = __importStar(require("../../common/utils/LocalDateTimeUtils"));
 const commonEnums = __importStar(require("../../common/enum"));
 // get customer's infor
@@ -102,6 +102,17 @@ function getStoreByLoginIdAndPassword(loginId, password) {
     return queryObject;
 }
 exports.getStoreByLoginIdAndPassword = getStoreByLoginIdAndPassword;
+function getEmployeeByLoginIdAndPassword(loginId, password) {
+    const query = `SELECT * FROM STORE_EMPLOYEE WHERE LOGIN_ID = $1 AND PASSWORD = $2`;
+    const now = localDateTimeUtils.getSystemDateTime();
+    const values = [loginId, password];
+    const queryObject = {
+        text: query,
+        values: values,
+    };
+    return queryObject;
+}
+exports.getEmployeeByLoginIdAndPassword = getEmployeeByLoginIdAndPassword;
 function getStoreByStoreIdAndLoginId(storeId, loginId) {
     const query = `SELECT * FROM STORE WHERE STORE_ID = $1 AND LOGIN_ID = $2`;
     const now = localDateTimeUtils.getSystemDateTime();
@@ -113,6 +124,17 @@ function getStoreByStoreIdAndLoginId(storeId, loginId) {
     return queryObject;
 }
 exports.getStoreByStoreIdAndLoginId = getStoreByStoreIdAndLoginId;
+function getEmployeeByEmpIdAndLoginId(empId, loginId) {
+    const query = `SELECT * FROM STORE_EMPLOYEE WHERE STORE_ID = $1 AND LOGIN_ID = $2`;
+    const now = localDateTimeUtils.getSystemDateTime();
+    const values = [empId, loginId];
+    const queryObject = {
+        text: query,
+        values: values,
+    };
+    return queryObject;
+}
+exports.getEmployeeByEmpIdAndLoginId = getEmployeeByEmpIdAndLoginId;
 function updateCustomer(customerId, email, name, gender, phoneNumber, dateOfBirth, avatarPicture) {
     const query = `UPDATE CUSTOMER 
         SET CUSTOMER_NAME = $3, GENDER = $4, PHONE_NUMBER = $5, DATE_OF_BIRTH = $6, AVATAR_PICTURE = $7, UPDATED_AT = $8, UPDATED_BY = $9
@@ -149,6 +171,16 @@ function getListAllStore() {
     return queryObject;
 }
 exports.getListAllStore = getListAllStore;
+function getListAllEmployeeByStoreId(storeId) {
+    const query = `SELECT * FROM STORE_EMPLOYEE WHERE STORE_ID = $1`;
+    const values = [storeId];
+    const queryObject = {
+        text: query,
+        values: values,
+    };
+    return queryObject;
+}
+exports.getListAllEmployeeByStoreId = getListAllEmployeeByStoreId;
 function getListAllCustomer() {
     const query = `SELECT * FROM CUSTOMER`;
     const values = [];

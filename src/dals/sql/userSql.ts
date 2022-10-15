@@ -77,6 +77,17 @@ export function getStoreByLoginIdAndPassword (loginId: string, password: string)
     return queryObject;
 }
 
+export function getEmployeeByLoginIdAndPassword (loginId: string, password: string) {
+    const query = `SELECT * FROM STORE_EMPLOYEE WHERE LOGIN_ID = $1 AND PASSWORD = $2`;
+    const now = localDateTimeUtils.getSystemDateTime();
+    const values = [loginId, password];
+    const queryObject = {
+        text: query,
+        values: values,
+    }
+    return queryObject;
+}
+
 export function getStoreByStoreIdAndLoginId (storeId: string, loginId: string) {
     const query = `SELECT * FROM STORE WHERE STORE_ID = $1 AND LOGIN_ID = $2`;
     const now = localDateTimeUtils.getSystemDateTime();
@@ -87,6 +98,18 @@ export function getStoreByStoreIdAndLoginId (storeId: string, loginId: string) {
     }
     return queryObject;
 }
+
+export function getEmployeeByEmpIdAndLoginId (empId: string, loginId: string) {
+    const query = `SELECT * FROM STORE_EMPLOYEE WHERE STORE_ID = $1 AND LOGIN_ID = $2`;
+    const now = localDateTimeUtils.getSystemDateTime();
+    const values = [empId, loginId];
+    const queryObject = {
+        text: query,
+        values: values,
+    }
+    return queryObject;
+}
+
 
 export function updateCustomer (customerId: string, email: string, name: string, gender: number, phoneNumber: string, dateOfBirth: string, avatarPicture: string) {
     const query = `UPDATE CUSTOMER 
@@ -118,6 +141,16 @@ export function updateStore (storeId: string, email: string, name: string, addre
 export function getListAllStore () {
     const query = `SELECT * FROM STORE`;
     const values: any = [];
+    const queryObject = {
+        text: query,
+        values: values,
+    }
+    return queryObject;
+}
+
+export function getListAllEmployeeByStoreId (storeId: string) {
+    const query = `SELECT * FROM STORE_EMPLOYEE WHERE STORE_ID = $1`;
+    const values: any = [storeId];
     const queryObject = {
         text: query,
         values: values,

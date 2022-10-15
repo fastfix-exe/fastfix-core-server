@@ -4,6 +4,7 @@ import * as userSql from "../sql/userSql";
 import { Guid } from "guid-typescript";
 import * as customerModel from "../../models/CustomerModels";
 import * as storeModel from "../../models/StoreModels";
+import * as employeeModel from "../../models/EmployeeModel";
 import * as adminModel from "../../models/AdministratorModels";
 import * as commonEnums from "../../common/enum";
 import * as exception from "../../common/exception";
@@ -105,10 +106,13 @@ export async function generateAccessTokenFromRefreshToken (refreshToken: string)
     }
     if (userToken.role === commonEnums.UserRole.administrator) {
         createdUser = adminModel.createJsonObject(userToken);
-
     }
     if (userToken.role === commonEnums.UserRole.store) {
         [userDb] = await db.query(userSql.getStoreByStoreIdAndLoginId(userToken.id, userToken.loginId));
+        createdUser = userDb ? storeModel.createJsonObjectWithoutHiddenData(userDb) : null;
+    }
+    if (userToken.role === commonEnums.UserRole.employee) {
+        [userDb] = await db.query(userSql.getEmployeeByEmpIdAndLoginId(userToken.id, userToken.loginId));
         createdUser = userDb ? storeModel.createJsonObjectWithoutHiddenData(userDb) : null;
     }
     if (!createdUser) {
@@ -133,7 +137,12 @@ export async function loginStore (loginId: string, password: string) {
     const [store] = await db.query(queryGetStore);
 
     if (!store) {
-        throw new exception.APIException(exception.HttpStatusCode.CLIENT_BAD_REQUEST, exception.ErrorMessage.API_E_006);
+        const queryGetEmp = userSql.getEmployeeByLoginIdAndPassword(loginId, password);
+        const [emp] = await db.query(queryGetEmp);
+        if (!emp) {
+            throw new exception.APIException(exception.HttpStatusCode.CLIENT_BAD_REQUEST, exception.ErrorMessage.API_E_006);
+        }
+        return employeeModel.createJsonObjectWithoutHiddenData(emp);
     }
 
     return storeModel.createJsonObjectWithoutHiddenData(store);

@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.loginRoleStore = exports.logout = exports.generateAccessTokenFromRefreshToken = exports.getLoginUserInfor = exports.loginWithCredentialId = exports.callbackGoogle = exports.getGoogleLoginUrl = void 0;
+exports.loginRoleStoreOrEmployee = exports.logout = exports.generateAccessTokenFromRefreshToken = exports.getLoginUserInfor = exports.loginWithCredentialId = exports.callbackGoogle = exports.getGoogleLoginUrl = void 0;
 const googleapis_1 = require("googleapis");
 const google_1 = require("../auth/google");
 const authService = __importStar(require("../services/auth/authService"));
@@ -129,12 +129,12 @@ function logout(req, res, next) {
     });
 }
 exports.logout = logout;
-function loginRoleStore(req, res, next) {
+function loginRoleStoreOrEmployee(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const loginId = req.body.loginId;
             const password = req.body.password;
-            const result = yield authService.loginRoleStore(loginId, password);
+            const result = yield authService.loginRoleStoreOrEmployee(loginId, password);
             res.json(result);
         }
         catch (error) {
@@ -142,5 +142,5 @@ function loginRoleStore(req, res, next) {
         }
     });
 }
-exports.loginRoleStore = loginRoleStore;
+exports.loginRoleStoreOrEmployee = loginRoleStoreOrEmployee;
 //# sourceMappingURL=authController.js.map

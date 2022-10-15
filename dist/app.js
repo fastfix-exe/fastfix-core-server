@@ -32,6 +32,7 @@ const authRouter_1 = require("./routers/authRouter");
 const storeRouter_1 = require("./routers/storeRouter");
 const customerRouter_1 = require("./routers/customerRouter");
 const userRouter_1 = require("./routers/userRouter");
+const employeeRouter_1 = require("./routers/employeeRouter");
 const swaggerRouter_1 = require("./routers/swaggerRouter");
 const exception = __importStar(require("./common/exception"));
 const log4js_config_1 = require("./config/log4js_config");
@@ -58,7 +59,9 @@ app.use("/*", authMiddleware.validateToken, function (req, res, next) {
 });
 app.use("/api/adm/*", authMiddleware.authorizeAdministrator);
 app.use("/api/customer/*", authMiddleware.authorizeCustomer);
+// store will bypass apis start with /api/employee/
 app.use("/api/store/*", authMiddleware.authorizeStore);
+app.use("/api/employee/*", authMiddleware.authorizeEmployee);
 app.use(swaggerRouter_1.swaggerRouter);
 app.use(authRouter_1.authRouter);
 app.use(storeRouter_1.storeRouter);
@@ -66,6 +69,7 @@ app.use(customerRouter_1.customerRouter);
 app.use(subcriptionRouter_1.subsriptionRouter);
 app.use(requestRouter_1.requestRouter);
 app.use(userRouter_1.userRouter);
+app.use(employeeRouter_1.employeeRouter);
 // không tìm thấy đường dẫn api
 function notFoundErrorHandler(req, res, next) {
     var err = new exception.APIException(exception.HttpStatusCode.CLIENT_NOT_FOUND, exception.ErrorMessage.API_E_001);

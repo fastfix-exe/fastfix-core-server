@@ -32,9 +32,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getCurrentUserRatedStar = exports.insertOrUpdateStoreRatingByStoreId = exports.insertStoreCommentByStoreId = exports.getStoreRatingByStoreId = exports.getStoreCommentByStoreId = exports.addFieldHiddenDataForStore = exports.getStoreById = exports.getListStore = void 0;
+exports.getListEmployeeByStoreId = exports.getCurrentUserRatedStar = exports.insertOrUpdateStoreRatingByStoreId = exports.insertStoreCommentByStoreId = exports.getStoreRatingByStoreId = exports.getStoreCommentByStoreId = exports.addFieldHiddenDataForStore = exports.getStoreById = exports.getListStore = void 0;
 const storeDAL = __importStar(require("../../dals/user/storeDAL"));
 const storeModel = __importStar(require("../../models/StoreModels"));
+const employeeModel = __importStar(require("../../models/EmployeeModel"));
 function getListStore(loginCustomer, currentPotition) {
     return __awaiter(this, void 0, void 0, function* () {
         if (currentPotition) {
@@ -101,4 +102,12 @@ function getCurrentUserRatedStar(loginUser, storeId) {
     });
 }
 exports.getCurrentUserRatedStar = getCurrentUserRatedStar;
+function getListEmployeeByStoreId(storeId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const listEmp = yield storeDAL.getListEmployeeByStoreId(storeId);
+        const res = listEmp.map((e) => employeeModel.createJsonObject(e));
+        return res;
+    });
+}
+exports.getListEmployeeByStoreId = getListEmployeeByStoreId;
 //# sourceMappingURL=storeService.js.map

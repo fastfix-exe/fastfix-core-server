@@ -27,7 +27,7 @@ export async function updateStore(loginStore: any, storeEntry: any, refreshToken
     // delete refreshtoken (temp logout) and generate new tokens
     if (store) {
         await authService.logout(refreshToken);
-        const res = await authService.loginRoleStore(loginId, store.password);
+        const res = await authService.loginRoleStoreOrEmployee(loginId, store.password);
         return res;
     } else {
         throw new exception.APIException(exception.HttpStatusCode.SERVER, exception.ErrorMessage.API_E_002);

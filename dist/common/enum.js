@@ -11,6 +11,7 @@ var UserRole;
 (function (UserRole) {
     UserRole[UserRole["customer"] = 1] = "customer";
     UserRole[UserRole["store"] = 2] = "store";
+    UserRole[UserRole["employee"] = 3] = "employee";
     UserRole[UserRole["administrator"] = 0] = "administrator";
 })(UserRole = exports.UserRole || (exports.UserRole = {}));
 var UserStatus;

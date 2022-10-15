@@ -172,6 +172,6 @@ router.get('/api/auth/user/profile', authController.getLoginUserInfor);
  *            schema:
  *              type: object
  */
-router.post('/api/auth/store', authController.loginRoleStore);
+router.post('/api/auth/store', authController.loginRoleStoreOrEmployee);
 exports.authRouter = router;
 //# sourceMappingURL=authRouter.js.map

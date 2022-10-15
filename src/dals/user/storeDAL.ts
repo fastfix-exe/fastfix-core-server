@@ -13,6 +13,11 @@ export async function getListStore() {
     return await db.query(queryGetListAllStore);
 }
 
+export async function getListEmployeeByStoreId (storeId: string) {
+    const queryGetListAllStore = userSql.getListAllEmployeeByStoreId(storeId);
+    return await db.query(queryGetListAllStore);
+}
+
 export async function getListNearestStore(currentPotition: storeModel.Position) {
     const queryGetListAllStore = userSql.getListAllStore();
     const listStore = await db.query(queryGetListAllStore);

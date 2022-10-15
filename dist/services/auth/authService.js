@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getCurrentLoginUserInfor = exports.loginRoleStore = exports.generateAccessTokenFromRefreshToken = exports.logout = exports.loginViaCredentialId = exports.loginCustomerOrAdmin = void 0;
+exports.getCurrentLoginUserInfor = exports.loginRoleStoreOrEmployee = exports.generateAccessTokenFromRefreshToken = exports.logout = exports.loginViaCredentialId = exports.loginCustomerOrAdmin = void 0;
 const authDAL = __importStar(require("../../dals/auth/authDAL"));
 const env_config_1 = require("../../config/env_config");
 const exception = __importStar(require("../../common/exception"));
@@ -92,7 +92,7 @@ function generateAccessTokenFromRefreshToken(refreshToken) {
     });
 }
 exports.generateAccessTokenFromRefreshToken = generateAccessTokenFromRefreshToken;
-function loginRoleStore(loginId, password) {
+function loginRoleStoreOrEmployee(loginId, password) {
     return __awaiter(this, void 0, void 0, function* () {
         const loginStore = yield authDAL.loginStore(loginId, password);
         const tokens = yield authDAL.addNewRefreshToken(loginStore);
@@ -102,7 +102,7 @@ function loginRoleStore(loginId, password) {
         };
     });
 }
-exports.loginRoleStore = loginRoleStore;
+exports.loginRoleStoreOrEmployee = loginRoleStoreOrEmployee;
 function getCurrentLoginUserInfor(loginUser) {
     return __awaiter(this, void 0, void 0, function* () {
         return yield authDAL.getCurrentLoginUserInfor(loginUser);

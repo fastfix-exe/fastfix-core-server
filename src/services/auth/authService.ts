@@ -48,7 +48,7 @@ export async function generateAccessTokenFromRefreshToken (refreshToken: string)
     }
 }
 
-export async function loginRoleStore (loginId: string, password: string) {
+export async function loginRoleStoreOrEmployee (loginId: string, password: string) {
     const loginStore = await authDAL.loginStore(loginId, password);
     const tokens = await authDAL.addNewRefreshToken(loginStore);
     return {

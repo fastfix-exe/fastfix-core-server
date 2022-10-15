@@ -42,6 +42,7 @@ const userSql = __importStar(require("../sql/userSql"));
 const guid_typescript_1 = require("guid-typescript");
 const customerModel = __importStar(require("../../models/CustomerModels"));
 const storeModel = __importStar(require("../../models/StoreModels"));
+const employeeModel = __importStar(require("../../models/EmployeeModel"));
 const adminModel = __importStar(require("../../models/AdministratorModels"));
 const commonEnums = __importStar(require("../../common/enum"));
 const exception = __importStar(require("../../common/exception"));
@@ -145,6 +146,10 @@ function generateAccessTokenFromRefreshToken(refreshToken) {
             [userDb] = yield db_config_1.db.query(userSql.getStoreByStoreIdAndLoginId(userToken.id, userToken.loginId));
             createdUser = userDb ? storeModel.createJsonObjectWithoutHiddenData(userDb) : null;
         }
+        if (userToken.role === commonEnums.UserRole.employee) {
+            [userDb] = yield db_config_1.db.query(userSql.getEmployeeByEmpIdAndLoginId(userToken.id, userToken.loginId));
+            createdUser = userDb ? storeModel.createJsonObjectWithoutHiddenData(userDb) : null;
+        }
         if (!createdUser) {
             throw new exception.APIException(exception.HttpStatusCode.SERVER, exception.ErrorMessage.API_E_002);
         }
@@ -170,7 +175,12 @@ function loginStore(loginId, password) {
         const queryGetStore = userSql.getStoreByLoginIdAndPassword(loginId, password);
         const [store] = yield db_config_1.db.query(queryGetStore);
         if (!store) {
-            throw new exception.APIException(exception.HttpStatusCode.CLIENT_BAD_REQUEST, exception.ErrorMessage.API_E_006);
+            const queryGetEmp = userSql.getEmployeeByLoginIdAndPassword(loginId, password);
+            const [emp] = yield db_config_1.db.query(queryGetEmp);
+            if (!emp) {
+                throw new exception.APIException(exception.HttpStatusCode.CLIENT_BAD_REQUEST, exception.ErrorMessage.API_E_006);
+            }
+            return employeeModel.createJsonObjectWithoutHiddenData(emp);
         }
         return storeModel.createJsonObjectWithoutHiddenData(store);
     });

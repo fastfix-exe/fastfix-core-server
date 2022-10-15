@@ -3,6 +3,7 @@ import * as storeDAL from "../../dals/user/storeDAL";
 import * as authService from "../../services/auth/authService"
 import { envConfig } from "../../config/env_config";
 import * as storeModel from "../../models/StoreModels";
+import * as employeeModel from "../../models/EmployeeModel";
 import * as exception from "../../common/exception";
 
 export async function getListStore(loginCustomer: any, currentPotition?: storeModel.Position) {
@@ -53,5 +54,11 @@ export async function insertOrUpdateStoreRatingByStoreId(loginUser: any, storeId
 
 export async function getCurrentUserRatedStar(loginUser: any, storeId: string) {
     const res = await storeDAL.getCurrentUserRatedStar(loginUser, storeId);
+    return res;
+}
+
+export async function getListEmployeeByStoreId(storeId: string) {
+    const listEmp = await storeDAL.getListEmployeeByStoreId(storeId);
+    const res = listEmp.map((e: employeeModel.EmployeeDB) => employeeModel.createJsonObject(e));
     return res;
 }

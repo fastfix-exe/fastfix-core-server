@@ -7,6 +7,7 @@ export enum CustomerGender {
 export enum UserRole {
     customer = 1,
     store = 2,
+    employee = 3,
     administrator = 0,
 }
 

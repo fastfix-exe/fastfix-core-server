@@ -83,11 +83,11 @@ export async function logout (req: any, res: any, next: any) {
     }
 }
 
-export async function loginRoleStore(req: any, res: any, next: any) {
+export async function loginRoleStoreOrEmployee(req: any, res: any, next: any) {
     try {
         const loginId: string = req.body.loginId as string;
         const password: string = req.body.password as string;
-        const result = await authService.loginRoleStore(loginId, password);
+        const result = await authService.loginRoleStoreOrEmployee(loginId, password);
         res.json(result);
     } catch (error) {
         return next(error);
