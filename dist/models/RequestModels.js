@@ -27,7 +27,7 @@ exports.createJsonObject = exports.Request = void 0;
 const commonEnums = __importStar(require("../common/enum"));
 class Request {
     constructor(id, userId, storeId, dateTime, type, status) {
-        this.status = commonEnums.RequestStatus.Approved;
+        this.status = commonEnums.RequestStatus.Pending;
         this.id = id;
         this.userId = userId;
         this.storeId = storeId;

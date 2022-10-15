@@ -22,9 +22,10 @@ var UserStatus;
 })(UserStatus = exports.UserStatus || (exports.UserStatus = {}));
 var RequestStatus;
 (function (RequestStatus) {
-    RequestStatus[RequestStatus["New"] = 0] = "New";
-    RequestStatus[RequestStatus["Approved"] = 1] = "Approved";
-    RequestStatus[RequestStatus["Cancel"] = 2] = "Cancel";
+    RequestStatus[RequestStatus["Pending"] = 0] = "Pending";
+    RequestStatus[RequestStatus["Processing"] = 1] = "Processing";
+    RequestStatus[RequestStatus["Success"] = 2] = "Success";
+    RequestStatus[RequestStatus["Failed"] = 3] = "Failed";
 })(RequestStatus = exports.RequestStatus || (exports.RequestStatus = {}));
 var GeneralStatus;
 (function (GeneralStatus) {

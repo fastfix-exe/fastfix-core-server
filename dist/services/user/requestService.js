@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UpdateRequest = exports.getById = exports.createNewRequest = void 0;
+exports.UpdateRequest = exports.getListPendingByStoreId = exports.getLatestById = exports.getById = exports.createNewRequest = void 0;
 const requestDAL = __importStar(require("../../dals/user/requestDAL"));
 const requestModels = __importStar(require("../../models/RequestModels"));
 function createNewRequest(Object) {
@@ -51,6 +51,22 @@ function getById(id) {
     });
 }
 exports.getById = getById;
+function getLatestById() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const request = yield requestDAL.getByIdLatest();
+        const res = requestModels.createJsonObject(request);
+        return res;
+    });
+}
+exports.getLatestById = getLatestById;
+function getListPendingByStoreId(storeId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const request = yield requestDAL.getListByStoreIdWithPending(storeId);
+        const res = request.map((e) => requestModels.createJsonObject(e));
+        return res;
+    });
+}
+exports.getListPendingByStoreId = getListPendingByStoreId;
 function UpdateRequest(Object) {
     return __awaiter(this, void 0, void 0, function* () {
         yield requestDAL.UpdateRequest(Object);

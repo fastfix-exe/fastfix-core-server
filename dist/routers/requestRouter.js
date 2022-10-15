@@ -60,25 +60,19 @@ const router = express_1.default.Router();
  */
 router.post('/api/customer/request/', requestController.createRequest);
 /**
- * @openapi
- * '/api/customer/request/{id}':
- *  get:
- *     tags:
- *     - Request
- *     summary: Get request by ID
- *     parameters:
- *     - in: path
- *       name: id
- *       required: true
- *       schema:
- *          type: number
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: Success
- */
-router.get('/api/customer/request/:id', requestController.getRequestById);
+* @openapi
+* '/api/customer/request/latest':
+*  get:
+*     tags:
+*     - Request
+*     summary: Get latest request
+*     security:
+*       - bearerAuth: []
+*     responses:
+*       200:
+*         description: Success
+*/
+router.get('/api/customer/request/latest', requestController.getRequestLatest);
 /**
 * @openapi
 * '/api/customer/request/':
@@ -105,5 +99,45 @@ router.get('/api/customer/request/:id', requestController.getRequestById);
 *         description: Success
 */
 router.put('/api/customer/request/', requestController.UpdateRequest);
+/**
+* @openapi
+* '/api/customer/request/{id}':
+*  get:
+*     tags:
+*     - Request
+*     summary: Get request by ID
+*     parameters:
+*     - in: path
+*       name: id
+*       required: true
+*       schema:
+*          type: number
+*     security:
+*       - bearerAuth: []
+*     responses:
+*       200:
+*         description: Success
+*/
+router.get('/api/customer/request/:id', requestController.getRequestById);
+/**
+* @openapi
+* '/api/customer/request/store/{storeId}':
+*  get:
+*     tags:
+*     - Request
+*     summary: Get request by ID
+*     parameters:
+*     - in: path
+*       name: storeId
+*       required: true
+*       schema:
+*          type: string
+*     security:
+*       - bearerAuth: []
+*     responses:
+*       200:
+*         description: Success
+*/
+router.get('/api/customer/request/store/:storeId', requestController.getListPendingRequestByStoreId);
 exports.requestRouter = router;
 //# sourceMappingURL=requestRouter.js.map

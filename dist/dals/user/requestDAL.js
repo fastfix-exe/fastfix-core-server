@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UpdateRequest = exports.getById = exports.createNewRequest = void 0;
+exports.UpdateRequest = exports.getListByStoreIdWithPending = exports.getByIdLatest = exports.getById = exports.createNewRequest = void 0;
 const db_config_1 = require("../../config/db_config");
 const userSql = __importStar(require("../sql/userSql"));
 function createNewRequest(Object) {
@@ -51,6 +51,22 @@ function getById(id) {
     });
 }
 exports.getById = getById;
+function getByIdLatest() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const queryCreate = userSql.getRequestByIdLatest();
+        let [request] = yield db_config_1.db.query(queryCreate);
+        return request;
+    });
+}
+exports.getByIdLatest = getByIdLatest;
+function getListByStoreIdWithPending(storeId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const queryCreate = userSql.getRequestByStoreIdWithPendingStatus(storeId);
+        let request = yield db_config_1.db.query(queryCreate);
+        return request;
+    });
+}
+exports.getListByStoreIdWithPending = getListByStoreIdWithPending;
 function UpdateRequest(Object) {
     return __awaiter(this, void 0, void 0, function* () {
         const queryCreate = userSql.UpdateStatusRequest(Object.status, Object.id);

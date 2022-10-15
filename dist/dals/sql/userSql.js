@@ -23,7 +23,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getRatingByUniqueKey = exports.insertOrUpdateStoreRating = exports.insertStoreComment = exports.getListRatingsOfStore = exports.getListCommentsOfStore = exports.updateSubcription = exports.UpdateStatusRequest = exports.getRequestById = exports.createRequest = exports.getSubcriptionById = exports.getListAllSubscription = exports.updateHiddenDataByStoreId = exports.updateStoreByStoreId = exports.getStoreById = exports.getListAllCustomer = exports.getListAllEmployeeByStoreId = exports.getListAllStore = exports.updateStore = exports.updateCustomer = exports.getEmployeeByEmpIdAndLoginId = exports.getStoreByStoreIdAndLoginId = exports.getEmployeeByLoginIdAndPassword = exports.getStoreByLoginIdAndPassword = exports.getCustomerByIdAndEmail = exports.deleteRefreshToken = exports.insertRefreshToken = exports.getRefreshTokenInDb = exports.createCustomer = exports.getCustomerByEmail = void 0;
+exports.getRatingByUniqueKey = exports.insertOrUpdateStoreRating = exports.insertStoreComment = exports.getListRatingsOfStore = exports.getListCommentsOfStore = exports.updateSubcription = exports.UpdateStatusRequest = exports.getRequestByStoreIdWithPendingStatus = exports.getRequestByIdLatest = exports.getRequestById = exports.createRequest = exports.getSubcriptionById = exports.getListAllSubscription = exports.updateHiddenDataByStoreId = exports.updateStoreByStoreId = exports.getStoreById = exports.getListAllCustomer = exports.getListAllEmployeeByStoreId = exports.getListAllStore = exports.updateStore = exports.updateCustomer = exports.getEmployeeByEmpIdAndLoginId = exports.getStoreByStoreIdAndLoginId = exports.getEmployeeByLoginIdAndPassword = exports.getStoreByLoginIdAndPassword = exports.getCustomerByIdAndEmail = exports.deleteRefreshToken = exports.insertRefreshToken = exports.getRefreshTokenInDb = exports.createCustomer = exports.getCustomerByEmail = void 0;
 const localDateTimeUtils = __importStar(require("../../common/utils/LocalDateTimeUtils"));
 const commonEnums = __importStar(require("../../common/enum"));
 // get customer's infor
@@ -249,7 +249,7 @@ function createRequest(userId, storeId, type) {
     VALUES ((SELECT (coalesce(MAX(id)+1,1)) from request) ,$1, $2, $3, $4, $5)
     returning id;`;
     const now = localDateTimeUtils.getSystemDateTime();
-    const status = commonEnums.RequestStatus.Approved;
+    const status = commonEnums.RequestStatus.Pending;
     const values = [userId, storeId, now, type, status];
     const queryObject = {
         text: query,
@@ -268,6 +268,26 @@ function getRequestById(id) {
     return queryObject;
 }
 exports.getRequestById = getRequestById;
+function getRequestByIdLatest() {
+    const query = `select  *  from request ORDER BY id DESC limit 1`;
+    const values = [];
+    const queryObject = {
+        text: query,
+        values: values,
+    };
+    return queryObject;
+}
+exports.getRequestByIdLatest = getRequestByIdLatest;
+function getRequestByStoreIdWithPendingStatus(storeId) {
+    const query = `select * from request where store_id = $1 and (status = 1 or status = 0) `;
+    const values = [storeId];
+    const queryObject = {
+        text: query,
+        values: values,
+    };
+    return queryObject;
+}
+exports.getRequestByStoreIdWithPendingStatus = getRequestByStoreIdWithPendingStatus;
 function UpdateStatusRequest(status, id) {
     const query = `update request set status = $1 where id =$2;`;
     const values = [status, id];

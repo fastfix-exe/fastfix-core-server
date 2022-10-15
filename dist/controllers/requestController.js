@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UpdateRequest = exports.getRequestById = exports.createRequest = void 0;
+exports.UpdateRequest = exports.getListPendingRequestByStoreId = exports.getRequestLatest = exports.getRequestById = exports.createRequest = void 0;
 const db_config_1 = require("../config/db_config");
 const requestService = __importStar(require("../services/user/requestService"));
 function createRequest(req, res, next) {
@@ -63,6 +63,31 @@ function getRequestById(req, res, next) {
     });
 }
 exports.getRequestById = getRequestById;
+function getRequestLatest(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const response = yield requestService.getLatestById();
+            res.json(response);
+        }
+        catch (error) {
+            return next(error);
+        }
+    });
+}
+exports.getRequestLatest = getRequestLatest;
+function getListPendingRequestByStoreId(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const storeId = req.params.storeId;
+            const response = yield requestService.getListPendingByStoreId(storeId);
+            res.json(response);
+        }
+        catch (error) {
+            return next(error);
+        }
+    });
+}
+exports.getListPendingRequestByStoreId = getListPendingRequestByStoreId;
 function UpdateRequest(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
