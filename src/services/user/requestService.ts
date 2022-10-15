@@ -12,8 +12,8 @@ export async function getById(id: number) {
     return res;
 }
 
-export async function getLatestById() {  
-    const request = await requestDAL.getByIdLatest();
+export async function getLatestById(loginUser: any) {  
+    const request = await requestDAL.getByIdLatest(loginUser);
     const res = requestModels.createJsonObject(request)
     return res;
 }

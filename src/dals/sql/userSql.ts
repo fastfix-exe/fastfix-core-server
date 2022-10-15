@@ -248,9 +248,9 @@ export function getRequestById (id: number) {
     return queryObject;
 }
 
-export function getRequestByIdLatest () {
-    const query = `select  *  from request ORDER BY id DESC limit 1`;
-    const values: any = [];
+export function getRequestByIdLatest (customerId: string) {
+    const query = `select  *  from request where user_id = $1 ORDER BY id DESC limit 1`;
+    const values: any = [customerId];
     const queryObject = {
         text: query,
         values: values,

@@ -268,9 +268,9 @@ function getRequestById(id) {
     return queryObject;
 }
 exports.getRequestById = getRequestById;
-function getRequestByIdLatest() {
-    const query = `select  *  from request ORDER BY id DESC limit 1`;
-    const values = [];
+function getRequestByIdLatest(customerId) {
+    const query = `select  *  from request where user_id = $1 ORDER BY id DESC limit 1`;
+    const values = [customerId];
     const queryObject = {
         text: query,
         values: values,

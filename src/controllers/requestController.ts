@@ -27,7 +27,8 @@ export async function getRequestById (req: any, res: any, next: any) {
 
 export async function getRequestLatest (req: any, res: any, next: any) {
     try {
-        const response = await requestService.getLatestById();
+        const loginUser = req.loginUser;
+        const response = await requestService.getLatestById(loginUser);
         res.json(response);
     } catch (error) {
         return next(error);

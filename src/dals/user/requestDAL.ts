@@ -16,8 +16,8 @@ export async function getById (id: number) {
     return request;
 }
 
-export async function getByIdLatest () {
-    const queryCreate = userSql.getRequestByIdLatest();
+export async function getByIdLatest (loginUser: any) {
+    const queryCreate = userSql.getRequestByIdLatest(loginUser.id);
     let [request] = await db.query(queryCreate);
     return request;
 }

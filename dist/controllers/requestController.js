@@ -66,7 +66,8 @@ exports.getRequestById = getRequestById;
 function getRequestLatest(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const response = yield requestService.getLatestById();
+            const loginUser = req.loginUser;
+            const response = yield requestService.getLatestById(loginUser);
             res.json(response);
         }
         catch (error) {

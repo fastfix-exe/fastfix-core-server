@@ -51,9 +51,9 @@ function getById(id) {
     });
 }
 exports.getById = getById;
-function getByIdLatest() {
+function getByIdLatest(loginUser) {
     return __awaiter(this, void 0, void 0, function* () {
-        const queryCreate = userSql.getRequestByIdLatest();
+        const queryCreate = userSql.getRequestByIdLatest(loginUser.id);
         let [request] = yield db_config_1.db.query(queryCreate);
         return request;
     });

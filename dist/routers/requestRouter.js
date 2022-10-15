@@ -65,7 +65,7 @@ router.post('/api/customer/request/', requestController.createRequest);
 *  get:
 *     tags:
 *     - Request
-*     summary: Get latest request
+*     summary: Get latest request of current login customer
 *     security:
 *       - bearerAuth: []
 *     responses:
@@ -75,7 +75,7 @@ router.post('/api/customer/request/', requestController.createRequest);
 router.get('/api/customer/request/latest', requestController.getRequestLatest);
 /**
 * @openapi
-* '/api/customer/request/':
+* '/api/request/':
 *  put:
 *     tags:
 *     - Request
@@ -98,14 +98,14 @@ router.get('/api/customer/request/latest', requestController.getRequestLatest);
 *       200:
 *         description: Success
 */
-router.put('/api/customer/request/', requestController.UpdateRequest);
+router.put('/api/request/', requestController.UpdateRequest);
 /**
 * @openapi
-* '/api/customer/request/{id}':
+* '/api/request/{id}':
 *  get:
 *     tags:
 *     - Request
-*     summary: Get request by ID
+*     summary: Get request by request Id
 *     parameters:
 *     - in: path
 *       name: id
@@ -118,14 +118,14 @@ router.put('/api/customer/request/', requestController.UpdateRequest);
 *       200:
 *         description: Success
 */
-router.get('/api/customer/request/:id', requestController.getRequestById);
+router.get('/api/request/:id', requestController.getRequestById);
 /**
 * @openapi
-* '/api/customer/request/store/{storeId}':
+* '/api/request/store/{storeId}':
 *  get:
 *     tags:
 *     - Request
-*     summary: Get request by ID
+*     summary: Get list of request by store ID
 *     parameters:
 *     - in: path
 *       name: storeId
@@ -138,6 +138,6 @@ router.get('/api/customer/request/:id', requestController.getRequestById);
 *       200:
 *         description: Success
 */
-router.get('/api/customer/request/store/:storeId', requestController.getListPendingRequestByStoreId);
+router.get('/api/request/store/:storeId', requestController.getListPendingRequestByStoreId);
 exports.requestRouter = router;
 //# sourceMappingURL=requestRouter.js.map

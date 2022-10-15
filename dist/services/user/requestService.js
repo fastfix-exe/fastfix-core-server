@@ -51,9 +51,9 @@ function getById(id) {
     });
 }
 exports.getById = getById;
-function getLatestById() {
+function getLatestById(loginUser) {
     return __awaiter(this, void 0, void 0, function* () {
-        const request = yield requestDAL.getByIdLatest();
+        const request = yield requestDAL.getByIdLatest(loginUser);
         const res = requestModels.createJsonObject(request);
         return res;
     });
