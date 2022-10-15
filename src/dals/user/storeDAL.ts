@@ -135,9 +135,8 @@ export async function postStoreComment(loginUser: any, storeId: string, content:
         throw new exception.APIException(exception.HttpStatusCode.SERVER, "Login user id not found!");
     }
     const queryAddComment = userSql.insertStoreComment(commentId, storeId, loginUser.id, content, replyId || null, commonEnums.GeneralStatus.Activating, {}, loginUser.id, loginUser.role );
-    console.log(queryAddComment);
     await db.query(queryAddComment);
-    return true;
+    return await getStoreCommentByStoreId(storeId);
 }
 
 // post store rating

@@ -207,7 +207,8 @@ return queryObject;
 export function getListCommentsOfStore (storeId: string) {
     const query = `SELECT comment_id, store_id, sender_id, content, reply_id, status, hidden_data, sender_role
                     from store_comment
-                    where store_id = $1`;
+                    where store_id = $1
+                    order by created_at desc`;
     const values = [storeId];
     const queryObject = {
     text: query,

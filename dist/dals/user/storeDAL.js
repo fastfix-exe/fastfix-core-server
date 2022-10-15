@@ -171,9 +171,8 @@ function postStoreComment(loginUser, storeId, content, replyId) {
             throw new exception.APIException(exception.HttpStatusCode.SERVER, "Login user id not found!");
         }
         const queryAddComment = userSql.insertStoreComment(commentId, storeId, loginUser.id, content, replyId || null, commonEnums.GeneralStatus.Activating, {}, loginUser.id, loginUser.role);
-        console.log(queryAddComment);
         yield db_config_1.db.query(queryAddComment);
-        return true;
+        return yield getStoreCommentByStoreId(storeId);
     });
 }
 exports.postStoreComment = postStoreComment;
