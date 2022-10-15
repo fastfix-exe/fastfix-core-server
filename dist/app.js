@@ -31,6 +31,7 @@ const cors_1 = __importDefault(require("cors"));
 const authRouter_1 = require("./routers/authRouter");
 const storeRouter_1 = require("./routers/storeRouter");
 const customerRouter_1 = require("./routers/customerRouter");
+const userRouter_1 = require("./routers/userRouter");
 const swaggerRouter_1 = require("./routers/swaggerRouter");
 const exception = __importStar(require("./common/exception"));
 const log4js_config_1 = require("./config/log4js_config");
@@ -62,6 +63,7 @@ app.use(authRouter_1.authRouter);
 app.use(storeRouter_1.storeRouter);
 app.use(customerRouter_1.customerRouter);
 app.use(subcriptionRouter_1.subsriptionRouter);
+app.use(userRouter_1.userRouter);
 // không tìm thấy đường dẫn api
 function notFoundErrorHandler(req, res, next) {
     var err = new exception.APIException(exception.HttpStatusCode.CLIENT_NOT_FOUND, exception.ErrorMessage.API_E_001);

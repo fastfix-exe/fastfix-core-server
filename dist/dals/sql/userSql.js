@@ -23,7 +23,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateSubcription = exports.getSubcriptionById = exports.getListAllSubscription = exports.updateHiddenDataByStoreId = exports.updateStoreByStoreId = exports.getStoreById = exports.getListAllStore = exports.updateStore = exports.updateCustomer = exports.getStoreByStoreIdAndLoginId = exports.getStoreByLoginIdAndPassword = exports.getCustomerByIdAndEmail = exports.deleteRefreshToken = exports.insertRefreshToken = exports.getRefreshTokenInDb = exports.createCustomer = exports.getCustomerByEmail = void 0;
+exports.insertOrUpdateStoreRating = exports.insertStoreComment = exports.getListRatingsOfStore = exports.getListCommentsOfStore = exports.updateSubcription = exports.getSubcriptionById = exports.getListAllSubscription = exports.updateHiddenDataByStoreId = exports.updateStoreByStoreId = exports.getStoreById = exports.getListAllCustomer = exports.getListAllStore = exports.updateStore = exports.updateCustomer = exports.getStoreByStoreIdAndLoginId = exports.getStoreByLoginIdAndPassword = exports.getCustomerByIdAndEmail = exports.deleteRefreshToken = exports.insertRefreshToken = exports.getRefreshTokenInDb = exports.createCustomer = exports.getCustomerByEmail = void 0;
 const localDateTimeUtils = __importStar(require("../../common/utils/LocalDateTimeUtils"));
 // get customer's infor
 function getCustomerByEmail(email) {
@@ -148,6 +148,16 @@ function getListAllStore() {
     return queryObject;
 }
 exports.getListAllStore = getListAllStore;
+function getListAllCustomer() {
+    const query = `SELECT * FROM CUSTOMER`;
+    const values = [];
+    const queryObject = {
+        text: query,
+        values: values,
+    };
+    return queryObject;
+}
+exports.getListAllCustomer = getListAllCustomer;
 function getStoreById(storeId) {
     const query = `SELECT * FROM STORE WHERE STORE_ID = $1`;
     const values = [storeId];
@@ -214,4 +224,60 @@ WHERE STORE_ID = $1 AND LOGIN_ID = $9;`;
     return queryObject;
 }
 exports.updateSubcription = updateSubcription;
+// get comment
+function getListCommentsOfStore(storeId) {
+    const query = `SELECT comment_id, store_id, sender_id, content, reply_id, status, hidden_data, sender_role
+                    from store_comment
+                    where store_id = $1`;
+    const values = [storeId];
+    const queryObject = {
+        text: query,
+        values: values,
+    };
+    return queryObject;
+}
+exports.getListCommentsOfStore = getListCommentsOfStore;
+// get rating
+function getListRatingsOfStore(storeId) {
+    const query = `SELECT rating_id, store_id, customer_id, status, hidden_data, rating
+                    from store_rating
+                    where store_id = $1`;
+    const values = [storeId];
+    const queryObject = {
+        text: query,
+        values: values,
+    };
+    return queryObject;
+}
+exports.getListRatingsOfStore = getListRatingsOfStore;
+// add comment
+function insertStoreComment(commentId, storeId, customerId, content, replyId, status, hiddenData, userId, senderRole) {
+    const query = `INSERT INTO store_comment(
+        comment_id, store_id, sender_id, content, reply_id, status, hidden_data, created_at, created_by, updated_at, updated_by, deleted_at, deleted_by, sender_role)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14);`;
+    const now = localDateTimeUtils.getSystemDateTime();
+    const values = [commentId, storeId, customerId, content, replyId, status, hiddenData, now, userId, now, userId, null, null, senderRole];
+    const queryObject = {
+        text: query,
+        values: values,
+    };
+    return queryObject;
+}
+exports.insertStoreComment = insertStoreComment;
+// add or update
+function insertOrUpdateStoreRating(ratingId, storeId, customerId, rating, status, hiddenData, userId) {
+    const query = `INSERT INTO public.store_rating(
+        rating_id, store_id, customer_id, status, hidden_data, created_at, created_by, updated_at, updated_by, deleted_at, deleted_by, rating)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+        ON CONFLICT (store_id, customer_id) DO UPDATE
+        SET rating = $12;`;
+    const now = localDateTimeUtils.getSystemDateTime();
+    const values = [ratingId, storeId, customerId, status, hiddenData, now, userId, now, userId, null, null, rating];
+    const queryObject = {
+        text: query,
+        values: values,
+    };
+    return queryObject;
+}
+exports.insertOrUpdateStoreRating = insertOrUpdateStoreRating;
 //# sourceMappingURL=userSql.js.map

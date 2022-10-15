@@ -3,6 +3,7 @@ import cors from "cors";
 import { authRouter } from "./routers/authRouter";
 import { storeRouter } from "./routers/storeRouter";
 import { customerRouter } from "./routers/customerRouter";
+import { userRouter } from "./routers/userRouter";
 import { swaggerRouter } from "./routers/swaggerRouter";
 import * as exception from "./common/exception";
 import { logger } from "./config/log4js_config";
@@ -45,7 +46,9 @@ app.use(authRouter);
 app.use(storeRouter);
 app.use(customerRouter);
 app.use(subsriptionRouter);
+
 app.use(requestRouter);
+app.use(userRouter);
 
 // không tìm thấy đường dẫn api
 function notFoundErrorHandler(req: any, res: any, next: any) {

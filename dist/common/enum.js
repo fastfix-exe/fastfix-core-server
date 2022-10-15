@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UserStatus = exports.UserRole = exports.CustomerGender = void 0;
+exports.GeneralStatus = exports.UserStatus = exports.UserRole = exports.CustomerGender = void 0;
 var CustomerGender;
 (function (CustomerGender) {
     CustomerGender[CustomerGender["male"] = 1] = "male";
@@ -19,4 +19,9 @@ var UserStatus;
     UserStatus[UserStatus["Deleted"] = 1] = "Deleted";
     UserStatus[UserStatus["Approved"] = 2] = "Approved";
 })(UserStatus = exports.UserStatus || (exports.UserStatus = {}));
+var GeneralStatus;
+(function (GeneralStatus) {
+    GeneralStatus[GeneralStatus["Activating"] = 1] = "Activating";
+    GeneralStatus[GeneralStatus["Deleted"] = 0] = "Deleted";
+})(GeneralStatus = exports.GeneralStatus || (exports.GeneralStatus = {}));
 //# sourceMappingURL=enum.js.map

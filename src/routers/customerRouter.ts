@@ -111,4 +111,101 @@ router.post('/api/customer/store/list', customerController.getListNearestStore);
  */
 router.get('/api/customer/store/:storeId', customerController.getStoreByStoreId);
 
+ /**
+ * @openapi
+ * '/api/customer/store/{storeId}':
+ *  post:
+ *     tags:
+ *     - Customer
+ *     summary: Get list of store and distance
+ *     parameters:
+ *     - in: path
+ *       name: storeId
+ *       required: true
+ *       schema:
+ *          type: string
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               latitude: 
+ *                 description: current latitude
+ *                 type: string
+ *               longtitude: 
+ *                 description: current longtitude
+ *                 type: string
+ *             required:
+ *               - latitude
+ *               - longtitude
+ *     responses:
+ *       200:
+ *         description: Success
+ */
+  router.post('/api/customer/store/:storeId', customerController.getStoreAndDistanceByStoreId);
+
+ /**
+ * @openapi
+ * '/api/customer/store/list':
+ *  post:
+ *     tags:
+ *     - Customer
+ *     summary: Get list of store and distance
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               latitude: 
+ *                 description: current latitude
+ *                 type: string
+ *               longtitude: 
+ *                 description: current longtitude
+ *                 type: string
+ *             required:
+ *               - latitude
+ *               - longtitude
+ *     responses:
+ *       200:
+ *         description: Success
+ */
+  router.post('/api/customer/store/list', customerController.getListNearestStore);
+
+/**
+ * @openapi
+ * '/api/customer/store/rating/{storeId}':
+ *  post:
+ *     tags:
+ *     - Customer
+ *     summary: Rate a store (insert and update)
+ *     parameters:
+ *     - in: path
+ *       name: storeId
+ *       required: true
+ *       schema:
+ *          type: string
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               rating: 
+ *                 description: integer rating
+ *                 type: number
+ *             required:
+ *               - rating
+ *     responses:
+ *       200:
+ *         description: Success
+ */
+  router.post('/api/customer/store/rating/:storeId', userController.insertOrUpdateRatingOfStoreByStoreId);
 export const customerRouter = router;

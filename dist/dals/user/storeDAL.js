@@ -32,11 +32,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addFieldHiddenData = exports.updateStoreById = exports.getStoreById = exports.getListNearestStore = exports.getListStore = void 0;
+exports.postStoreRating = exports.postStoreComment = exports.getStoreRatingByStoreId = exports.getStoreCommentByStoreId = exports.addFieldHiddenData = exports.updateStoreById = exports.getStoreById = exports.getListNearestStore = exports.getListStore = void 0;
 const db_config_1 = require("../../config/db_config");
+const commonEnums = __importStar(require("../../common/enum"));
 const userSql = __importStar(require("../sql/userSql"));
 const exception = __importStar(require("../../common/exception"));
+const commentModel = __importStar(require(".././../models/StoreCommentModel"));
+const ratingModel = __importStar(require(".././../models/StoreRatingModel"));
 const locationUtils = __importStar(require(".././../common/utils/LocationUtils"));
+const guid_typescript_1 = require("guid-typescript");
 function getListStore() {
     return __awaiter(this, void 0, void 0, function* () {
         const queryGetListAllStore = userSql.getListAllStore();
@@ -60,13 +64,16 @@ function getListNearestStore(currentPotition) {
     });
 }
 exports.getListNearestStore = getListNearestStore;
-function getStoreById(storeId) {
+function getStoreById(storeId, currentPotition) {
+    var _a;
     return __awaiter(this, void 0, void 0, function* () {
         const queryGetOneStore = userSql.getStoreById(storeId);
         const [store] = yield db_config_1.db.query(queryGetOneStore);
         if (!store || store.deleted_at || store.deleted_by) {
             throw new exception.APIException(exception.HttpStatusCode.CLIENT_BAD_REQUEST, exception.ErrorMessage.API_E_008);
         }
+        const storeCoordinates = (_a = store.hidden_data.coordinates) === null || _a === void 0 ? void 0 : _a.split(", ");
+        store.distance = locationUtils.distance(currentPotition === null || currentPotition === void 0 ? void 0 : currentPotition.latitude, currentPotition === null || currentPotition === void 0 ? void 0 : currentPotition.longtitude, storeCoordinates[0], storeCoordinates[1], "K");
         return store;
     });
 }
@@ -101,4 +108,89 @@ function addFieldHiddenData(storeId, hiddenData) {
     });
 }
 exports.addFieldHiddenData = addFieldHiddenData;
+// get store comment
+function getStoreCommentByStoreId(storeId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const queryGetListComments = userSql.getListCommentsOfStore(storeId);
+        const listCommentsDB = yield db_config_1.db.query(queryGetListComments);
+        const queryGetListCustomers = userSql.getListAllCustomer();
+        const listCustomers = yield db_config_1.db.query(queryGetListCustomers);
+        const queryGetListStores = userSql.getListAllStore();
+        const listStores = yield db_config_1.db.query(queryGetListStores);
+        // create object json format
+        const listComments = listCommentsDB.map((commentDB) => {
+            let avatar = '';
+            let name = '';
+            if (commentDB.sender_role === commonEnums.UserRole.customer) {
+                const sender = listCustomers.find((e) => e.customer_id === commentDB.sender_id);
+                avatar = sender.avatar_picture;
+                name = sender.customer_name;
+            }
+            if (commentDB.sender_role === commonEnums.UserRole.store) {
+                const sender = listStores.find((e) => e.store_id === commentDB.sender_id);
+                avatar = sender.avatar_picture;
+                name = sender.store_name;
+            }
+            if (!avatar || !name) {
+                return null;
+            }
+            return commentModel.createJsonObject(commentDB, avatar, name);
+        });
+        const listRes = listComments.filter((comment) => {
+            if (!comment) {
+                return false;
+            }
+            if (comment.getReplyId) {
+                const parentComment = listComments.find((e) => (e === null || e === void 0 ? void 0 : e.getCommentId) === comment.getReplyId);
+                if (parentComment) {
+                    parentComment.addReplyToList(comment);
+                    // not push to list of root comments
+                    return false;
+                }
+            }
+            return true;
+        });
+        return listRes;
+    });
+}
+exports.getStoreCommentByStoreId = getStoreCommentByStoreId;
+// get store rating
+function getStoreRatingByStoreId(storeId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const queryGetListRatings = userSql.getListRatingsOfStore(storeId);
+        const listRatings = yield db_config_1.db.query(queryGetListRatings);
+        return listRatings.map((ratingDB) => ratingModel.createJsonObject(ratingDB));
+    });
+}
+exports.getStoreRatingByStoreId = getStoreRatingByStoreId;
+// post store comment
+function postStoreComment(loginUser, storeId, content, replyId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const commentId = guid_typescript_1.Guid.create().toString().replace(/-/g, '');
+        if (!loginUser.id) {
+            throw new exception.APIException(exception.HttpStatusCode.SERVER, "Login user id not found!");
+        }
+        const queryAddComment = userSql.insertStoreComment(commentId, storeId, loginUser.id, content, replyId || null, commonEnums.GeneralStatus.Activating, {}, loginUser.id, loginUser.role);
+        console.log(queryAddComment);
+        yield db_config_1.db.query(queryAddComment);
+        return true;
+    });
+}
+exports.postStoreComment = postStoreComment;
+// post store rating
+function postStoreRating(loginUser, storeId, rating) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const ratingId = guid_typescript_1.Guid.create().toString().replace(/-/g, '');
+        const queryAddRating = userSql.insertOrUpdateStoreRating(ratingId, storeId, loginUser.id, rating, commonEnums.GeneralStatus.Activating, {}, loginUser.id);
+        yield db_config_1.db.query(queryAddRating);
+        const listRatings = yield getStoreRatingByStoreId(storeId);
+        const averageRating = (listRatings.map((rating) => rating.getRating).reduce((a, b) => a + b, 0)) / listRatings.length;
+        const store = yield getStoreById(storeId);
+        store.hidden_data.rating = averageRating;
+        const queryUpdatehiddenData = userSql.updateHiddenDataByStoreId(storeId, store.hidden_data);
+        yield db_config_1.db.query(queryUpdatehiddenData);
+        return true;
+    });
+}
+exports.postStoreRating = postStoreRating;
 //# sourceMappingURL=storeDAL.js.map

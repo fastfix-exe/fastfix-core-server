@@ -14,17 +14,16 @@ const pg_1 = require("pg");
 const env_config_1 = require("./env_config");
 let pool;
 //create pool
-if (env_config_1.envConfig.NODE_ENV === 'localenv') {
-    pool = new pg_1.Pool({
-        connectionString: env_config_1.envConfig.PG_CONNECTION_STRING,
-    });
-}
-else {
-    pool = new pg_1.Pool({
-        connectionString: env_config_1.envConfig.PG_CONNECTION_STRING,
-        ssl: { rejectUnauthorized: false }
-    });
-}
+// if (envConfig.NODE_ENV === 'localenv') {
+//     pool = new Pool({
+//         connectionString: envConfig.PG_CONNECTION_STRING,
+//     });
+// } else {
+pool = new pg_1.Pool({
+    connectionString: env_config_1.envConfig.PG_CONNECTION_STRING,
+    ssl: { rejectUnauthorized: false }
+});
+// }
 //sql query
 function query(text) {
     return __awaiter(this, void 0, void 0, function* () {

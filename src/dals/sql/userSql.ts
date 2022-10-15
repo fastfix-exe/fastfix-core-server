@@ -125,6 +125,16 @@ export function getListAllStore () {
     return queryObject;
 }
 
+export function getListAllCustomer () {
+    const query = `SELECT * FROM CUSTOMER`;
+    const values: any = [];
+    const queryObject = {
+        text: query,
+        values: values,
+    }
+    return queryObject;
+}
+
 export function getStoreById (storeId: string) {
     const query = `SELECT * FROM STORE WHERE STORE_ID = $1`;
     const values: any = [storeId];
@@ -226,4 +236,60 @@ text: query,
 values: values,
 }
 return queryObject;
+}
+
+// get comment
+export function getListCommentsOfStore (storeId: string) {
+    const query = `SELECT comment_id, store_id, sender_id, content, reply_id, status, hidden_data, sender_role
+                    from store_comment
+                    where store_id = $1`;
+    const values = [storeId];
+    const queryObject = {
+    text: query,
+    values: values,
+    }
+    return queryObject;
+}
+
+// get rating
+export function getListRatingsOfStore (storeId: string) {
+    const query = `SELECT rating_id, store_id, customer_id, status, hidden_data, rating
+                    from store_rating
+                    where store_id = $1`;
+    const values = [storeId];
+    const queryObject = {
+    text: query,
+    values: values,
+    }
+    return queryObject;
+}
+
+// add comment
+export function insertStoreComment (commentId: string, storeId: string, customerId: string, content: string, replyId: string | null, status: number, hiddenData: any, userId: string, senderRole: number) {
+    const query = `INSERT INTO store_comment(
+        comment_id, store_id, sender_id, content, reply_id, status, hidden_data, created_at, created_by, updated_at, updated_by, deleted_at, deleted_by, sender_role)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14);`;
+    const now = localDateTimeUtils.getSystemDateTime();
+    const values = [commentId, storeId, customerId, content, replyId, status, hiddenData, now, userId, now, userId, null, null, senderRole];
+    const queryObject = {
+    text: query,
+    values: values,
+    }
+    return queryObject;
+}
+
+// add or update
+export function insertOrUpdateStoreRating (ratingId: string, storeId: string, customerId: string, rating: number, status: number, hiddenData: any, userId: string) {
+    const query = `INSERT INTO public.store_rating(
+        rating_id, store_id, customer_id, status, hidden_data, created_at, created_by, updated_at, updated_by, deleted_at, deleted_by, rating)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+        ON CONFLICT (store_id, customer_id) DO UPDATE
+        SET rating = $12;`;
+    const now = localDateTimeUtils.getSystemDateTime();
+    const values = [ratingId, storeId, customerId, status,hiddenData, now, userId, now, userId, null,null, rating];
+    const queryObject = {
+    text: query,
+    values: values,
+    }
+    return queryObject;
 }
