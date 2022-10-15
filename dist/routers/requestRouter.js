@@ -158,10 +158,7 @@ router.get('/api/request/store/:storeId', requestController.getListPendingReques
  *                 description: coordinate
  *                 type: string
  *               requestId:
- *                 description: the store id
- *                 type: string
- *               type:
- *                 description: request type
+ *                 description: the request id
  *                 type: string
  *     responses:
  *       200:
@@ -183,14 +180,11 @@ router.post('/api/customer/request/position', requestController.customerChangePo
 *           schema:
 *             type: object
 *             properties:
-*               userId:
-*                 description: the user id
+*               coordinates:
+*                 description: coordinate
 *                 type: string
-*               storeId:
-*                 description: the store id
-*                 type: string
-*               type:
-*                 description: request type
+*               requestId:
+*                 description: the request id
 *                 type: string
 *     responses:
 *       200:
