@@ -100,7 +100,7 @@ app.use(logErrors);
 app.use(errorHandler);
 const server = new http_1.default.Server(app);
 const io = (new socket_io_1.Server()).listen(server);
-server.listen(3000);
+server.listen(process.env.PORT || 3000);
 console.log("PORT: 3000");
 io.on("connection", function (socket) {
     console.log('client connected!');

@@ -91,7 +91,7 @@ const server = new http.Server(app);
 
 const io = (new Server()).listen(server);
 
-server.listen(3000);
+server.listen(process.env.PORT || 3000);
 console.log("PORT: 3000");
 
 io.on("connection", function(socket)
