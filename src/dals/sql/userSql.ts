@@ -229,7 +229,7 @@ export function createRequest (userId: string, storeId: string, type : string ) 
     VALUES ((SELECT (coalesce(MAX(id)+1,1)) from request) ,$1, $2, $3, $4, $5)
     returning id;`;
     const now = localDateTimeUtils.getSystemDateTime();
-    const status = commonEnums.RequestStatus.Approved;
+    const status = commonEnums.RequestStatus.Pending;
     const values = [userId, storeId, now,type,status ];
     const queryObject = {
         text: query,
@@ -241,6 +241,26 @@ export function createRequest (userId: string, storeId: string, type : string ) 
 export function getRequestById (id: number) {
     const query = `select * from request where id = $1`;
     const values: any = [id];
+    const queryObject = {
+        text: query,
+        values: values,
+    }
+    return queryObject;
+}
+
+export function getRequestByIdLatest () {
+    const query = `select  *  from request ORDER BY id DESC limit 1`;
+    const values: any = [];
+    const queryObject = {
+        text: query,
+        values: values,
+    }
+    return queryObject;
+}
+
+export function getRequestByStoreIdWithPendingStatus (storeId : string) {
+    const query = `select * from request where store_id = $1 and (status = 1 or status = 0) `;
+    const values: any = [storeId];
     const queryObject = {
         text: query,
         values: values,

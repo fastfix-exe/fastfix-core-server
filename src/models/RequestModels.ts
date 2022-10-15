@@ -15,7 +15,7 @@ export class Request {
     private storeId: string;
     private dateTime?: Date;
     private type?: string;
-    private status?: number = commonEnums.RequestStatus.Approved;
+    private status?: number = commonEnums.RequestStatus.Pending;
 
     constructor (id: number, userId: string, storeId: string, dateTime?: Date, type?: string, status?: number) {
         this.id =  id;

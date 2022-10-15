@@ -19,9 +19,10 @@ export enum UserStatus {
 
 
 export enum RequestStatus{
-    New = 0,
-    Approved =1,
-    Cancel = 2,
+    Pending = 0,
+    Processing =1,
+    Success = 2,
+    Failed = 3
 }
 
 export enum GeneralStatus {

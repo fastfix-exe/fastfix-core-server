@@ -16,6 +16,18 @@ export async function getById (id: number) {
     return request;
 }
 
+export async function getByIdLatest () {
+    const queryCreate = userSql.getRequestByIdLatest();
+    let [request] = await db.query(queryCreate);
+    return request;
+}
+
+export async function getListByStoreIdWithPending (storeId : string) {
+    const queryCreate = userSql.getRequestByStoreIdWithPendingStatus(storeId);
+    let request = await db.query(queryCreate);
+    return request;
+}
+
 export async function UpdateRequest (Object: any) {
     const queryCreate = userSql.UpdateStatusRequest(Object.status,Object.id);
      await db.query(queryCreate);

@@ -25,6 +25,25 @@ export async function getRequestById (req: any, res: any, next: any) {
     }
 }
 
+export async function getRequestLatest (req: any, res: any, next: any) {
+    try {
+        const response = await requestService.getLatestById();
+        res.json(response);
+    } catch (error) {
+        return next(error);
+    }
+}
+
+export async function getListPendingRequestByStoreId (req: any, res: any, next: any) {
+    try {
+        const storeId: string = req.params.storeId as string;
+        const response = await requestService.getListPendingByStoreId(storeId);
+        res.json(response);
+    } catch (error) {
+        return next(error);
+    }
+}
+
 export async function UpdateRequest (req: any, res: any, next: any) {
     try {
         await db.query('BEGIN');
