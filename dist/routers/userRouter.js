@@ -55,7 +55,7 @@ router.get('/api/user/store/comment/:storeId', userController.getCommentOfStoreB
  * '/api/user/store/comment/{storeId}':
  *  post:
  *     tags:
- *     - Customer
+ *     - User
  *     summary: Comment a store (or reply)
  *     parameters:
  *     - in: path
