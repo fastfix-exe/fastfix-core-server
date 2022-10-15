@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getListEmployeeByStoreId = void 0;
+exports.getEmployeeByCurrentRequestId = exports.getEmployeeByEmployeeId = exports.getListEmployeeByStoreId = void 0;
 const storeService = __importStar(require("../services/user/storeService"));
 function getListEmployeeByStoreId(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -48,4 +48,32 @@ function getListEmployeeByStoreId(req, res, next) {
     });
 }
 exports.getListEmployeeByStoreId = getListEmployeeByStoreId;
+function getEmployeeByEmployeeId(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const loginUser = req.loginUser;
+            const employeeId = req.params.employeeId;
+            const response = yield storeService.getEmployeeByEmployeeId(employeeId);
+            res.json(response);
+        }
+        catch (error) {
+            return next(error);
+        }
+    });
+}
+exports.getEmployeeByEmployeeId = getEmployeeByEmployeeId;
+function getEmployeeByCurrentRequestId(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const loginUser = req.loginUser;
+            const currentRequestId = req.params.requestId;
+            const response = yield storeService.getEmployeeByCurrentRequestId(currentRequestId);
+            res.json(response);
+        }
+        catch (error) {
+            return next(error);
+        }
+    });
+}
+exports.getEmployeeByCurrentRequestId = getEmployeeByCurrentRequestId;
 //# sourceMappingURL=employeeController.js.map

@@ -12,6 +12,17 @@ export function getCustomerByEmail (email: string) {
     return queryObject;
 }
 
+// get customer's infor by customerId
+export function getCustomerByCustomerId (customerId: string) {
+    const query = `SELECT * FROM CUSTOMER WHERE customer_id = $1`;
+    const values = [customerId];
+    const queryObject = {
+        text: query,
+        values: values,
+    }
+    return queryObject;
+}
+
 // insert customer
 export function createCustomer (customerId: string, email: string, customerName: string, avatarPicture: string, hiddenData: any) {
     const query = `INSERT INTO customer(customer_id, email, customer_name, avatar_picture, hidden_data, created_at, created_by, updated_at, updated_by, status)
@@ -224,60 +235,6 @@ export function getSubcriptionById (subcriptionId: string) {
     return queryObject;
 }
 
-export function createRequest (userId: string, storeId: string, type : string ) {
-    const query = `insert into request(id, user_id, store_id, date_time, type, status)
-    VALUES ((SELECT (coalesce(MAX(id)+1,1)) from request) ,$1, $2, $3, $4, $5)
-    returning id;`;
-    const now = localDateTimeUtils.getSystemDateTime();
-    const status = commonEnums.RequestStatus.Pending;
-    const values = [userId, storeId, now,type,status ];
-    const queryObject = {
-        text: query,
-        values: values,
-    }
-    return queryObject;
-}
-
-export function getRequestById (id: number) {
-    const query = `select * from request where id = $1`;
-    const values: any = [id];
-    const queryObject = {
-        text: query,
-        values: values,
-    }
-    return queryObject;
-}
-
-export function getRequestByIdLatest (customerId: string) {
-    const query = `select  *  from request where user_id = $1 ORDER BY id DESC limit 1`;
-    const values: any = [customerId];
-    const queryObject = {
-        text: query,
-        values: values,
-    }
-    return queryObject;
-}
-
-export function getRequestByStoreIdWithPendingStatus (storeId : string) {
-    const query = `select * from request where store_id = $1 and (status = 1 or status = 0) `;
-    const values: any = [storeId];
-    const queryObject = {
-        text: query,
-        values: values,
-    }
-    return queryObject;
-}
-
-export function UpdateStatusRequest (status: number, id: number) {
-    const query = `update request set status = $1 where id =$2;`;
-    const values = [status,id];
-    const queryObject = {
-        text: query,
-        values: values,
-    }
-    return queryObject;
-}
-
 export function updateSubcription (subcriptionId: string, name: string, price: number, description: string) {
 const query = `UPDATE subcription
 SET name=$2, price = $3, description = $4, updated_at = $5
@@ -348,13 +305,43 @@ export function insertOrUpdateStoreRating (ratingId: string, storeId: string, cu
     return queryObject;
 }
 
-// add or update
+// add or update rating
 export function getRatingByUniqueKey (storeId: string, customerId: string) {
     const query = `SELECT rating_id, store_id, customer_id, status, hidden_data, rating
     from store_rating
     where store_id = $1 and customer_id = $2`;
-    const now = localDateTimeUtils.getSystemDateTime();
     const values = [storeId, customerId];
+    const queryObject = {
+    text: query,
+    values: values,
+    }
+    return queryObject;
+}
+
+export function getEmployeeByEmployeeId (employeeId: string) {
+    const query = `SELECT * from store_employee where employee_id = $1`;
+    const values = [employeeId];
+    const queryObject = {
+    text: query,
+    values: values,
+    }
+    return queryObject;
+}
+
+export function getEmployeeByCurrentRequestId (currentRequestId: number) {
+    const query = `SELECT * from store_employee where current_request_id = $1`;
+    const values = [currentRequestId];
+    const queryObject = {
+    text: query,
+    values: values,
+    }
+    return queryObject;
+}
+
+export function updateCurrentRequestIdOfLoginEmployee(employeeId: string, requestId: number) {
+    const query = 'update store_employee set current_request_id = $2, updated_by = $1, updated_at = $3 where employee_id = $1'
+    const now = localDateTimeUtils.getSystemDateTime();
+    const values = [employeeId, requestId, now];
     const queryObject = {
     text: query,
     values: values,

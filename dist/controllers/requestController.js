@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UpdateRequest = exports.getListPendingRequestByStoreId = exports.getRequestLatest = exports.getRequestById = exports.createRequest = void 0;
+exports.UpdateRequestStatus = exports.getListPendingRequestByStoreId = exports.getRequestLatest = exports.getRequestById = exports.createRequest = void 0;
 const db_config_1 = require("../config/db_config");
 const requestService = __importStar(require("../services/user/requestService"));
 function createRequest(req, res, next) {
@@ -89,11 +89,17 @@ function getListPendingRequestByStoreId(req, res, next) {
     });
 }
 exports.getListPendingRequestByStoreId = getListPendingRequestByStoreId;
-function UpdateRequest(req, res, next) {
+function UpdateRequestStatus(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             yield db_config_1.db.query('BEGIN');
-            const response = yield requestService.UpdateRequest(req.body);
+            const loginUser = req.loginUser;
+            const requestId = req.body.id;
+            const status = req.body.status;
+            const response = yield requestService.UpdateRequestStatus(loginUser, requestId, status);
+            console.log('__Start sending msg');
+            req.app.get('socketio').emit('changed-request', response);
+            console.log('__End sending msg');
             res.json(response);
             yield db_config_1.db.query('COMMIT');
         }
@@ -103,5 +109,5 @@ function UpdateRequest(req, res, next) {
         }
     });
 }
-exports.UpdateRequest = UpdateRequest;
+exports.UpdateRequestStatus = UpdateRequestStatus;
 //# sourceMappingURL=requestController.js.map

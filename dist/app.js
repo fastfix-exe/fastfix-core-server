@@ -36,11 +36,12 @@ const employeeRouter_1 = require("./routers/employeeRouter");
 const swaggerRouter_1 = require("./routers/swaggerRouter");
 const exception = __importStar(require("./common/exception"));
 const log4js_config_1 = require("./config/log4js_config");
-const env_config_1 = require("./config/env_config");
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
+const http_1 = __importDefault(require("http"));
 const authMiddleware = __importStar(require("./middlewares/authMiddleware"));
 const subcriptionRouter_1 = require("./routers/subcriptionRouter");
 const requestRouter_1 = require("./routers/requestRouter");
+const socket_io_1 = require("socket.io");
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
 app.use((0, cookie_parser_1.default)());
@@ -97,9 +98,21 @@ function errorHandler(err, req, res, next) {
 app.use(notFoundErrorHandler);
 app.use(logErrors);
 app.use(errorHandler);
-// chạy server local
-app.listen(env_config_1.envConfig.PORT, () => {
-    console.log("Server is running on: http://localhost:" + env_config_1.envConfig.PORT);
+const server = new http_1.default.Server(app);
+const io = (new socket_io_1.Server()).listen(server);
+server.listen(3000);
+console.log("PORT: 3000");
+io.on("connection", function (socket) {
+    console.log('client connected!');
+    socket.on("disconnect", function () {
+        console.log("Socket IO disconnected!");
+    });
+    //server lắng nghe dữ liệu từ client
+    socket.on("Client-sent-data", function (data) {
+        //sau khi lắng nghe dữ liệu, server phát lại dữ liệu này đến các client khác
+        socket.emit("Server-sent-data", data);
+    });
 });
-exports.default = app;
+app.set('socketio', io);
+exports.default = server;
 //# sourceMappingURL=app.js.map

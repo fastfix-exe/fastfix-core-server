@@ -35,6 +35,9 @@ class Request {
         this.type = type;
         this.status = status;
     }
+    get getUserId() {
+        return this.userId;
+    }
 }
 exports.Request = Request;
 function createJsonObject(data) {

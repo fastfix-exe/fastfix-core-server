@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getCurrentUserRatedStar = exports.postStoreRating = exports.postStoreComment = exports.getStoreRatingByStoreId = exports.getStoreCommentByStoreId = exports.addFieldHiddenData = exports.updateStoreById = exports.getStoreById = exports.getListNearestStore = exports.getListEmployeeByStoreId = exports.getListStore = void 0;
+exports.getEmployeeByCurrentRequestId = exports.getEmpByEmpId = exports.getCurrentUserRatedStar = exports.postStoreRating = exports.postStoreComment = exports.getStoreRatingByStoreId = exports.getStoreCommentByStoreId = exports.addFieldHiddenData = exports.updateStoreById = exports.getStoreById = exports.getListNearestStore = exports.getListEmployeeByStoreId = exports.getListStore = void 0;
 const db_config_1 = require("../../config/db_config");
 const commonEnums = __importStar(require("../../common/enum"));
 const userSql = __importStar(require("../sql/userSql"));
@@ -208,4 +208,20 @@ function getCurrentUserRatedStar(loginUser, storeId) {
     });
 }
 exports.getCurrentUserRatedStar = getCurrentUserRatedStar;
+function getEmpByEmpId(empId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const queryGetEmpById = userSql.getEmployeeByEmployeeId(empId);
+        const [emp] = yield db_config_1.db.query(queryGetEmpById);
+        return emp;
+    });
+}
+exports.getEmpByEmpId = getEmpByEmpId;
+function getEmployeeByCurrentRequestId(currentRequestId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const queryGetEmpById = userSql.getEmployeeByCurrentRequestId(currentRequestId);
+        const [emp] = yield db_config_1.db.query(queryGetEmpById);
+        return emp;
+    });
+}
+exports.getEmployeeByCurrentRequestId = getEmployeeByCurrentRequestId;
 //# sourceMappingURL=storeDAL.js.map

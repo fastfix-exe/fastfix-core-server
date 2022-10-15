@@ -23,9 +23,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getRatingByUniqueKey = exports.insertOrUpdateStoreRating = exports.insertStoreComment = exports.getListRatingsOfStore = exports.getListCommentsOfStore = exports.updateSubcription = exports.UpdateStatusRequest = exports.getRequestByStoreIdWithPendingStatus = exports.getRequestByIdLatest = exports.getRequestById = exports.createRequest = exports.getSubcriptionById = exports.getListAllSubscription = exports.updateHiddenDataByStoreId = exports.updateStoreByStoreId = exports.getStoreById = exports.getListAllCustomer = exports.getListAllEmployeeByStoreId = exports.getListAllStore = exports.updateStore = exports.updateCustomer = exports.getEmployeeByEmpIdAndLoginId = exports.getStoreByStoreIdAndLoginId = exports.getEmployeeByLoginIdAndPassword = exports.getStoreByLoginIdAndPassword = exports.getCustomerByIdAndEmail = exports.deleteRefreshToken = exports.insertRefreshToken = exports.getRefreshTokenInDb = exports.createCustomer = exports.getCustomerByEmail = void 0;
+exports.updateCurrentRequestIdOfLoginEmployee = exports.getEmployeeByCurrentRequestId = exports.getEmployeeByEmployeeId = exports.getRatingByUniqueKey = exports.insertOrUpdateStoreRating = exports.insertStoreComment = exports.getListRatingsOfStore = exports.getListCommentsOfStore = exports.updateSubcription = exports.getSubcriptionById = exports.getListAllSubscription = exports.updateHiddenDataByStoreId = exports.updateStoreByStoreId = exports.getStoreById = exports.getListAllCustomer = exports.getListAllEmployeeByStoreId = exports.getListAllStore = exports.updateStore = exports.updateCustomer = exports.getEmployeeByEmpIdAndLoginId = exports.getStoreByStoreIdAndLoginId = exports.getEmployeeByLoginIdAndPassword = exports.getStoreByLoginIdAndPassword = exports.getCustomerByIdAndEmail = exports.deleteRefreshToken = exports.insertRefreshToken = exports.getRefreshTokenInDb = exports.createCustomer = exports.getCustomerByCustomerId = exports.getCustomerByEmail = void 0;
 const localDateTimeUtils = __importStar(require("../../common/utils/LocalDateTimeUtils"));
-const commonEnums = __importStar(require("../../common/enum"));
 // get customer's infor
 function getCustomerByEmail(email) {
     const query = `SELECT * FROM CUSTOMER WHERE EMAIL = $1`;
@@ -37,6 +36,17 @@ function getCustomerByEmail(email) {
     return queryObject;
 }
 exports.getCustomerByEmail = getCustomerByEmail;
+// get customer's infor by customerId
+function getCustomerByCustomerId(customerId) {
+    const query = `SELECT * FROM CUSTOMER WHERE customer_id = $1`;
+    const values = [customerId];
+    const queryObject = {
+        text: query,
+        values: values,
+    };
+    return queryObject;
+}
+exports.getCustomerByCustomerId = getCustomerByCustomerId;
 // insert customer
 function createCustomer(customerId, email, customerName, avatarPicture, hiddenData) {
     const query = `INSERT INTO customer(customer_id, email, customer_name, avatar_picture, hidden_data, created_at, created_by, updated_at, updated_by, status)
@@ -244,60 +254,6 @@ function getSubcriptionById(subcriptionId) {
     return queryObject;
 }
 exports.getSubcriptionById = getSubcriptionById;
-function createRequest(userId, storeId, type) {
-    const query = `insert into request(id, user_id, store_id, date_time, type, status)
-    VALUES ((SELECT (coalesce(MAX(id)+1,1)) from request) ,$1, $2, $3, $4, $5)
-    returning id;`;
-    const now = localDateTimeUtils.getSystemDateTime();
-    const status = commonEnums.RequestStatus.Pending;
-    const values = [userId, storeId, now, type, status];
-    const queryObject = {
-        text: query,
-        values: values,
-    };
-    return queryObject;
-}
-exports.createRequest = createRequest;
-function getRequestById(id) {
-    const query = `select * from request where id = $1`;
-    const values = [id];
-    const queryObject = {
-        text: query,
-        values: values,
-    };
-    return queryObject;
-}
-exports.getRequestById = getRequestById;
-function getRequestByIdLatest(customerId) {
-    const query = `select  *  from request where user_id = $1 ORDER BY id DESC limit 1`;
-    const values = [customerId];
-    const queryObject = {
-        text: query,
-        values: values,
-    };
-    return queryObject;
-}
-exports.getRequestByIdLatest = getRequestByIdLatest;
-function getRequestByStoreIdWithPendingStatus(storeId) {
-    const query = `select * from request where store_id = $1 and (status = 1 or status = 0) `;
-    const values = [storeId];
-    const queryObject = {
-        text: query,
-        values: values,
-    };
-    return queryObject;
-}
-exports.getRequestByStoreIdWithPendingStatus = getRequestByStoreIdWithPendingStatus;
-function UpdateStatusRequest(status, id) {
-    const query = `update request set status = $1 where id =$2;`;
-    const values = [status, id];
-    const queryObject = {
-        text: query,
-        values: values,
-    };
-    return queryObject;
-}
-exports.UpdateStatusRequest = UpdateStatusRequest;
 function updateSubcription(subcriptionId, name, price, description) {
     const query = `UPDATE subcription
 SET name=$2, price = $3, description = $4, updated_at = $5
@@ -368,12 +324,11 @@ function insertOrUpdateStoreRating(ratingId, storeId, customerId, rating, status
     return queryObject;
 }
 exports.insertOrUpdateStoreRating = insertOrUpdateStoreRating;
-// add or update
+// add or update rating
 function getRatingByUniqueKey(storeId, customerId) {
     const query = `SELECT rating_id, store_id, customer_id, status, hidden_data, rating
     from store_rating
     where store_id = $1 and customer_id = $2`;
-    const now = localDateTimeUtils.getSystemDateTime();
     const values = [storeId, customerId];
     const queryObject = {
         text: query,
@@ -382,4 +337,35 @@ function getRatingByUniqueKey(storeId, customerId) {
     return queryObject;
 }
 exports.getRatingByUniqueKey = getRatingByUniqueKey;
+function getEmployeeByEmployeeId(employeeId) {
+    const query = `SELECT * from store_employee where employee_id = $1`;
+    const values = [employeeId];
+    const queryObject = {
+        text: query,
+        values: values,
+    };
+    return queryObject;
+}
+exports.getEmployeeByEmployeeId = getEmployeeByEmployeeId;
+function getEmployeeByCurrentRequestId(currentRequestId) {
+    const query = `SELECT * from store_employee where current_request_id = $1`;
+    const values = [currentRequestId];
+    const queryObject = {
+        text: query,
+        values: values,
+    };
+    return queryObject;
+}
+exports.getEmployeeByCurrentRequestId = getEmployeeByCurrentRequestId;
+function updateCurrentRequestIdOfLoginEmployee(employeeId, requestId) {
+    const query = 'update store_employee set current_request_id = $2, updated_by = $1, updated_at = $3 where employee_id = $1';
+    const now = localDateTimeUtils.getSystemDateTime();
+    const values = [employeeId, requestId, now];
+    const queryObject = {
+        text: query,
+        values: values,
+    };
+    return queryObject;
+}
+exports.updateCurrentRequestIdOfLoginEmployee = updateCurrentRequestIdOfLoginEmployee;
 //# sourceMappingURL=userSql.js.map

@@ -50,5 +50,45 @@ const router = express_1.default.Router();
 *         description: Success
 */
 router.get('/api/employee/list/:storeId', employeeController.getListEmployeeByStoreId);
+/**
+* @openapi
+* '/api/user/employee/{employeeId}':
+*  get:
+*     tags:
+*     - Employee
+*     summary: Get employee by employeeId
+*     parameters:
+*     - in: path
+*       name: employeeId
+*       required: true
+*       schema:
+*          type: string
+*     security:
+*       - bearerAuth: []
+*     responses:
+*       200:
+*         description: Success
+*/
+router.get('/api/user/employee/:employeeId', employeeController.getEmployeeByEmployeeId);
+/**
+* @openapi
+* '/api/request/store/employee/{requestId}':
+*  get:
+*     tags:
+*     - Employee
+*     summary: Get employee of store who are processing request by request Id
+*     parameters:
+*     - in: path
+*       name: requestId
+*       required: true
+*       schema:
+*          type: string
+*     security:
+*       - bearerAuth: []
+*     responses:
+*       200:
+*         description: Success
+*/
+router.get('/api/user/employee/request/:requestId', employeeController.getEmployeeByCurrentRequestId);
 exports.employeeRouter = router;
 //# sourceMappingURL=employeeRouter.js.map

@@ -62,3 +62,15 @@ export async function getListEmployeeByStoreId(storeId: string) {
     const res = listEmp.map((e: employeeModel.EmployeeDB) => employeeModel.createJsonObject(e));
     return res;
 }
+
+export async function getEmployeeByEmployeeId(employeeId: string) {
+    const emp = await storeDAL.getEmpByEmpId(employeeId);
+    const res = employeeModel.createJsonObject(emp);
+    return res;
+}
+
+export async function getEmployeeByCurrentRequestId(currentRequestId: number) {
+    const emp = await storeDAL.getEmployeeByCurrentRequestId(currentRequestId);
+    const res = employeeModel.createJsonObject(emp);
+    return res;
+}

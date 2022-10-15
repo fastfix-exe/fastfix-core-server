@@ -89,16 +89,16 @@ router.get('/api/customer/request/latest', requestController.getRequestLatest);
 *             type: object
 *             properties:
 *               id:
-*                 description: the request id
+*                 description: the request's id
 *                 type: number
 *               status:
-*                 description: the status id
+*                 description: the status
 *                 type: number
 *     responses:
 *       200:
 *         description: Success
 */
-router.put('/api/request/', requestController.UpdateRequest);
+router.put('/api/request/', requestController.UpdateRequestStatus);
 /**
 * @openapi
 * '/api/request/{id}':

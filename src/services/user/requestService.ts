@@ -20,11 +20,11 @@ export async function getLatestById(loginUser: any) {
 
 export async function getListPendingByStoreId(storeId: string) {  
     const request = await requestDAL.getListByStoreIdWithPending(storeId);
-    const res = request.map((e: requestModels.RequestDB) => requestModels.createJsonObject(e))
-    return res;
+    const listReq: any = request.map((e: requestModels.RequestDB) => requestModels.createJsonObject(e));
+    const convertedFullDataRequests = await requestDAL.getCustomersForRequests(listReq);
+    return convertedFullDataRequests;
 }
 
-export async function UpdateRequest(Object: any) {  
-     await requestDAL.UpdateRequest(Object);
-    return true;
+export async function UpdateRequestStatus(loginUser: any, requestId: number, status: number) {
+     return await requestDAL.UpdateRequestStatus(loginUser, requestId, status);
 }

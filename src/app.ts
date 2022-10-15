@@ -15,6 +15,7 @@ import * as authMiddleware from "./middlewares/authMiddleware";
 import * as commonEnums from "./common/enum";
 import { subsriptionRouter } from "./routers/subcriptionRouter";
 import { requestRouter} from "./routers/requestRouter"
+import { Server } from 'socket.io';
 
 const app = express();
 
@@ -86,9 +87,26 @@ app.use(notFoundErrorHandler);
 app.use(logErrors);
 app.use(errorHandler);
 
-// chạy server local
-app.listen(envConfig.PORT, () => {
-  console.log("Server is running on: http://localhost:" + envConfig.PORT);
-});
+const server = new http.Server(app);
 
-export default app;
+const io = (new Server()).listen(server);
+
+server.listen(3000);
+console.log("PORT: 3000");
+
+io.on("connection", function(socket)
+	{
+    console.log('client connected!');
+		socket.on("disconnect", function()
+			{
+        console.log("Socket IO disconnected!")
+			});
+         //server lắng nghe dữ liệu từ client
+		socket.on("Client-sent-data", function(data)
+			{
+				//sau khi lắng nghe dữ liệu, server phát lại dữ liệu này đến các client khác
+                socket.emit("Server-sent-data", data);
+			});
+	});
+app.set('socketio', io);
+export default server;

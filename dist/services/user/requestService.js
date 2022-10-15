@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UpdateRequest = exports.getListPendingByStoreId = exports.getLatestById = exports.getById = exports.createNewRequest = void 0;
+exports.UpdateRequestStatus = exports.getListPendingByStoreId = exports.getLatestById = exports.getById = exports.createNewRequest = void 0;
 const requestDAL = __importStar(require("../../dals/user/requestDAL"));
 const requestModels = __importStar(require("../../models/RequestModels"));
 function createNewRequest(Object) {
@@ -62,16 +62,16 @@ exports.getLatestById = getLatestById;
 function getListPendingByStoreId(storeId) {
     return __awaiter(this, void 0, void 0, function* () {
         const request = yield requestDAL.getListByStoreIdWithPending(storeId);
-        const res = request.map((e) => requestModels.createJsonObject(e));
-        return res;
+        const listReq = request.map((e) => requestModels.createJsonObject(e));
+        const convertedFullDataRequests = yield requestDAL.getCustomersForRequests(listReq);
+        return convertedFullDataRequests;
     });
 }
 exports.getListPendingByStoreId = getListPendingByStoreId;
-function UpdateRequest(Object) {
+function UpdateRequestStatus(loginUser, requestId, status) {
     return __awaiter(this, void 0, void 0, function* () {
-        yield requestDAL.UpdateRequest(Object);
-        return true;
+        return yield requestDAL.UpdateRequestStatus(loginUser, requestId, status);
     });
 }
-exports.UpdateRequest = UpdateRequest;
+exports.UpdateRequestStatus = UpdateRequestStatus;
 //# sourceMappingURL=requestService.js.map

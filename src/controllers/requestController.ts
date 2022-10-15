@@ -45,12 +45,16 @@ export async function getListPendingRequestByStoreId (req: any, res: any, next: 
     }
 }
 
-export async function UpdateRequest (req: any, res: any, next: any) {
+export async function UpdateRequestStatus (req: any, res: any, next: any) {
     try {
         await db.query('BEGIN');
-
-        const response = await requestService.UpdateRequest(req.body);
-
+        const loginUser = req.loginUser;
+        const requestId = req.body.id;
+        const status = req.body.status;
+        const response = await requestService.UpdateRequestStatus(loginUser, requestId, status);
+        console.log('__Start sending msg');
+        req.app.get('socketio').emit('changed-request', response);
+        console.log('__End sending msg');
         res.json(response);
         await db.query('COMMIT');
     } catch (error) {

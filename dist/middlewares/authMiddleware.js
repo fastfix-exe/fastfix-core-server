@@ -98,7 +98,6 @@ function authorizeStore(req, res, next) {
         }
         const bypassApi = commonBypassApi;
         // skip by role
-        console.log(req.originalUrl);
         if (req.loginUser.role !== commonEnums.UserRole.store && !bypassApi.some((api) => req.originalUrl.startsWith(api))) {
             throw new exception.APIException(exception.HttpStatusCode.CLIENT_FORBIDDEN, exception.ErrorMessage.API_E_004);
         }

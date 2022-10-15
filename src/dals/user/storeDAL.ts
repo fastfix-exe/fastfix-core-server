@@ -4,6 +4,7 @@ import * as userSql from "../sql/userSql";
 import * as exception from "../../common/exception";
 import * as storeModel from ".././../models/StoreModels";
 import * as commentModel from ".././../models/StoreCommentModel";
+import * as employeeModel from ".././../models/EmployeeModel";
 import * as ratingModel from ".././../models/StoreRatingModel";
 import * as locationUtils from ".././../common/utils/LocationUtils";
 import { Guid } from "guid-typescript";
@@ -164,4 +165,18 @@ export async function getCurrentUserRatedStar(loginUser: any, storeId: string) {
     const [rating] = await db.query(queryGetRatingByCustomerIdAndStoreId);
 
     return rating?.rating || 0;
+}
+
+export async function getEmpByEmpId(empId: string) {
+    const queryGetEmpById = userSql.getEmployeeByEmployeeId(empId);
+    const [emp] = await db.query(queryGetEmpById);
+
+    return emp;
+}
+
+export async function getEmployeeByCurrentRequestId(currentRequestId: number) {
+    const queryGetEmpById = userSql.getEmployeeByCurrentRequestId(currentRequestId);
+    const [emp] = await db.query(queryGetEmpById);
+
+    return emp;
 }

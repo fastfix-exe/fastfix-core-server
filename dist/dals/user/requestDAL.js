@@ -32,12 +32,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UpdateRequest = exports.getListByStoreIdWithPending = exports.getByIdLatest = exports.getById = exports.createNewRequest = void 0;
+exports.UpdateRequestStatus = exports.getCustomersForRequests = exports.getListByStoreIdWithPending = exports.getByIdLatest = exports.getById = exports.createNewRequest = void 0;
 const db_config_1 = require("../../config/db_config");
 const userSql = __importStar(require("../sql/userSql"));
+const requestSql = __importStar(require("../sql/requestSql"));
+const commonEnums = __importStar(require("../../common/enum"));
+const requestModel = __importStar(require("../../models/RequestModels"));
+const customerModel = __importStar(require("../../models/CustomerModels"));
 function createNewRequest(Object) {
     return __awaiter(this, void 0, void 0, function* () {
-        const queryCreate = userSql.createRequest(Object.userId, Object.storeId, Object.type);
+        const queryCreate = requestSql.createRequest(Object.userId, Object.storeId, Object.type);
         let [request] = yield db_config_1.db.query(queryCreate);
         return request;
     });
@@ -45,34 +49,60 @@ function createNewRequest(Object) {
 exports.createNewRequest = createNewRequest;
 function getById(id) {
     return __awaiter(this, void 0, void 0, function* () {
-        const queryCreate = userSql.getRequestById(id);
-        let [request] = yield db_config_1.db.query(queryCreate);
+        const queryGetById = requestSql.getRequestById(id);
+        let [request] = yield db_config_1.db.query(queryGetById);
         return request;
     });
 }
 exports.getById = getById;
 function getByIdLatest(loginUser) {
     return __awaiter(this, void 0, void 0, function* () {
-        const queryCreate = userSql.getRequestByIdLatest(loginUser.id);
-        let [request] = yield db_config_1.db.query(queryCreate);
+        const queryRequestByCustomerId = requestSql.getRequestByIdLatest(loginUser.id);
+        let [request] = yield db_config_1.db.query(queryRequestByCustomerId);
         return request;
     });
 }
 exports.getByIdLatest = getByIdLatest;
 function getListByStoreIdWithPending(storeId) {
     return __awaiter(this, void 0, void 0, function* () {
-        const queryCreate = userSql.getRequestByStoreIdWithPendingStatus(storeId);
+        const queryCreate = requestSql.getRequestByStoreIdWithPendingStatus(storeId);
         let request = yield db_config_1.db.query(queryCreate);
         return request;
     });
 }
 exports.getListByStoreIdWithPending = getListByStoreIdWithPending;
-function UpdateRequest(Object) {
+function getCustomersForRequests(listRequests) {
     return __awaiter(this, void 0, void 0, function* () {
-        const queryCreate = userSql.UpdateStatusRequest(Object.status, Object.id);
-        yield db_config_1.db.query(queryCreate);
-        return true;
+        const listRes = [];
+        for (const req of listRequests) {
+            const queryGetCustomerbyId = userSql.getCustomerByCustomerId(req.getUserId);
+            const [customerDB] = yield db_config_1.db.query(queryGetCustomerbyId);
+            const customer = customerModel.createJsonObjectWithoutHiddenData(customerDB);
+            listRes.push(Object.assign(Object.assign({}, req), { customer }));
+        }
+        return listRes;
     });
 }
-exports.UpdateRequest = UpdateRequest;
+exports.getCustomersForRequests = getCustomersForRequests;
+function UpdateRequestStatus(loginUser, requestId, status) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let currentRequest = yield getById(requestId);
+        if (currentRequest.status === commonEnums.RequestStatus.Pending && status === commonEnums.RequestStatus.Processing && loginUser.role === commonEnums.UserRole.employee) {
+            const queryUpdateLoginEmp = userSql.updateCurrentRequestIdOfLoginEmployee(loginUser.id, requestId);
+            yield db_config_1.db.query(queryUpdateLoginEmp);
+        }
+        else {
+            const queryUpdateNullCurrentRequestId = requestSql.updateEmployeeCurrentRequestWhereSentRequestToNull(requestId);
+            yield db_config_1.db.query(queryUpdateNullCurrentRequestId);
+        }
+        const queryUpdateStatus = requestSql.UpdateStatusRequest(requestId, status);
+        yield db_config_1.db.query(queryUpdateStatus);
+        currentRequest = yield getById(requestId);
+        return {
+            operator: loginUser,
+            requestChanged: requestModel.createJsonObject(currentRequest),
+        };
+    });
+}
+exports.UpdateRequestStatus = UpdateRequestStatus;
 //# sourceMappingURL=requestDAL.js.map

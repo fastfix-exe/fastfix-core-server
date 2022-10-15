@@ -11,7 +11,6 @@ export function getGoogleLoginUrl (req: any, res: any, next: any) {
 export async function callbackGoogle (req: any, res: any, next: any) {
     try {
         await db.query('BEGIN');
-
         let code = req.query.code;    // get the code from req, need to get access_token for the customer 
         let { tokens } = await Oauth2Client.getToken(code);    // get tokens
         let oauth2Client = new google.auth.OAuth2();    // create new auth client
