@@ -116,7 +116,7 @@ function assignEmployeeForRequest(req, res, next) {
         try {
             yield db_config_1.db.query('BEGIN');
             const loginUser = req.loginUser;
-            const requestId = req.body.id;
+            const requestId = req.body.requestId;
             const employeeId = req.body.employeeId;
             const response = yield requestService.assignEmployeeForRequest(loginUser, requestId, employeeId);
             console.log('__Start sending msg REQUEST-CHANGED');

@@ -68,7 +68,7 @@ export async function assignEmployeeForRequest (req: any, res: any, next: any) {
     try {
         await db.query('BEGIN');
         const loginUser = req.loginUser;
-        const requestId = req.body.id;
+        const requestId = req.body.requestId;
         const employeeId = req.body.employeeId;
         const response = await requestService.assignEmployeeForRequest(loginUser, requestId, employeeId);
         console.log('__Start sending msg REQUEST-CHANGED');
