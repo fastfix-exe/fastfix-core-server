@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateStoreByStoreId = exports.updateStore = exports.updateCustomer = void 0;
+exports.insertOrUpdateRatingOfStoreByStoreId = exports.insertCommentOfStoreByStoreId = exports.getRatingOfStoreByStoreId = exports.getCommentOfStoreByStoreId = exports.updateStoreByStoreId = exports.updateStore = exports.updateCustomer = void 0;
 const userService = __importStar(require("../services/user/userService"));
 const storeService = __importStar(require("../services/user/storeService"));
 const db_config_1 = require("../config/db_config");
@@ -113,4 +113,69 @@ function updateStoreByStoreId(req, res, next) {
     });
 }
 exports.updateStoreByStoreId = updateStoreByStoreId;
+function getCommentOfStoreByStoreId(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const loginStore = req.loginUser;
+            const storeId = req.params.storeId;
+            const response = yield storeService.getStoreCommentByStoreId(loginStore, storeId);
+            res.json(response);
+        }
+        catch (error) {
+            return next(error);
+        }
+    });
+}
+exports.getCommentOfStoreByStoreId = getCommentOfStoreByStoreId;
+function getRatingOfStoreByStoreId(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const loginStore = req.loginUser;
+            const storeId = req.params.storeId;
+            const response = yield storeService.getStoreRatingByStoreId(loginStore, storeId);
+            res.json(response);
+        }
+        catch (error) {
+            return next(error);
+        }
+    });
+}
+exports.getRatingOfStoreByStoreId = getRatingOfStoreByStoreId;
+function insertCommentOfStoreByStoreId(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            yield db_config_1.db.query('BEGIN');
+            const loginUser = req.loginUser;
+            const storeId = req.params.storeId;
+            const content = req.body.content;
+            const replyId = req.body.replyId;
+            const response = yield storeService.insertStoreCommentByStoreId(loginUser, storeId, content, replyId);
+            res.json(response);
+            yield db_config_1.db.query('COMMIT');
+        }
+        catch (error) {
+            yield db_config_1.db.query('ROLLBACK');
+            return next(error);
+        }
+    });
+}
+exports.insertCommentOfStoreByStoreId = insertCommentOfStoreByStoreId;
+function insertOrUpdateRatingOfStoreByStoreId(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            yield db_config_1.db.query('BEGIN');
+            const loginUser = req.loginUser;
+            const storeId = req.params.storeId;
+            const rating = req.body.rating;
+            const response = yield storeService.insertOrUpdateStoreRatingByStoreId(loginUser, storeId, rating);
+            res.json(response);
+            yield db_config_1.db.query('COMMIT');
+        }
+        catch (error) {
+            yield db_config_1.db.query('ROLLBACK');
+            return next(error);
+        }
+    });
+}
+exports.insertOrUpdateRatingOfStoreByStoreId = insertOrUpdateRatingOfStoreByStoreId;
 //# sourceMappingURL=userController.js.map
