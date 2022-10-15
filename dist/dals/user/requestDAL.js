@@ -36,7 +36,6 @@ exports.assignEmployeeForRequest = exports.UpdateRequestStatus = exports.getCust
 const db_config_1 = require("../../config/db_config");
 const userSql = __importStar(require("../sql/userSql"));
 const requestSql = __importStar(require("../sql/requestSql"));
-const exception = __importStar(require("../../common/exception"));
 const commonEnums = __importStar(require("../../common/enum"));
 const requestModel = __importStar(require("../../models/RequestModels"));
 const customerModel = __importStar(require("../../models/CustomerModels"));
@@ -105,13 +104,12 @@ exports.UpdateRequestStatus = UpdateRequestStatus;
 function assignEmployeeForRequest(loginUser, requestId, employeeId) {
     return __awaiter(this, void 0, void 0, function* () {
         const currentRequest = yield getRequestByRequestId(requestId);
-        if (currentRequest === commonEnums.RequestStatus.Pending && loginUser.role === commonEnums.UserRole.store && currentRequest.store_id === loginUser.id) {
-            const queryUpdateLoginEmp = userSql.updateCurrentRequestIdOfLoginEmployee(employeeId, requestId);
-            yield db_config_1.db.query(queryUpdateLoginEmp);
-        }
-        else {
-            throw new exception.APIException(exception.HttpStatusCode.CLIENT_BAD_REQUEST, 'Current login user is not role STORE or not the owner of this request\'s store');
-        }
+        // if (currentRequest === commonEnums.RequestStatus.Pending && loginUser.role === commonEnums.UserRole.store && currentRequest.store_id === loginUser.id) {
+        const queryUpdateLoginEmp = userSql.updateCurrentRequestIdOfLoginEmployee(employeeId, requestId);
+        yield db_config_1.db.query(queryUpdateLoginEmp);
+        // } else {
+        //     throw new exception.APIException(exception.HttpStatusCode.CLIENT_BAD_REQUEST, 'Current login user is not role STORE or not the owner of this request\'s store');
+        // }
         return yield UpdateRequestStatus(loginUser, requestId, 1);
     });
 }

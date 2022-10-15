@@ -66,11 +66,11 @@ export async function UpdateRequestStatus (loginUser: any, requestId: number, st
 export async function assignEmployeeForRequest (loginUser: any, requestId: number, employeeId: string) {
     const currentRequest = await getRequestByRequestId(requestId);
 
-    if (currentRequest === commonEnums.RequestStatus.Pending && loginUser.role === commonEnums.UserRole.store && currentRequest.store_id === loginUser.id) {
+    // if (currentRequest === commonEnums.RequestStatus.Pending && loginUser.role === commonEnums.UserRole.store && currentRequest.store_id === loginUser.id) {
         const queryUpdateLoginEmp = userSql.updateCurrentRequestIdOfLoginEmployee(employeeId, requestId);
         await db.query(queryUpdateLoginEmp);
-    } else {
-        throw new exception.APIException(exception.HttpStatusCode.CLIENT_BAD_REQUEST, 'Current login user is not role STORE or not the owner of this request\'s store');
-    }
+    // } else {
+    //     throw new exception.APIException(exception.HttpStatusCode.CLIENT_BAD_REQUEST, 'Current login user is not role STORE or not the owner of this request\'s store');
+    // }
     return await UpdateRequestStatus(loginUser, requestId, 1);
 }
