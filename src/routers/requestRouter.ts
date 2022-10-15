@@ -117,4 +117,64 @@ router.put('/api/request/', requestController.UpdateRequestStatus);
  */
    router.get('/api/request/store/:storeId', requestController.getListPendingRequestByStoreId);
 
+/**
+ * @openapi
+ * '/api/customer/request/position':
+ *  post:
+ *     tags:
+ *     - Request
+ *     summary: Change position of customer's side
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               coordinates: 
+ *                 description: coordinate
+ *                 type: string
+ *               requestId: 
+ *                 description: the store id
+ *                 type: string
+ *               type: 
+ *                 description: request type
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Success
+ */
+  router.post('/api/customer/request/position', requestController.customerChangePosition);
+
+  /**
+ * @openapi
+ * '/api/employee/request/position':
+ *  post:
+ *     tags:
+ *     - Request
+ *     summary: Change position of employee's side
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               userId: 
+ *                 description: the user id
+ *                 type: string
+ *               storeId: 
+ *                 description: the store id
+ *                 type: string
+ *               type: 
+ *                 description: request type
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Success
+ */
+   router.post('/api/employee/request/position', requestController.employeeChangePosition);
+
   export const requestRouter = router;

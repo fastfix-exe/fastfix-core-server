@@ -38,6 +38,9 @@ class Request {
     get getUserId() {
         return this.userId;
     }
+    get getId() {
+        return this.id;
+    }
 }
 exports.Request = Request;
 function createJsonObject(data) {

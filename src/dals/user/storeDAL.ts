@@ -3,6 +3,7 @@ import * as commonEnums from "../../common/enum";
 import * as userSql from "../sql/userSql";
 import * as exception from "../../common/exception";
 import * as storeModel from ".././../models/StoreModels";
+import * as customerModel from ".././../models/CustomerModels";
 import * as commentModel from ".././../models/StoreCommentModel";
 import * as employeeModel from ".././../models/EmployeeModel";
 import * as ratingModel from ".././../models/StoreRatingModel";
@@ -179,4 +180,11 @@ export async function getEmployeeByCurrentRequestId(currentRequestId: number) {
     const [emp] = await db.query(queryGetEmpById);
 
     return emp;
+}
+
+export async function getCustomerByCustomerId(customerId: string) {
+    const queryGetCustomerbyId = userSql.getCustomerByCustomerId(customerId);
+    const [customerDB] = await db.query(queryGetCustomerbyId);
+    const customer = customerModel.createJsonObjectWithoutHiddenData(customerDB);
+    return customer;
 }

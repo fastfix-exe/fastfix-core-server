@@ -38,6 +38,9 @@ class Employee {
             this.avatarPicture = avatarPicture;
         this.hiddenData = hiddenData;
     }
+    get getEmployeeId() {
+        return this.id;
+    }
 }
 exports.Employee = Employee;
 function createJsonObject(data) {

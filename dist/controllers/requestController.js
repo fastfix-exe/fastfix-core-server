@@ -32,9 +32,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UpdateRequestStatus = exports.getListPendingRequestByStoreId = exports.getRequestLatest = exports.getRequestById = exports.createRequest = void 0;
+exports.employeeChangePosition = exports.customerChangePosition = exports.UpdateRequestStatus = exports.getListPendingRequestByStoreId = exports.getRequestLatest = exports.getRequestById = exports.createRequest = void 0;
 const db_config_1 = require("../config/db_config");
 const requestService = __importStar(require("../services/user/requestService"));
+const storeService = __importStar(require("../services/user/storeService"));
 function createRequest(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -54,7 +55,7 @@ function getRequestById(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const id = req.params.id;
-            const response = yield requestService.getById(id);
+            const response = yield requestService.getRequestByRequestId(id);
             res.json(response);
         }
         catch (error) {
@@ -97,9 +98,9 @@ function UpdateRequestStatus(req, res, next) {
             const requestId = req.body.id;
             const status = req.body.status;
             const response = yield requestService.UpdateRequestStatus(loginUser, requestId, status);
-            console.log('__Start sending msg');
+            console.log('__Start sending msg REQUEST-CHANGED');
             req.app.get('socketio').emit('changed-request', response);
-            console.log('__End sending msg');
+            console.log('__End sending msgREQUEST-CHANGED');
             res.json(response);
             yield db_config_1.db.query('COMMIT');
         }
@@ -110,4 +111,55 @@ function UpdateRequestStatus(req, res, next) {
     });
 }
 exports.UpdateRequestStatus = UpdateRequestStatus;
+function customerChangePosition(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const loginUser = req.loginUser; // customer
+            const requestId = req.body.requestId;
+            const coordinates = req.body.coordinates;
+            const request = yield requestService.getRequestByRequestId(requestId);
+            console.log(request);
+            const employee = yield storeService.getEmployeeByCurrentRequestId(request.getId);
+            // const customer = await storeService.getCustomerByCustomerId(request.getUserId);
+            const response = {
+                userId: request.getUserId,
+                customerCoordinates: coordinates,
+                employeeId: employee.getEmployeeId,
+            };
+            console.log('__Start sending msg customer-change-coordinates');
+            req.app.get('socketio').emit('customer-change-coordinates', response);
+            console.log('__End sending msg customer-change-coordinates');
+            res.json(response);
+        }
+        catch (error) {
+            return next(error);
+        }
+    });
+}
+exports.customerChangePosition = customerChangePosition;
+function employeeChangePosition(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const loginUser = req.loginUser; // employee
+            const requestId = req.body.requestId;
+            const coordinates = req.body.coordinates;
+            const request = yield requestService.getRequestByRequestId(requestId);
+            const employee = yield storeService.getEmployeeByCurrentRequestId(request.getId);
+            // const customer = await storeService.getCustomerByCustomerId(request.getUserId);
+            const response = {
+                userId: request.getUserId,
+                employeeCoordinates: coordinates,
+                employee,
+            };
+            console.log('__Start sending msg employee-change-coordinates');
+            req.app.get('socketio').emit('employee-change-coordinates', response);
+            console.log('__End sending msg employee-change-coordinates');
+            res.json(response);
+        }
+        catch (error) {
+            return next(error);
+        }
+    });
+}
+exports.employeeChangePosition = employeeChangePosition;
 //# sourceMappingURL=requestController.js.map

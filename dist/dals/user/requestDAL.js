@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UpdateRequestStatus = exports.getCustomersForRequests = exports.getListByStoreIdWithPending = exports.getByIdLatest = exports.getById = exports.createNewRequest = void 0;
+exports.UpdateRequestStatus = exports.getCustomersForRequests = exports.getListByStoreIdWithPending = exports.getByIdLatest = exports.getRequestByRequestId = exports.createNewRequest = void 0;
 const db_config_1 = require("../../config/db_config");
 const userSql = __importStar(require("../sql/userSql"));
 const requestSql = __importStar(require("../sql/requestSql"));
@@ -47,14 +47,14 @@ function createNewRequest(Object) {
     });
 }
 exports.createNewRequest = createNewRequest;
-function getById(id) {
+function getRequestByRequestId(id) {
     return __awaiter(this, void 0, void 0, function* () {
         const queryGetById = requestSql.getRequestById(id);
         let [request] = yield db_config_1.db.query(queryGetById);
         return request;
     });
 }
-exports.getById = getById;
+exports.getRequestByRequestId = getRequestByRequestId;
 function getByIdLatest(loginUser) {
     return __awaiter(this, void 0, void 0, function* () {
         const queryRequestByCustomerId = requestSql.getRequestByIdLatest(loginUser.id);
@@ -86,7 +86,7 @@ function getCustomersForRequests(listRequests) {
 exports.getCustomersForRequests = getCustomersForRequests;
 function UpdateRequestStatus(loginUser, requestId, status) {
     return __awaiter(this, void 0, void 0, function* () {
-        let currentRequest = yield getById(requestId);
+        let currentRequest = yield getRequestByRequestId(requestId);
         if (currentRequest.status === commonEnums.RequestStatus.Pending && status === commonEnums.RequestStatus.Processing && loginUser.role === commonEnums.UserRole.employee) {
             const queryUpdateLoginEmp = userSql.updateCurrentRequestIdOfLoginEmployee(loginUser.id, requestId);
             yield db_config_1.db.query(queryUpdateLoginEmp);
@@ -97,7 +97,7 @@ function UpdateRequestStatus(loginUser, requestId, status) {
         }
         const queryUpdateStatus = requestSql.UpdateStatusRequest(requestId, status);
         yield db_config_1.db.query(queryUpdateStatus);
-        currentRequest = yield getById(requestId);
+        currentRequest = yield getRequestByRequestId(requestId);
         return {
             operator: loginUser,
             requestChanged: requestModel.createJsonObject(currentRequest),

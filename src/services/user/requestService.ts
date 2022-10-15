@@ -6,8 +6,8 @@ export async function createNewRequest(Object: any) {
     return res;
 }
 
-export async function getById(id: number) {  
-    const request = await requestDAL.getById(id);
+export async function getRequestByRequestId(id: number) {  
+    const request = await requestDAL.getRequestByRequestId(id);
     const res = requestModels.createJsonObject(request)
     return res;
 }

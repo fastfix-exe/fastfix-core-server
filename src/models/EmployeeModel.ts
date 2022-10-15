@@ -44,6 +44,10 @@ export class Employee {
         this.avatarPicture =  avatarPicture;
         this.hiddenData =  hiddenData;
     }
+
+    get getEmployeeId() {
+        return this.id;
+    }
 }
 
 export function createJsonObject (data: EmployeeDB) {

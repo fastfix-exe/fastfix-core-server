@@ -74,3 +74,7 @@ export async function getEmployeeByCurrentRequestId(currentRequestId: number) {
     const res = employeeModel.createJsonObject(emp);
     return res;
 }
+
+export async function getCustomerByCustomerId(customerId: string) {
+    return await storeDAL.getCustomerByCustomerId(customerId);
+}

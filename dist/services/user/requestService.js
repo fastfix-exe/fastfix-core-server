@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UpdateRequestStatus = exports.getListPendingByStoreId = exports.getLatestById = exports.getById = exports.createNewRequest = void 0;
+exports.UpdateRequestStatus = exports.getListPendingByStoreId = exports.getLatestById = exports.getRequestByRequestId = exports.createNewRequest = void 0;
 const requestDAL = __importStar(require("../../dals/user/requestDAL"));
 const requestModels = __importStar(require("../../models/RequestModels"));
 function createNewRequest(Object) {
@@ -43,14 +43,14 @@ function createNewRequest(Object) {
     });
 }
 exports.createNewRequest = createNewRequest;
-function getById(id) {
+function getRequestByRequestId(id) {
     return __awaiter(this, void 0, void 0, function* () {
-        const request = yield requestDAL.getById(id);
+        const request = yield requestDAL.getRequestByRequestId(id);
         const res = requestModels.createJsonObject(request);
         return res;
     });
 }
-exports.getById = getById;
+exports.getRequestByRequestId = getRequestByRequestId;
 function getLatestById(loginUser) {
     return __awaiter(this, void 0, void 0, function* () {
         const request = yield requestDAL.getByIdLatest(loginUser);

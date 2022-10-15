@@ -32,11 +32,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getEmployeeByCurrentRequestId = exports.getEmpByEmpId = exports.getCurrentUserRatedStar = exports.postStoreRating = exports.postStoreComment = exports.getStoreRatingByStoreId = exports.getStoreCommentByStoreId = exports.addFieldHiddenData = exports.updateStoreById = exports.getStoreById = exports.getListNearestStore = exports.getListEmployeeByStoreId = exports.getListStore = void 0;
+exports.getCustomerByCustomerId = exports.getEmployeeByCurrentRequestId = exports.getEmpByEmpId = exports.getCurrentUserRatedStar = exports.postStoreRating = exports.postStoreComment = exports.getStoreRatingByStoreId = exports.getStoreCommentByStoreId = exports.addFieldHiddenData = exports.updateStoreById = exports.getStoreById = exports.getListNearestStore = exports.getListEmployeeByStoreId = exports.getListStore = void 0;
 const db_config_1 = require("../../config/db_config");
 const commonEnums = __importStar(require("../../common/enum"));
 const userSql = __importStar(require("../sql/userSql"));
 const exception = __importStar(require("../../common/exception"));
+const customerModel = __importStar(require(".././../models/CustomerModels"));
 const commentModel = __importStar(require(".././../models/StoreCommentModel"));
 const ratingModel = __importStar(require(".././../models/StoreRatingModel"));
 const locationUtils = __importStar(require(".././../common/utils/LocationUtils"));
@@ -224,4 +225,13 @@ function getEmployeeByCurrentRequestId(currentRequestId) {
     });
 }
 exports.getEmployeeByCurrentRequestId = getEmployeeByCurrentRequestId;
+function getCustomerByCustomerId(customerId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const queryGetCustomerbyId = userSql.getCustomerByCustomerId(customerId);
+        const [customerDB] = yield db_config_1.db.query(queryGetCustomerbyId);
+        const customer = customerModel.createJsonObjectWithoutHiddenData(customerDB);
+        return customer;
+    });
+}
+exports.getCustomerByCustomerId = getCustomerByCustomerId;
 //# sourceMappingURL=storeDAL.js.map

@@ -13,7 +13,7 @@ export async function createNewRequest (Object: any) {
     return request;
 }
 
-export async function getById (id: number) {
+export async function getRequestByRequestId (id: number) {
     const queryGetById = requestSql.getRequestById(id);
     let [request] = await db.query(queryGetById);
     return request;
@@ -46,7 +46,7 @@ export async function getCustomersForRequests (listRequests: requestModel.Reques
 }
 
 export async function UpdateRequestStatus (loginUser: any, requestId: number, status: number) {
-    let currentRequest = await getById(requestId);
+    let currentRequest = await getRequestByRequestId(requestId);
     if (currentRequest.status === commonEnums.RequestStatus.Pending && status === commonEnums.RequestStatus.Processing && loginUser.role === commonEnums.UserRole.employee) {
         const queryUpdateLoginEmp = userSql.updateCurrentRequestIdOfLoginEmployee(loginUser.id, requestId);
         await db.query(queryUpdateLoginEmp);
@@ -57,7 +57,7 @@ export async function UpdateRequestStatus (loginUser: any, requestId: number, st
     const queryUpdateStatus = requestSql.UpdateStatusRequest(requestId, status);
     await db.query(queryUpdateStatus);
 
-    currentRequest = await getById(requestId);
+    currentRequest = await getRequestByRequestId(requestId);
     return {
         operator: loginUser,
         requestChanged: requestModel.createJsonObject(currentRequest),

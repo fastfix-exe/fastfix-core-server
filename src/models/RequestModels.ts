@@ -29,6 +29,10 @@ export class Request {
     get getUserId() {
         return this.userId;
     }
+
+    get getId() {
+        return this.id;
+    }
 }
 export function createJsonObject (data: RequestDB) {
     

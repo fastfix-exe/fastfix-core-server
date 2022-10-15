@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getEmployeeByCurrentRequestId = exports.getEmployeeByEmployeeId = exports.getListEmployeeByStoreId = exports.getCurrentUserRatedStar = exports.insertOrUpdateStoreRatingByStoreId = exports.insertStoreCommentByStoreId = exports.getStoreRatingByStoreId = exports.getStoreCommentByStoreId = exports.addFieldHiddenDataForStore = exports.getStoreById = exports.getListStore = void 0;
+exports.getCustomerByCustomerId = exports.getEmployeeByCurrentRequestId = exports.getEmployeeByEmployeeId = exports.getListEmployeeByStoreId = exports.getCurrentUserRatedStar = exports.insertOrUpdateStoreRatingByStoreId = exports.insertStoreCommentByStoreId = exports.getStoreRatingByStoreId = exports.getStoreCommentByStoreId = exports.addFieldHiddenDataForStore = exports.getStoreById = exports.getListStore = void 0;
 const storeDAL = __importStar(require("../../dals/user/storeDAL"));
 const storeModel = __importStar(require("../../models/StoreModels"));
 const employeeModel = __importStar(require("../../models/EmployeeModel"));
@@ -126,4 +126,10 @@ function getEmployeeByCurrentRequestId(currentRequestId) {
     });
 }
 exports.getEmployeeByCurrentRequestId = getEmployeeByCurrentRequestId;
+function getCustomerByCustomerId(customerId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield storeDAL.getCustomerByCustomerId(customerId);
+    });
+}
+exports.getCustomerByCustomerId = getCustomerByCustomerId;
 //# sourceMappingURL=storeService.js.map
