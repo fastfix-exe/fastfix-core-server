@@ -39,6 +39,7 @@ const env_config_1 = require("./config/env_config");
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const authMiddleware = __importStar(require("./middlewares/authMiddleware"));
 const subcriptionRouter_1 = require("./routers/subcriptionRouter");
+const requestRouter_1 = require("./routers/requestRouter");
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
 app.use((0, cookie_parser_1.default)());
@@ -63,6 +64,7 @@ app.use(authRouter_1.authRouter);
 app.use(storeRouter_1.storeRouter);
 app.use(customerRouter_1.customerRouter);
 app.use(subcriptionRouter_1.subsriptionRouter);
+app.use(requestRouter_1.requestRouter);
 app.use(userRouter_1.userRouter);
 // không tìm thấy đường dẫn api
 function notFoundErrorHandler(req, res, next) {

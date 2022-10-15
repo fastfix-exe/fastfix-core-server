@@ -32,39 +32,50 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateSubcriptionById = exports.getSubcriptionById = exports.getListSubscription = void 0;
-const db_config_1 = require("../../config/db_config");
-const userSql = __importStar(require("../sql/userSql"));
-const exception = __importStar(require("../../common/exception"));
-function getListSubscription() {
+exports.UpdateRequest = exports.getRequestById = exports.createRequest = void 0;
+const db_config_1 = require("../config/db_config");
+const requestService = __importStar(require("../services/user/requestService"));
+function createRequest(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        const queryGetListAllStore = userSql.getListAllSubscription();
-        return yield db_config_1.db.query(queryGetListAllStore);
-    });
-}
-exports.getListSubscription = getListSubscription;
-function getSubcriptionById(subcriptionId) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const queryGetOneStore = userSql.getSubcriptionById(subcriptionId);
-        const [store] = yield db_config_1.db.query(queryGetOneStore);
-        if (!store || store.deleted_at || store.deleted_by) {
-            throw new exception.APIException(exception.HttpStatusCode.CLIENT_BAD_REQUEST, exception.ErrorMessage.API_E_009);
+        try {
+            yield db_config_1.db.query('BEGIN');
+            const response = yield requestService.createNewRequest(req.body);
+            res.json(response);
+            yield db_config_1.db.query('COMMIT');
         }
-        return store;
-    });
-}
-exports.getSubcriptionById = getSubcriptionById;
-function updateSubcriptionById(subcriptionEntry) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const queryGetOneStore = userSql.getSubcriptionById(subcriptionEntry.subcriptionId);
-        const [store] = yield db_config_1.db.query(queryGetOneStore);
-        if (!store) {
-            return false;
+        catch (error) {
+            yield db_config_1.db.query("ROLLBACK");
+            return next(error);
         }
-        const queryUpdatehiddenData = userSql.updateSubcription(subcriptionEntry.subcriptionId, subcriptionEntry.email, subcriptionEntry.price, subcriptionEntry.description);
-        yield db_config_1.db.query(queryUpdatehiddenData);
-        return true;
     });
 }
-exports.updateSubcriptionById = updateSubcriptionById;
-//# sourceMappingURL=subcriptionDAL.js.map
+exports.createRequest = createRequest;
+function getRequestById(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const id = req.params.id;
+            const response = yield requestService.getById(id);
+            res.json(response);
+        }
+        catch (error) {
+            return next(error);
+        }
+    });
+}
+exports.getRequestById = getRequestById;
+function UpdateRequest(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            yield db_config_1.db.query('BEGIN');
+            const response = yield requestService.UpdateRequest(req.body);
+            res.json(response);
+            yield db_config_1.db.query('COMMIT');
+        }
+        catch (error) {
+            yield db_config_1.db.query("ROLLBACK");
+            return next(error);
+        }
+    });
+}
+exports.UpdateRequest = UpdateRequest;
+//# sourceMappingURL=requestController.js.map

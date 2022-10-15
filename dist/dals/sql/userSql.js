@@ -23,8 +23,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.insertOrUpdateStoreRating = exports.insertStoreComment = exports.getListRatingsOfStore = exports.getListCommentsOfStore = exports.updateSubcription = exports.getSubcriptionById = exports.getListAllSubscription = exports.updateHiddenDataByStoreId = exports.updateStoreByStoreId = exports.getStoreById = exports.getListAllCustomer = exports.getListAllStore = exports.updateStore = exports.updateCustomer = exports.getStoreByStoreIdAndLoginId = exports.getStoreByLoginIdAndPassword = exports.getCustomerByIdAndEmail = exports.deleteRefreshToken = exports.insertRefreshToken = exports.getRefreshTokenInDb = exports.createCustomer = exports.getCustomerByEmail = void 0;
+exports.insertOrUpdateStoreRating = exports.insertStoreComment = exports.getListRatingsOfStore = exports.getListCommentsOfStore = exports.updateSubcription = exports.UpdateStatusRequest = exports.getRequestById = exports.createRequest = exports.getSubcriptionById = exports.getListAllSubscription = exports.updateHiddenDataByStoreId = exports.updateStoreByStoreId = exports.getStoreById = exports.getListAllCustomer = exports.getListAllStore = exports.updateStore = exports.updateCustomer = exports.getStoreByStoreIdAndLoginId = exports.getStoreByLoginIdAndPassword = exports.getCustomerByIdAndEmail = exports.deleteRefreshToken = exports.insertRefreshToken = exports.getRefreshTokenInDb = exports.createCustomer = exports.getCustomerByEmail = void 0;
 const localDateTimeUtils = __importStar(require("../../common/utils/LocalDateTimeUtils"));
+const commonEnums = __importStar(require("../../common/enum"));
 // get customer's infor
 function getCustomerByEmail(email) {
     const query = `SELECT * FROM CUSTOMER WHERE EMAIL = $1`;
@@ -211,6 +212,40 @@ function getSubcriptionById(subcriptionId) {
     return queryObject;
 }
 exports.getSubcriptionById = getSubcriptionById;
+function createRequest(userId, storeId, type) {
+    const query = `insert into request(id, user_id, store_id, date_time, type, status)
+    VALUES ((SELECT (coalesce(MAX(id)+1,1)) from request) ,$1, $2, $3, $4, $5)
+    returning id;`;
+    const now = localDateTimeUtils.getSystemDateTime();
+    const status = commonEnums.RequestStatus.Approved;
+    const values = [userId, storeId, now, type, status];
+    const queryObject = {
+        text: query,
+        values: values,
+    };
+    return queryObject;
+}
+exports.createRequest = createRequest;
+function getRequestById(id) {
+    const query = `select * from request where id = $1`;
+    const values = [id];
+    const queryObject = {
+        text: query,
+        values: values,
+    };
+    return queryObject;
+}
+exports.getRequestById = getRequestById;
+function UpdateStatusRequest(status, id) {
+    const query = `update request set status = $1 where id =$2;`;
+    const values = [status, id];
+    const queryObject = {
+        text: query,
+        values: values,
+    };
+    return queryObject;
+}
+exports.UpdateStatusRequest = UpdateStatusRequest;
 function updateSubcription(subcriptionId, name, price, description) {
     const query = `UPDATE subcription
 SET name=$2, price = $3, description = $4, updated_at = $5
