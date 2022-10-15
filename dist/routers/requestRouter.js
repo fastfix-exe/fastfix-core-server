@@ -101,7 +101,7 @@ router.get('/api/customer/request/latest', requestController.getRequestLatest);
 router.put('/api/request/', requestController.UpdateRequestStatus);
 /**
 * @openapi
-* '/api/request/':
+* '/api/request/employee/':
 *  post:
 *     tags:
 *     - Request
