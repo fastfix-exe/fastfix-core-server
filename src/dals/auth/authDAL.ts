@@ -168,4 +168,8 @@ export async function getCurrentLoginUserInfor (loginUser: any) {
         const [store] = await db.query(userSql.getStoreByStoreIdAndLoginId(loginUser.id, loginUser.loginId));
         return storeModel.createJsonObjectWithoutHiddenData(store);
     }
+    if (loginUser.role === commonEnums.UserRole.employee) {
+        const [employee] = await db.query(userSql.getEmployeeByEmpIdAndLoginId(loginUser.id, loginUser.loginId));
+        return employeeModel.createJsonObjectWithoutHiddenData(employee);
+    }
 }

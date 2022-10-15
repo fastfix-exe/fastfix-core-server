@@ -209,6 +209,10 @@ function getCurrentLoginUserInfor(loginUser) {
             const [store] = yield db_config_1.db.query(userSql.getStoreByStoreIdAndLoginId(loginUser.id, loginUser.loginId));
             return storeModel.createJsonObjectWithoutHiddenData(store);
         }
+        if (loginUser.role === commonEnums.UserRole.employee) {
+            const [employee] = yield db_config_1.db.query(userSql.getEmployeeByEmpIdAndLoginId(loginUser.id, loginUser.loginId));
+            return employeeModel.createJsonObjectWithoutHiddenData(employee);
+        }
     });
 }
 exports.getCurrentLoginUserInfor = getCurrentLoginUserInfor;
