@@ -248,6 +248,6 @@ router.post('/api/customer/store/rating/:storeId', userController.insertOrUpdate
 *       200:
 *         description: Success
 */
-router.get('/api/customer/store/rating/:storeId', userController.insertOrUpdateRatingOfStoreByStoreId);
+router.get('/api/customer/store/rating/:storeId', customerController.getCurrentUserRatedStar);
 exports.customerRouter = router;
 //# sourceMappingURL=customerRouter.js.map

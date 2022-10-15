@@ -227,5 +227,5 @@ router.get('/api/customer/store/:storeId', customerController.getStoreByStoreId)
  *       200:
  *         description: Success
  */
-  router.get('/api/customer/store/rating/:storeId', userController.insertOrUpdateRatingOfStoreByStoreId);
+  router.get('/api/customer/store/rating/:storeId', customerController.getCurrentUserRatedStar);
 export const customerRouter = router;
