@@ -53,3 +53,14 @@ export async function getStoreAndDistanceByStoreId (req: any, res: any, next: an
         return next(error);
     }
 }
+
+export async function getCurrentUserRatedStar (req: any, res: any, next: any) {
+    try {
+        const loginCustomer = req.loginUser;
+        const storeId: string = req.params.storeId as string;
+        const response = await storeService.getCurrentUserRatedStar(loginCustomer, storeId);
+        res.json(response);
+    } catch (error) {
+        return next(error);
+    }
+}

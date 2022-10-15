@@ -23,7 +23,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.insertOrUpdateStoreRating = exports.insertStoreComment = exports.getListRatingsOfStore = exports.getListCommentsOfStore = exports.updateSubcription = exports.UpdateStatusRequest = exports.getRequestById = exports.createRequest = exports.getSubcriptionById = exports.getListAllSubscription = exports.updateHiddenDataByStoreId = exports.updateStoreByStoreId = exports.getStoreById = exports.getListAllCustomer = exports.getListAllStore = exports.updateStore = exports.updateCustomer = exports.getStoreByStoreIdAndLoginId = exports.getStoreByLoginIdAndPassword = exports.getCustomerByIdAndEmail = exports.deleteRefreshToken = exports.insertRefreshToken = exports.getRefreshTokenInDb = exports.createCustomer = exports.getCustomerByEmail = void 0;
+exports.getRatingByUniqueKey = exports.insertOrUpdateStoreRating = exports.insertStoreComment = exports.getListRatingsOfStore = exports.getListCommentsOfStore = exports.updateSubcription = exports.UpdateStatusRequest = exports.getRequestById = exports.createRequest = exports.getSubcriptionById = exports.getListAllSubscription = exports.updateHiddenDataByStoreId = exports.updateStoreByStoreId = exports.getStoreById = exports.getListAllCustomer = exports.getListAllStore = exports.updateStore = exports.updateCustomer = exports.getStoreByStoreIdAndLoginId = exports.getStoreByLoginIdAndPassword = exports.getCustomerByIdAndEmail = exports.deleteRefreshToken = exports.insertRefreshToken = exports.getRefreshTokenInDb = exports.createCustomer = exports.getCustomerByEmail = void 0;
 const localDateTimeUtils = __importStar(require("../../common/utils/LocalDateTimeUtils"));
 const commonEnums = __importStar(require("../../common/enum"));
 // get customer's infor
@@ -316,4 +316,18 @@ function insertOrUpdateStoreRating(ratingId, storeId, customerId, rating, status
     return queryObject;
 }
 exports.insertOrUpdateStoreRating = insertOrUpdateStoreRating;
+// add or update
+function getRatingByUniqueKey(storeId, customerId) {
+    const query = `SELECT rating_id, store_id, customer_id, status, hidden_data, rating
+    from store_rating
+    where store_id = $1 and customer_id = $2`;
+    const now = localDateTimeUtils.getSystemDateTime();
+    const values = [storeId, customerId];
+    const queryObject = {
+        text: query,
+        values: values,
+    };
+    return queryObject;
+}
+exports.getRatingByUniqueKey = getRatingByUniqueKey;
 //# sourceMappingURL=userSql.js.map

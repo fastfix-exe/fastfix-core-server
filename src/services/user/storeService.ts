@@ -50,3 +50,8 @@ export async function insertOrUpdateStoreRatingByStoreId(loginUser: any, storeId
     const res = await storeDAL.postStoreRating(loginUser, storeId, rating);
     return res;
 }
+
+export async function getCurrentUserRatedStar(loginUser: any, storeId: string) {
+    const res = await storeDAL.getCurrentUserRatedStar(loginUser, storeId);
+    return res;
+}

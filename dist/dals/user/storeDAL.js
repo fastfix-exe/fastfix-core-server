@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.postStoreRating = exports.postStoreComment = exports.getStoreRatingByStoreId = exports.getStoreCommentByStoreId = exports.addFieldHiddenData = exports.updateStoreById = exports.getStoreById = exports.getListNearestStore = exports.getListStore = void 0;
+exports.getCurrentUserRatedStar = exports.postStoreRating = exports.postStoreComment = exports.getStoreRatingByStoreId = exports.getStoreCommentByStoreId = exports.addFieldHiddenData = exports.updateStoreById = exports.getStoreById = exports.getListNearestStore = exports.getListStore = void 0;
 const db_config_1 = require("../../config/db_config");
 const commonEnums = __importStar(require("../../common/enum"));
 const userSql = __importStar(require("../sql/userSql"));
@@ -192,4 +192,13 @@ function postStoreRating(loginUser, storeId, rating) {
     });
 }
 exports.postStoreRating = postStoreRating;
+// post store rating
+function getCurrentUserRatedStar(loginUser, storeId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const queryGetRatingByCustomerIdAndStoreId = userSql.getRatingByUniqueKey(storeId, loginUser.id);
+        const [rating] = yield db_config_1.db.query(queryGetRatingByCustomerIdAndStoreId);
+        return (rating === null || rating === void 0 ? void 0 : rating.rating) || 0;
+    });
+}
+exports.getCurrentUserRatedStar = getCurrentUserRatedStar;
 //# sourceMappingURL=storeDAL.js.map

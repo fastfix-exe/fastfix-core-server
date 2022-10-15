@@ -152,3 +152,11 @@ export async function postStoreRating(loginUser: any, storeId: string, rating: n
     await db.query(queryUpdatehiddenData);
     return true;
 }
+
+// post store rating
+export async function getCurrentUserRatedStar(loginUser: any, storeId: string) {
+    const queryGetRatingByCustomerIdAndStoreId = userSql.getRatingByUniqueKey(storeId, loginUser.id);
+    const [rating] = await db.query(queryGetRatingByCustomerIdAndStoreId);
+
+    return rating?.rating || 0;
+}

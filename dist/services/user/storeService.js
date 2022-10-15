@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.insertOrUpdateStoreRatingByStoreId = exports.insertStoreCommentByStoreId = exports.getStoreRatingByStoreId = exports.getStoreCommentByStoreId = exports.addFieldHiddenDataForStore = exports.getStoreById = exports.getListStore = void 0;
+exports.getCurrentUserRatedStar = exports.insertOrUpdateStoreRatingByStoreId = exports.insertStoreCommentByStoreId = exports.getStoreRatingByStoreId = exports.getStoreCommentByStoreId = exports.addFieldHiddenDataForStore = exports.getStoreById = exports.getListStore = void 0;
 const storeDAL = __importStar(require("../../dals/user/storeDAL"));
 const storeModel = __importStar(require("../../models/StoreModels"));
 function getListStore(loginCustomer, currentPotition) {
@@ -94,4 +94,11 @@ function insertOrUpdateStoreRatingByStoreId(loginUser, storeId, rating) {
     });
 }
 exports.insertOrUpdateStoreRatingByStoreId = insertOrUpdateStoreRatingByStoreId;
+function getCurrentUserRatedStar(loginUser, storeId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const res = yield storeDAL.getCurrentUserRatedStar(loginUser, storeId);
+        return res;
+    });
+}
+exports.getCurrentUserRatedStar = getCurrentUserRatedStar;
 //# sourceMappingURL=storeService.js.map

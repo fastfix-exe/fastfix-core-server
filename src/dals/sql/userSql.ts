@@ -294,3 +294,17 @@ export function insertOrUpdateStoreRating (ratingId: string, storeId: string, cu
     }
     return queryObject;
 }
+
+// add or update
+export function getRatingByUniqueKey (storeId: string, customerId: string) {
+    const query = `SELECT rating_id, store_id, customer_id, status, hidden_data, rating
+    from store_rating
+    where store_id = $1 and customer_id = $2`;
+    const now = localDateTimeUtils.getSystemDateTime();
+    const values = [storeId, customerId];
+    const queryObject = {
+    text: query,
+    values: values,
+    }
+    return queryObject;
+}

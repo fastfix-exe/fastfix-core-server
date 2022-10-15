@@ -208,4 +208,24 @@ router.get('/api/customer/store/:storeId', customerController.getStoreByStoreId)
  *         description: Success
  */
   router.post('/api/customer/store/rating/:storeId', userController.insertOrUpdateRatingOfStoreByStoreId);
+   /**
+ * @openapi
+ * '/api/customer/store/rating/{storeId}':
+ *  get:
+ *     tags:
+ *     - Customer
+ *     summary: Get store's current customer's rated star by storeID
+ *     parameters:
+ *     - in: path
+ *       name: storeId
+ *       required: true
+ *       schema:
+ *          type: string
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Success
+ */
+  router.get('/api/customer/store/rating/:storeId', userController.insertOrUpdateRatingOfStoreByStoreId);
 export const customerRouter = router;
