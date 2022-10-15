@@ -23,7 +23,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.authorizeStore = exports.authorizeCustomer = exports.authorizeAdministrator = exports.validateToken = void 0;
+exports.authorizeEmployee = exports.authorizeStore = exports.authorizeCustomer = exports.authorizeAdministrator = exports.validateToken = void 0;
 const env_config_1 = require("../config/env_config");
 const exception = __importStar(require("../common/exception"));
 const commonEnums = __importStar(require("../common/enum"));
@@ -98,7 +98,7 @@ function authorizeStore(req, res, next) {
         }
         const bypassApi = commonBypassApi;
         // skip by role
-        bypassApi.push();
+        console.log(req.originalUrl);
         if (req.loginUser.role !== commonEnums.UserRole.store && !bypassApi.some((api) => req.originalUrl.startsWith(api))) {
             throw new exception.APIException(exception.HttpStatusCode.CLIENT_FORBIDDEN, exception.ErrorMessage.API_E_004);
         }
@@ -109,4 +109,24 @@ function authorizeStore(req, res, next) {
     }
 }
 exports.authorizeStore = authorizeStore;
+function authorizeEmployee(req, res, next) {
+    try {
+        // check role or add role to call apis
+        if (!req.loginUser) {
+            throw new exception.APIException(exception.HttpStatusCode.UNAUTHORIZED, exception.ErrorMessage.API_E_004);
+        }
+        const bypassApi = commonBypassApi;
+        // skip by role
+        bypassApi.push();
+        // this endpoint can be call by role store
+        if ((req.loginUser.role !== commonEnums.UserRole.employee && req.loginUser.role !== commonEnums.UserRole.store) && !bypassApi.some((api) => req.originalUrl.startsWith(api))) {
+            throw new exception.APIException(exception.HttpStatusCode.CLIENT_FORBIDDEN, exception.ErrorMessage.API_E_004);
+        }
+        next();
+    }
+    catch (err) {
+        next(err);
+    }
+}
+exports.authorizeEmployee = authorizeEmployee;
 //# sourceMappingURL=authMiddleware.js.map
