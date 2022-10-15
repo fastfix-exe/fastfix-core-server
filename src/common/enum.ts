@@ -15,3 +15,9 @@ export enum UserStatus {
     Deleted = 1,
     Approved = 2,
 }
+
+export enum RequestStatus{
+    New = 0,
+    Approved =1,
+    Cancel = 2,
+}

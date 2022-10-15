@@ -12,6 +12,7 @@ import http from "http";
 import * as authMiddleware from "./middlewares/authMiddleware";
 import * as commonEnums from "./common/enum";
 import { subsriptionRouter } from "./routers/subcriptionRouter";
+import { requestRouter} from "./routers/requestRouter"
 
 const app = express();
 
@@ -44,6 +45,7 @@ app.use(authRouter);
 app.use(storeRouter);
 app.use(customerRouter);
 app.use(subsriptionRouter);
+app.use(requestRouter);
 
 // không tìm thấy đường dẫn api
 function notFoundErrorHandler(req: any, res: any, next: any) {

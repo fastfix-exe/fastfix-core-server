@@ -1,4 +1,5 @@
 import * as localDateTimeUtils from '../../common/utils/LocalDateTimeUtils';
+import * as commonEnums from "../../common/enum";
 
 // get customer's infor
 export function getCustomerByEmail (email: string) {
@@ -173,6 +174,40 @@ export function getListAllSubscription () {
 export function getSubcriptionById (subcriptionId: string) {
     const query = `select * from subcription where  subcription_id = $1`;
     const values: any = [subcriptionId];
+    const queryObject = {
+        text: query,
+        values: values,
+    }
+    return queryObject;
+}
+
+export function createRequest (userId: string, storeId: string, type : string ) {
+    const query = `insert into request(id, user_id, store_id, date_time, type, status)
+    VALUES ((SELECT (coalesce(MAX(id)+1,1)) from request) ,$1, $2, $3, $4, $5)
+    returning id;`;
+    const now = localDateTimeUtils.getSystemDateTime();
+    const status = commonEnums.RequestStatus.Approved;
+    const values = [userId, storeId, now,type,status ];
+    const queryObject = {
+        text: query,
+        values: values,
+    }
+    return queryObject;
+}
+
+export function getRequestById (id: number) {
+    const query = `select * from request where id = $1`;
+    const values: any = [id];
+    const queryObject = {
+        text: query,
+        values: values,
+    }
+    return queryObject;
+}
+
+export function UpdateStatusRequest (status: number, id: number) {
+    const query = `update request set status = $1 where id =$2;`;
+    const values = [status,id];
     const queryObject = {
         text: query,
         values: values,
