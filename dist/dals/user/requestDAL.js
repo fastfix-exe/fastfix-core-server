@@ -32,10 +32,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UpdateRequestStatus = exports.getCustomersForRequests = exports.getListByStoreIdWithPending = exports.getByIdLatest = exports.getRequestByRequestId = exports.createNewRequest = void 0;
+exports.assignEmployeeForRequest = exports.UpdateRequestStatus = exports.getCustomersForRequests = exports.getListByStoreIdWithPending = exports.getByIdLatest = exports.getRequestByRequestId = exports.createNewRequest = void 0;
 const db_config_1 = require("../../config/db_config");
 const userSql = __importStar(require("../sql/userSql"));
 const requestSql = __importStar(require("../sql/requestSql"));
+const exception = __importStar(require("../../common/exception"));
 const commonEnums = __importStar(require("../../common/enum"));
 const requestModel = __importStar(require("../../models/RequestModels"));
 const customerModel = __importStar(require("../../models/CustomerModels"));
@@ -87,11 +88,7 @@ exports.getCustomersForRequests = getCustomersForRequests;
 function UpdateRequestStatus(loginUser, requestId, status) {
     return __awaiter(this, void 0, void 0, function* () {
         let currentRequest = yield getRequestByRequestId(requestId);
-        if (currentRequest.status === commonEnums.RequestStatus.Pending && status === commonEnums.RequestStatus.Processing && loginUser.role === commonEnums.UserRole.employee) {
-            const queryUpdateLoginEmp = userSql.updateCurrentRequestIdOfLoginEmployee(loginUser.id, requestId);
-            yield db_config_1.db.query(queryUpdateLoginEmp);
-        }
-        else {
+        if (!(currentRequest.status === commonEnums.RequestStatus.Pending && status === commonEnums.RequestStatus.Processing && loginUser.role === commonEnums.UserRole.store)) {
             const queryUpdateNullCurrentRequestId = requestSql.updateEmployeeCurrentRequestWhereSentRequestToNull(requestId);
             yield db_config_1.db.query(queryUpdateNullCurrentRequestId);
         }
@@ -105,4 +102,18 @@ function UpdateRequestStatus(loginUser, requestId, status) {
     });
 }
 exports.UpdateRequestStatus = UpdateRequestStatus;
+function assignEmployeeForRequest(loginUser, requestId, employeeId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const currentRequest = yield getRequestByRequestId(requestId);
+        if (currentRequest === commonEnums.RequestStatus.Pending && loginUser.role === commonEnums.UserRole.store && currentRequest.store_id === loginUser.id) {
+            const queryUpdateLoginEmp = userSql.updateCurrentRequestIdOfLoginEmployee(employeeId, requestId);
+            yield db_config_1.db.query(queryUpdateLoginEmp);
+        }
+        else {
+            throw new exception.APIException(exception.HttpStatusCode.CLIENT_BAD_REQUEST, 'Current login user is not role STORE or not the owner of this request\'s store');
+        }
+        return yield UpdateRequestStatus(loginUser, requestId, 1);
+    });
+}
+exports.assignEmployeeForRequest = assignEmployeeForRequest;
 //# sourceMappingURL=requestDAL.js.map

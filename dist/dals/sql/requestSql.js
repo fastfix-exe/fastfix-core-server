@@ -61,7 +61,7 @@ function getRequestByIdLatest(customerId) {
 }
 exports.getRequestByIdLatest = getRequestByIdLatest;
 function getRequestByStoreIdWithPendingStatus(storeId) {
-    const query = `select * from request where store_id = $1 and (status = 1 or status = 0) `;
+    const query = `select * from request where store_id = $1 and status = 0`;
     const values = [storeId];
     const queryObject = {
         text: query,

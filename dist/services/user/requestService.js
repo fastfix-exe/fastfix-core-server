@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UpdateRequestStatus = exports.getListPendingByStoreId = exports.getLatestById = exports.getRequestByRequestId = exports.createNewRequest = void 0;
+exports.assignEmployeeForRequest = exports.UpdateRequestStatus = exports.getListPendingByStoreId = exports.getLatestById = exports.getRequestByRequestId = exports.createNewRequest = void 0;
 const requestDAL = __importStar(require("../../dals/user/requestDAL"));
 const requestModels = __importStar(require("../../models/RequestModels"));
 function createNewRequest(Object) {
@@ -74,4 +74,10 @@ function UpdateRequestStatus(loginUser, requestId, status) {
     });
 }
 exports.UpdateRequestStatus = UpdateRequestStatus;
+function assignEmployeeForRequest(loginUser, requestId, employeeId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield requestDAL.assignEmployeeForRequest(loginUser, requestId, employeeId);
+    });
+}
+exports.assignEmployeeForRequest = assignEmployeeForRequest;
 //# sourceMappingURL=requestService.js.map

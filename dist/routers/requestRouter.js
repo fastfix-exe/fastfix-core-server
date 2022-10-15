@@ -101,6 +101,32 @@ router.get('/api/customer/request/latest', requestController.getRequestLatest);
 router.put('/api/request/', requestController.UpdateRequestStatus);
 /**
 * @openapi
+* '/api/request/':
+*  post:
+*     tags:
+*     - Request
+*     summary: store assign employee for Request
+*     security:
+*       - bearerAuth: []
+*     requestBody:
+*       content:
+*         application/json:
+*           schema:
+*             type: object
+*             properties:
+*               requestId:
+*                 description: the request's id
+*                 type: number
+*               employeeId:
+*                 description: the employeeId
+*                 type: string
+*     responses:
+*       200:
+*         description: Success
+*/
+router.post('/api/request/employee/', requestController.assignEmployeeForRequest);
+/**
+* @openapi
 * '/api/request/{id}':
 *  get:
 *     tags:

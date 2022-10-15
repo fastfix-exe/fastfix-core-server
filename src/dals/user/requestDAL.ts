@@ -47,10 +47,8 @@ export async function getCustomersForRequests (listRequests: requestModel.Reques
 
 export async function UpdateRequestStatus (loginUser: any, requestId: number, status: number) {
     let currentRequest = await getRequestByRequestId(requestId);
-    if (currentRequest.status === commonEnums.RequestStatus.Pending && status === commonEnums.RequestStatus.Processing && loginUser.role === commonEnums.UserRole.employee) {
-        const queryUpdateLoginEmp = userSql.updateCurrentRequestIdOfLoginEmployee(loginUser.id, requestId);
-        await db.query(queryUpdateLoginEmp);
-    } else {
+    if (!(currentRequest.status === commonEnums.RequestStatus.Pending && status === commonEnums.RequestStatus.Processing && loginUser.role === commonEnums.UserRole.store)) {
+    
         const queryUpdateNullCurrentRequestId = requestSql.updateEmployeeCurrentRequestWhereSentRequestToNull(requestId);
         await db.query(queryUpdateNullCurrentRequestId);
     }
@@ -63,4 +61,16 @@ export async function UpdateRequestStatus (loginUser: any, requestId: number, st
         requestChanged: requestModel.createJsonObject(currentRequest),
         
     };
+}
+
+export async function assignEmployeeForRequest (loginUser: any, requestId: number, employeeId: string) {
+    const currentRequest = await getRequestByRequestId(requestId);
+
+    if (currentRequest === commonEnums.RequestStatus.Pending && loginUser.role === commonEnums.UserRole.store && currentRequest.store_id === loginUser.id) {
+        const queryUpdateLoginEmp = userSql.updateCurrentRequestIdOfLoginEmployee(employeeId, requestId);
+        await db.query(queryUpdateLoginEmp);
+    } else {
+        throw new exception.APIException(exception.HttpStatusCode.CLIENT_BAD_REQUEST, 'Current login user is not role STORE or not the owner of this request\'s store');
+    }
+    return await UpdateRequestStatus(loginUser, requestId, 1);
 }

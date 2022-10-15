@@ -89,7 +89,11 @@ app.use(errorHandler);
 
 const server = new http.Server(app);
 
-const io = (new Server()).listen(server);
+const io = (new Server({
+  cors: {
+      origin: process.env.DOMAIN
+  }
+})).listen(server);
 
 server.listen(process.env.PORT || 3000);
 console.log("PORT: 3000");

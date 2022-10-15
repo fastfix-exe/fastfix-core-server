@@ -28,3 +28,7 @@ export async function getListPendingByStoreId(storeId: string) {
 export async function UpdateRequestStatus(loginUser: any, requestId: number, status: number) {
      return await requestDAL.UpdateRequestStatus(loginUser, requestId, status);
 }
+
+export async function assignEmployeeForRequest(loginUser: any, requestId: number, employeeId: string) {
+    return await requestDAL.assignEmployeeForRequest(loginUser, requestId, employeeId);
+}

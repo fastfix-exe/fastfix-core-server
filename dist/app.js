@@ -99,7 +99,11 @@ app.use(notFoundErrorHandler);
 app.use(logErrors);
 app.use(errorHandler);
 const server = new http_1.default.Server(app);
-const io = (new socket_io_1.Server()).listen(server);
+const io = (new socket_io_1.Server({
+    cors: {
+        origin: process.env.DOMAIN
+    }
+})).listen(server);
 server.listen(process.env.PORT || 3000);
 console.log("PORT: 3000");
 io.on("connection", function (socket) {

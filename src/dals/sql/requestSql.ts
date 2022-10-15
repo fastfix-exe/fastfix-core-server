@@ -35,7 +35,7 @@ export function getRequestByIdLatest (customerId: string) {
 }
 
 export function getRequestByStoreIdWithPendingStatus (storeId : string) {
-    const query = `select * from request where store_id = $1 and (status = 1 or status = 0) `;
+    const query = `select * from request where store_id = $1 and status = 0`;
     const values: any = [storeId];
     const queryObject = {
         text: query,

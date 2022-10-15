@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.employeeChangePosition = exports.customerChangePosition = exports.UpdateRequestStatus = exports.getListPendingRequestByStoreId = exports.getRequestLatest = exports.getRequestById = exports.createRequest = void 0;
+exports.employeeChangePosition = exports.customerChangePosition = exports.assignEmployeeForRequest = exports.UpdateRequestStatus = exports.getListPendingRequestByStoreId = exports.getRequestLatest = exports.getRequestById = exports.createRequest = void 0;
 const db_config_1 = require("../config/db_config");
 const requestService = __importStar(require("../services/user/requestService"));
 const storeService = __importStar(require("../services/user/storeService"));
@@ -111,6 +111,27 @@ function UpdateRequestStatus(req, res, next) {
     });
 }
 exports.UpdateRequestStatus = UpdateRequestStatus;
+function assignEmployeeForRequest(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            yield db_config_1.db.query('BEGIN');
+            const loginUser = req.loginUser;
+            const requestId = req.body.id;
+            const employeeId = req.body.employeeId;
+            const response = yield requestService.assignEmployeeForRequest(loginUser, requestId, employeeId);
+            console.log('__Start sending msg REQUEST-CHANGED');
+            req.app.get('socketio').emit('changed-request', response);
+            console.log('__End sending msgREQUEST-CHANGED');
+            res.json(response);
+            yield db_config_1.db.query('COMMIT');
+        }
+        catch (error) {
+            yield db_config_1.db.query("ROLLBACK");
+            return next(error);
+        }
+    });
+}
+exports.assignEmployeeForRequest = assignEmployeeForRequest;
 function customerChangePosition(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {

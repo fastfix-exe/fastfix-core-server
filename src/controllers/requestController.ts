@@ -64,6 +64,24 @@ export async function UpdateRequestStatus (req: any, res: any, next: any) {
     }
 }
 
+export async function assignEmployeeForRequest (req: any, res: any, next: any) {
+    try {
+        await db.query('BEGIN');
+        const loginUser = req.loginUser;
+        const requestId = req.body.id;
+        const employeeId = req.body.employeeId;
+        const response = await requestService.assignEmployeeForRequest(loginUser, requestId, employeeId);
+        console.log('__Start sending msg REQUEST-CHANGED');
+        req.app.get('socketio').emit('changed-request', response);
+        console.log('__End sending msgREQUEST-CHANGED');
+        res.json(response);
+        await db.query('COMMIT');
+    } catch (error) {
+        await db.query("ROLLBACK");
+        return next(error);
+    }
+}
+
 export async function customerChangePosition (req: any, res: any, next: any) {
     try {
         const loginUser = req.loginUser; // customer
