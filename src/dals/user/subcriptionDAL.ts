@@ -11,7 +11,7 @@ export async function getSubcriptionById(subcriptionId: string) {
     const queryGetOneStore = userSql.getSubcriptionById(subcriptionId);
     const [store] = await db.query(queryGetOneStore);
     if (!store || store.deleted_at || store.deleted_by) {
-        throw new exception.APIException(exception.HttpStatusCode.CLIENT_BAD_REQUEST, exception.ErrorMessage.API_E_010);
+        throw new exception.APIException(exception.HttpStatusCode.CLIENT_BAD_REQUEST, exception.ErrorMessage.API_E_009);
     }
     return store;
 }
