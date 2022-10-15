@@ -100,7 +100,7 @@ export function getStoreByStoreIdAndLoginId (storeId: string, loginId: string) {
 }
 
 export function getEmployeeByEmpIdAndLoginId (empId: string, loginId: string) {
-    const query = `SELECT * FROM STORE_EMPLOYEE WHERE STORE_ID = $1 AND LOGIN_ID = $2`;
+    const query = `SELECT * FROM STORE_EMPLOYEE WHERE EMPLOYEE_ID = $1 AND LOGIN_ID = $2`;
     const now = localDateTimeUtils.getSystemDateTime();
     const values = [empId, loginId];
     const queryObject = {
